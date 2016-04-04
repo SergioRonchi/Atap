@@ -1,0 +1,23 @@
+Riga 13: la classe ComctlLib.Toolbar del controllo Toolbar1 non era una classe di controllo caricata.
+Riga 75: la classe ComctlLib.ImageList del controllo ImageListSmall non era una classe di controllo caricata.
+Riga 117: la classe ComctlLib.ImageList del controllo ImageList1 non era una classe di controllo caricata.
+Riga 20: il nome della proprietà _ExtentX in Toolbar1 non è valido.
+Riga 21: il nome della proprietà _ExtentY in Toolbar1 non è valido.
+Riga 22: il nome della proprietà ButtonWidth in Toolbar1 non è valido.
+Riga 23: il nome della proprietà ButtonHeight in Toolbar1 non è valido.
+Riga 24: il nome della proprietà _Version in Toolbar1 non è valido.
+Riga 72: il nome della proprietà Buttons in Toolbar1 non è valido.
+Riga 78: il nome della proprietà _ExtentX in ImageListSmall non è valido.
+Riga 79: il nome della proprietà _ExtentY in ImageListSmall non è valido.
+Riga 81: il nome della proprietà ImageWidth in ImageListSmall non è valido.
+Riga 82: il nome della proprietà ImageHeight in ImageListSmall non è valido.
+Riga 83: il nome della proprietà MaskColor in ImageListSmall non è valido.
+Riga 84: il nome della proprietà _Version in ImageListSmall non è valido.
+Riga 115: il nome della proprietà Images in ImageListSmall non è valido.
+Riga 120: il nome della proprietà _ExtentX in ImageList1 non è valido.
+Riga 121: il nome della proprietà _ExtentY in ImageList1 non è valido.
+Riga 123: il nome della proprietà ImageWidth in ImageList1 non è valido.
+Riga 124: il nome della proprietà ImageHeight in ImageList1 non è valido.
+Riga 125: il nome della proprietà MaskColor in ImageList1 non è valido.
+Riga 126: il nome della proprietà _Version in ImageList1 non è valido.
+Riga 157: il nome della proprietà Images in ImageList1 non è valido.
