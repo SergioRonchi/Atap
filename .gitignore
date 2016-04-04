@@ -6,3 +6,5 @@
 *.tmp
 *.scc
 *.dca
+*.dll
+*.exe
