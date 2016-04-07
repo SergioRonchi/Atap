@@ -478,7 +478,7 @@ Private Sub CmdOK_Click()
     
     Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, 0, Chk(2), 0, Chk(3), prov, True
            
-    AggiungiAvvocatiSenzaOperazioni TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text
+    If TxtCodiceAvvocato.Text = "" Then AggiungiAvvocatiSenzaOperazioni TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text
     
     If Not GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
         If OptTipoStampa(0).value = True Or ChkAbilitaAnteDef.value = True Then
@@ -674,7 +674,7 @@ Dim rs As ADODB.Recordset
 
  dataEC = TxtRicDataFin.Text
  saldo = rsAssegni!saldo + rsAssegni!SALDO_PRECEDENTE
- codice = rsAssegni!CodAvv
+ codice = rsAssegni!codAvv
  If saldo >= g_Settings.LimiteSaldo Then
    saldo = 0
    

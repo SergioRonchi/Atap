@@ -3,17 +3,44 @@ Object = "{A49CE0E0-C0F9-11D2-B0EA-00A024695830}#1.0#0"; "tidate8.ocx"
 Begin VB.Form StampaSaldiNegativiUNEP 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Stampa Saldi Provvisori UNEP"
-   ClientHeight    =   4560
+   ClientHeight    =   5595
    ClientLeft      =   45
    ClientTop       =   210
-   ClientWidth     =   5175
+   ClientWidth     =   5430
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MDIChild        =   -1  'True
    MinButton       =   0   'False
-   ScaleHeight     =   4560
-   ScaleWidth      =   5175
+   ScaleHeight     =   5595
+   ScaleWidth      =   5430
    ShowInTaskbar   =   0   'False
+   Begin VB.Frame Frame2 
+      Caption         =   "Periodo"
+      Height          =   615
+      Left            =   180
+      TabIndex        =   22
+      Top             =   3360
+      Width           =   4920
+      Begin VB.OptionButton optMese 
+         Caption         =   "Mese"
+         Height          =   255
+         Index           =   0
+         Left            =   120
+         TabIndex        =   24
+         Top             =   240
+         Width           =   975
+      End
+      Begin VB.OptionButton optMese 
+         Caption         =   "Bimestre"
+         Height          =   255
+         Index           =   1
+         Left            =   1080
+         TabIndex        =   23
+         Top             =   240
+         Value           =   -1  'True
+         Width           =   975
+      End
+   End
    Begin VB.PictureBox PictureUNEP 
       Appearance      =   0  'Flat
       BackColor       =   &H80000005&
@@ -24,7 +51,7 @@ Begin VB.Form StampaSaldiNegativiUNEP
       ScaleHeight     =   465
       ScaleWidth      =   465
       TabIndex        =   21
-      Top             =   3960
+      Top             =   4920
       Width           =   495
    End
    Begin VB.CommandButton CmdAnnulla 
@@ -32,7 +59,7 @@ Begin VB.Form StampaSaldiNegativiUNEP
       Height          =   500
       Left            =   3720
       TabIndex        =   17
-      Top             =   3960
+      Top             =   4920
       Width           =   1380
    End
    Begin VB.CommandButton CmdOK 
@@ -40,7 +67,7 @@ Begin VB.Form StampaSaldiNegativiUNEP
       Height          =   500
       Left            =   2280
       TabIndex        =   16
-      Top             =   3960
+      Top             =   4920
       Width           =   1380
    End
    Begin VB.Frame v 
@@ -291,9 +318,9 @@ Begin VB.Form StampaSaldiNegativiUNEP
    Begin VB.Frame FrmMetodoStampa 
       Caption         =   "Modalità Stampa"
       Height          =   645
-      Left            =   180
+      Left            =   120
       TabIndex        =   5
-      Top             =   3240
+      Top             =   4080
       Width           =   4920
       Begin VB.OptionButton OptModSt 
          Caption         =   "Diretta"
@@ -353,6 +380,9 @@ Dim MSG_Avviso, Response As Variant
     LockPrtTable ("PrtSaldiUNEP")
     
     Riempi_PRT_EstrattoConto
+    'If TxtCodiceAvvocato.Text = "" Then AggiungiAvvocatiSenzaOperazioni TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, IIf(optMese(1).value, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)
+    
+
     createQuery
     If Not GetADORecordset("PrtSaldiUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
         Call Stampa.gestioneReport("PrtSaldiUNEP", "", 0, IIf(OptModSt(0).value, crptToWindow, crptToPrinter), "SaldiProvvisoriUNEP.rpt", 1)
