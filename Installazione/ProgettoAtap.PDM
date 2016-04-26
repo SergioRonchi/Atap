@@ -1,0 +1,130 @@
+[Root]
+Most Recent Package=File .dep 1
+
+
+[Package|File .dep 1|Root]
+SubWizProgID=PDWizard.DepPkgSubWiz
+BuildFolder=D:\Lavoro\Atap_02_2002\Ottobre2001
+
+[Package|File .dep 1|Configure DAO ISAMs]
+Applicable=Yes
+Xbase=No
+Excel=No
+Text=No
+Jet 2.x=No
+Lotus=No
+Paradox=No
+
+[Package|File .dep 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|File .dep 1|Files Found]
+
+[Package|File .dep 1|Files Released]
+
+[Package|File .dep 1|Missing Dependency Information]
+C:\WINDOWS\system32\todl8.ocx=
+C:\WINDOWS\system32\vsflex8.ocx=
+C:\WINDOWS\system32\dbgrid32.ocx=
+C:\Programmi\File comuni\System\ado\msado27.tlb=
+
+[Package|File .dep 1|Out-of-Date Dependency Information]
+C:\WINDOWS\system32\MSComctl.ocx=
+
+[Package|File .dep 1|Files Added]
+
+[Package|File .dep 1|Files Removed]
+
+[Package|File .dep 1|Files In Project]
+D:\Lavoro\Atap_02_2002\Ottobre2001\Atap.exe=Yes
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\WINDOWS\system32\VB6IT.DLL=Yes
+C:\Programmi\File comuni\Microsoft Shared\DAO\DAO350.DLL=Yes
+C:\WINDOWS\system32\MSJET35.DLL=Yes
+C:\WINDOWS\system32\MSJTER35.DLL=Yes
+C:\WINDOWS\system32\MSJINT35.DLL=Yes
+C:\WINDOWS\system32\vbajet32.dll=Yes
+C:\WINDOWS\system32\expsrv.dll=Yes
+C:\WINDOWS\system32\MSRD2X35.DLL=Yes
+C:\WINDOWS\system32\MSREPL35.DLL=Yes
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MSVCRT40.DLL=Yes
+C:\WINDOWS\system32\VB5DB.DLL=Yes
+C:\WINDOWS\system32\MSSTDFMT.DLL=Yes
+C:\WINDOWS\system32\STDFTIT.DLL=Yes
+C:\Programmi\File comuni\System\ado\msado27.tlb=Yes
+C:\WINDOWS\system32\dbgrid32.ocx=Yes
+C:\WINDOWS\system32\COMDLG32.OCX=Yes
+C:\WINDOWS\system32\CMDLGIT.DLL=Yes
+C:\WINDOWS\system32\Crystl32.OCX=Yes
+C:\WINDOWS\system32\crpe32.dll=Yes
+C:\WINDOWS\system32\MSComctl.ocx=Yes
+C:\WINDOWS\system32\MSCMCIT.DLL=Yes
+C:\WINDOWS\system32\vsflex8.ocx=Yes
+C:\WINDOWS\system32\tidate8.ocx=Yes
+C:\WINDOWS\system32\tishare8.dll=Yes
+C:\WINDOWS\system32\tibase8.dll=Yes
+C:\WINDOWS\system32\tinumb8.ocx=Yes
+C:\WINDOWS\system32\todl8.ocx=Yes
+
+[Package|File .dep 1|Configure Registry Files]
+Applicable=
+
+[Package|File .dep 1|Configure Remote Servers]
+Applicable=
+
+[Package|File .dep 1|Install Locations]
+D:\Lavoro\Atap_02_2002\Ottobre2001\Atap.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\VB6IT.DLL=$(WinSysPath)
+C:\Programmi\File comuni\Microsoft Shared\DAO\DAO350.DLL=$(MSDAOPath)
+C:\WINDOWS\system32\MSJET35.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\MSJTER35.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\MSJINT35.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\vbajet32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\expsrv.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\MSRD2X35.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\MSREPL35.DLL=$(WinSysPathSysFile)
+C:\Programmi\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MSVCRT40.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\VB5DB.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSSTDFMT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\STDFTIT.DLL=$(WinSysPath)
+C:\Programmi\File comuni\System\ado\msado27.tlb=$(WinSysPath)
+C:\WINDOWS\system32\dbgrid32.ocx=$(WinSysPath)
+C:\WINDOWS\system32\COMDLG32.OCX=$(WinSysPath)
+C:\WINDOWS\system32\CMDLGIT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\Crystl32.OCX=$(WinSysPath)
+C:\WINDOWS\system32\crpe32.dll=$(WinSysPath)
+C:\WINDOWS\system32\MSComctl.ocx=$(WinSysPath)
+C:\WINDOWS\system32\MSCMCIT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\vsflex8.ocx=$(WinSysPath)
+C:\WINDOWS\system32\tidate8.ocx=$(WinSysPath)
+C:\WINDOWS\system32\tishare8.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\tibase8.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\tinumb8.ocx=$(WinSysPath)
+C:\WINDOWS\system32\todl8.ocx=$(WinSysPath)
+
+[Package|File .dep 1|Configure Shared Files]
+Applicable=
+
+[Package|File .dep 1|DepFile]
+DepCabFile=Atap.CAB
+DepCabRun=Atap.INF
+
+[Package|File .dep 1|Package]
+PackageFolder=D:\Lavoro\Atap_02_2002\Ottobre2001
+ProjectFolder=D:\Lavoro\Atap_02_2002\Ottobre2001
+ServerSideCab=
+File1=D:\Lavoro\Atap_02_2002\Ottobre2001\Atap.DEP
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

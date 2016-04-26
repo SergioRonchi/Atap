@@ -1,0 +1,52 @@
+[Version]
+Version=2.0.0.4
+
+[Atap.exe <0010>]
+Dest=$(AppPath)
+Date=18/10/2004
+Time=15.55
+Version=2.0.0.4
+CABFilename=Atap.CAB
+CABINFFile=Atap.INF
+Uses1=msvbvm60.dll
+Uses2=OLEAUT32.DLL
+Uses3=OLEPRO32.DLL
+Uses4=ASYCFILT.DLL
+Uses5=STDOLE2.TLB
+Uses6=COMCAT.DLL
+Uses7=VB6IT.DLL
+Uses8=DAO350.DLL
+Uses9=MSSTDFMT.DLL
+Uses10=msado27.tlb
+Uses11=dbgrid32.ocx
+Uses12=COMDLG32.OCX
+Uses13=Crystl32.OCX
+Uses14=MSComctl.ocx
+Uses15=vsflex8.ocx
+Uses16=tidate8.ocx
+Uses17=tinumb8.ocx
+Uses18=todl8.ocx
+
+[msado27.tlb <0010>]
+Dest=$(WinSysPath)
+Date=04/08/2004
+Time=07.21
+Version=2.81.1117.0
+
+[dbgrid32.ocx <0010>]
+Dest=$(WinSysPath)
+Date=10/08/1998
+Time=19.30
+Version=5.1.81.4
+
+[vsflex8.ocx <0010>]
+Dest=$(WinSysPath)
+Date=17/12/2002
+Time=11.27
+Version=8.0.20031.172
+
+[todl8.ocx <0010>]
+Dest=$(WinSysPath)
+Date=26/12/2002
+Time=11.01
+Version=8.0.20031.302

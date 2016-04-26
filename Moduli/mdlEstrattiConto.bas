@@ -270,7 +270,11 @@ Public Function getQryNotifiche(isUnep As Boolean, tipo As String, Da As String,
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, NumeroAtto, "
     qrySQL = qrySQL & " ImpNotificheE,'Costo Notifica',ImpSpeseE,DesrSpese, 0,'',0,'',0,'',0,'',ImpCompetenzeE,  "
     If tipo = "Futuro" Then
-        qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
+       If isUnep Then
+         qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE,"
+        Else
+         qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
+        End If
        Else
        qrySQL = qrySQL & " ImpSaldoE  AS SaldoFinale, "
     End If
@@ -321,7 +325,11 @@ Public Function getQrySfratti(isUnep As Boolean, tipo As String, Da As String, A
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, NumeroAtto, "
     qrySQL = qrySQL & " ImpSpeseE,'Costo Effettivo',ImpVarieE,DesrSpese, 0,'',0,'',0,'',0,'',ImpCompetenzeE,  "
     If tipo = "Futuro" Then
-        qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
+        If isUnep Then
+         qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE,"
+        Else
+         qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
+        End If
        Else
         qrySQL = qrySQL & " ImpSaldoE  AS SaldoFinale, "
     End If

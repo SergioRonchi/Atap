@@ -417,15 +417,15 @@ On Error GoTo FINE
 Dim SQL As String
 
 SQL = "INSERT INTO PrtAssegniCircolariUNEP ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, COMPETENZE, SALDO, SALDO_PRECEDENTE, DATA_INIZIO, DATA_FINE, NumOrdinamento,DESCR_ATTIVITA,Valuta ) " & _
-      "SELECT PrtAssegniCircolariUNEP.CODAVV, PrtAssegniCircolariUNEP.Nome, Sum(PrtAssegniCircolariUNEP.DEPOSITO) AS SommaDiDEPOSITO, Sum(PrtAssegniCircolariUNEP.SPESE1) AS SommaDiSPESE1," & _
-      "Sum(PrtAssegniCircolariUNEP.SPESE2) AS SommaDiSPESE2, Sum(PrtAssegniCircolariUNEP.SPESE3) AS SommaDiSPESE3, Sum(PrtAssegniCircolariUNEP.SPESE4) AS SommaDiSPESE4," & _
-      "Sum(PrtAssegniCircolariUNEP.SPESE5) AS SommaDiSPESE5, Sum(PrtAssegniCircolariUNEP.SPESE6) AS SommaDiSPESE6, Sum(PrtAssegniCircolariUNEP.COMPETENZE) AS SommaDiCOMPETENZE," & _
-      "Sum(PrtAssegniCircolariUNEP.SALDO) AS actSaldo, First(PrtAssegniCircolariUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
-      "First(PrtAssegniCircolariUNEP.DATA_INIZIO) AS PrimoDiDATA_INIZIO, First(PrtAssegniCircolariUNEP.DATA_FINE) AS PrimoDiDATA_FINE," & _
+      "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome, Sum(PrtEstrattoContoUNEP.DEPOSITO) AS SommaDiDEPOSITO, Sum(PrtEstrattoContoUNEP.SPESE1) AS SommaDiSPESE1," & _
+      "Sum(PrtEstrattoContoUNEP.SPESE2) AS SommaDiSPESE2, Sum(PrtEstrattoContoUNEP.SPESE3) AS SommaDiSPESE3, Sum(PrtEstrattoContoUNEP.SPESE4) AS SommaDiSPESE4," & _
+      "Sum(PrtEstrattoContoUNEP.SPESE5) AS SommaDiSPESE5, Sum(PrtEstrattoContoUNEP.SPESE6) AS SommaDiSPESE6, Sum(PrtEstrattoContoUNEP.COMPETENZE) AS SommaDiCOMPETENZE," & _
+      "Sum(PrtEstrattoContoUNEP.SALDO) AS actSaldo, First(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
+      "First(PrtEstrattoContoUNEP.DATA_INIZIO) AS PrimoDiDATA_INIZIO, First(PrtEstrattoContoUNEP.DATA_FINE) AS PrimoDiDATA_FINE," & _
       "First(AnagraficaAvvocati.NumOrdinamento) AS PrimoDiNumOrdinamento,' ','E' " & _
-      "FROM PrtAssegniCircolariUNEP INNER JOIN AnagraficaAvvocati ON PrtAssegniCircolariUNEP.CODAVV = AnagraficaAvvocati.CODAVV " & _
-      "GROUP BY PrtAssegniCircolariUNEP.CODAVV, PrtAssegniCircolariUNEP.Nome " & _
-      "Having (((Sum([PrtAssegniCircolariUNEP].[saldo]) + First([PrtAssegniCircolariUNEP].[SALDO_PRECEDENTE])) >= " & Str(g_Settings.LimiteSaldo) & ")) " & _
+      "FROM PrtEstrattoContoUNEP INNER JOIN AnagraficaAvvocati ON PrtEstrattoContoUNEP.CODAVV = AnagraficaAvvocati.CODAVV " & _
+      "GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome " & _
+      "Having (((Sum([PrtEstrattoContoUNEP].[saldo]) + First([PrtEstrattoContoUNEP].[SALDO_PRECEDENTE])) >= " & Str(g_Settings.LimiteSaldo) & ")) " & _
       "ORDER BY First(AnagraficaAvvocati.NumOrdinamento);"
 
 'Reset PrtAssegniCircolariUNEP
