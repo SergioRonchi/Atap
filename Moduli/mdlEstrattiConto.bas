@@ -271,7 +271,7 @@ Public Function getQryNotifiche(isUnep As Boolean, tipo As String, Da As String,
     qrySQL = qrySQL & " ImpNotificheE,'Costo Notifica',ImpSpeseE,DesrSpese, 0,'',0,'',0,'',0,'',ImpCompetenzeE,  "
     If tipo = "Futuro" Then
        If isUnep Then
-         qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE,"
+         qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE,"
         Else
          qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
         End If
