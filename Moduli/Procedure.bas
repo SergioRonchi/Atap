@@ -1,5 +1,123 @@
 Attribute VB_Name = "Procedure"
 Option Explicit
+
+Public Sub CaricaDayNav(cmb As Object)
+ cmb.AddItem "Oggi"
+ cmb.AddItem "DaIeri"
+ cmb.AddItem "QuestaSettimana"
+ cmb.AddItem "DaUltimaSettimana"
+ cmb.AddItem "QuestoMese"
+ cmb.AddItem "UltimoMese"
+ cmb.AddItem "AnnoCorrente"
+ cmb.AddItem "DaUltimoAnno"
+ cmb.AddItem "InteroAnno"
+ cmb.AddItem "InteroAnnoPrec"
+ 
+End Sub
+Public Property Get GLO_OGGI_OLD() As String
+   
+   GLO_OGGI_OLD = Format(Date, "yyyy") - 1 & Right(GLO_OGGI, 4)
+End Property
+Public Property Get GLO_OGGI() As String
+   GLO_OGGI = Format(Date, "yyyymmdd")
+End Property
+Public Sub SettaDate(Dal As Object, Al As Object, Scelta As Integer)
+Dim D As Date, x As Integer
+Dim Mese As String, Giorno As String, gset As Integer
+Dim MesePrec As String
+
+Dim m_SysDataFormat As String
+Dim SysShortData As String
+Dim m_SysLang As String
+Dim m_SysCountry As String
+Dim m_SysValuta As String
+Dim m_SysDecimale As String
+Dim m_SysSeparatore As String
+Dim m_RegionalData As String
+D = Date
+
+x = month(D)
+MesePrec = x - 1
+If MesePrec < 1 Then MesePrec = 12
+
+Mese = IIf(x < 10, "0" & x, x)
+
+x = day(D)
+Giorno = IIf(x < 10, "0" & x, x)
+
+gset = Weekday(D, vbMonday)
+
+ Call GetTheLocaleInfo(m_SysDataFormat, SysShortData, m_SysLang, m_SysCountry, m_SysValuta, m_SysDecimale, m_SysSeparatore)
+
+Select Case Scelta
+  Case 0 'Oggi
+       Dal = getRegionalData(GLO_OGGI, SysShortData, True)
+       Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  Case 1 'DA ieri
+       Dal = getRegionalData(Format(D - 1, "yyyymmdd"), SysShortData, True)
+       Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  Case 2 'Questa settimana
+        Dal = getRegionalData(Format(D - gset + 1, "yyyymmdd"), SysShortData, True)
+        Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  Case 3 'Dall ' ultima settimana
+        Dal = getRegionalData(Format(D - 7 - gset + 1, "yyyymmdd"), SysShortData, True)
+        Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  Case 4 'Questo Mese
+        Dal = getRegionalData(Format(D - Giorno + 1, "yyyymmdd"), SysShortData, True)
+        
+        Al = getRegionalData(LastDay(month(Date), Format(Date, "YYYY")), SysShortData, True)
+  Case 5 'Dall ' ultimo mese
+        Dal = getRegionalData(Format("01/" & MesePrec & "/" & year(D), "yyyymmdd"), SysShortData, True)
+        Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  
+  Case 6 'Anno corrente  (si intende da inizio anno a oggi)
+        Dal = getRegionalData(year(D) & "0101", SysShortData, True)
+        Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  
+  Case 7 'Dall ' anno prededente
+        Dal = getRegionalData(GLO_OGGI_OLD, SysShortData, True)
+        Al = getRegionalData(GLO_OGGI, SysShortData, True)
+  Case 8 'Intero Anno
+        Dal = getRegionalData(year(D) & "0101", SysShortData, True)
+        Al = getRegionalData(year(D) & "1231", SysShortData, True)
+  Case 9 'Intero Anno Prec
+        Dal = getRegionalData(year(D) - 1 & "0101", SysShortData, True)
+        Al = getRegionalData(year(D) - 1 & "1231", SysShortData, True)
+        
+  Case 10
+        'Prossimi sette giorni
+        Dal = getRegionalData(GLO_OGGI, SysShortData, True)
+        Al = getRegionalData(Format(D + 7, "yyyymmdd"), SysShortData, True)
+        
+  Case 11
+        'prossimi 30 giorni
+        Dal = getRegionalData(GLO_OGGI, SysShortData, True)
+        Al = getRegionalData(Format(D + 30, "yyyymmdd"), SysShortData, True)
+        
+
+     
+
+End Select
+
+     Al.ForeColor = &H80000008
+     Dal.ForeColor = &H80000008
+End Sub
+Public Function getRegionalData(Field As String, formato As String, Optional isValue As Boolean) As String
+If Not isValue Then
+   getRegionalData = " Format( Mid(" & Field & ",1,4) & '-' & Mid(" & Field & ",5,2) & '-' & Mid(" & Field & ",7,2),'" & formato & "') "
+'   Select Case formato
+'    Case "mm/dd/yyyy"
+'     getRegionalData = " Mid(" & field & ",5,2) & '/' & Mid(" & field & ",7,2) & '/' & Mid(" & field & ",1,4) "
+'    Case "dd/mm/yyyy"
+'     getRegionalData = " Mid(" & field & ",7,2) & '/' & Mid(" & field & ",5,2) & '/' & Mid(" & field & ",1,4) "
+'   End Select
+  Else
+   Dim D As Date
+   D = Mid(Field, 1, 4) & "-" & Mid(Field, 5, 2) & "-" & Mid(Field, 7, 2)
+   getRegionalData = Format(D, formato)
+End If
+     
+End Function
 Public Sub sortGrid(flex As VSFlexGrid, Col As Long, ByRef Order As Integer, oldCol As Integer, newCol As Integer)
     
    
@@ -61,9 +179,9 @@ Public Function controlloPIvaCodFis(cod As String) As Boolean
     Dim D As String
     Dim n As Integer
     Dim k As Integer
-    Dim X As Integer
-    Dim i As Integer
-    n = k = X = 0
+    Dim x As Integer
+    Dim I As Integer
+    n = k = x = 0
     Dim Y(43) As Integer
           
     err = False
@@ -73,15 +191,15 @@ Public Function controlloPIvaCodFis(cod As String) As Boolean
     Y(3) = 5
     Y(4) = 7
     Y(5) = 9
-    For i = 6 To 10
-        Y(i) = (2 * i + 1)
-    Next i
-    For i = 11 To 17
-        Y(i) = 0
-    Next i
-    For i = 18 To 27
-        Y(i) = Y(i - 17)
-    Next i
+    For I = 6 To 10
+        Y(I) = (2 * I + 1)
+    Next I
+    For I = 11 To 17
+        Y(I) = 0
+    Next I
+    For I = 18 To 27
+        Y(I) = Y(I - 17)
+    Next I
     Y(28) = 2
     Y(29) = 4
     Y(30) = 18
@@ -102,38 +220,38 @@ Public Function controlloPIvaCodFis(cod As String) As Boolean
     If Len(cod) = 11 Then
         n = 0
         err = True
-        For i = 1 To 10 Step 2
-          n = n + Asc(Mid(cod, i, 1))
-        Next i
-        For i = 2 To 10 Step 2
-            k = Asc(Mid(cod, i, 1))
+        For I = 1 To 10 Step 2
+          n = n + Asc(Mid(cod, I, 1))
+        Next I
+        For I = 2 To 10 Step 2
+            k = Asc(Mid(cod, I, 1))
             If k > 9 Then
                 k = k / 10 + k Mod 10
             End If
             n = n + k
-        Next i
-        X = (10 - (n Mod 10)) Mod 10
+        Next I
+        x = (10 - (n Mod 10)) Mod 10
         If Asc(Mid(cod, 11, 1)) Then
             err = False
         End If
     Else
         err = True
-        For i = 2 To 15 Step 2
-            X = Asc(Mid(cod, i, 1))
-            If X > 60 Then
-                n = n + X - 65
+        For I = 2 To 15 Step 2
+            x = Asc(Mid(cod, I, 1))
+            If x > 60 Then
+                n = n + x - 65
             Else
-                n = n + X - 48
+                n = n + x - 48
             End If
-        Next i
+        Next I
         
-        For i = 1 To 15 Step 2
-            X = Asc(Mid(cod, i, 1)) - 47
-            n = n + Y(X)
-        Next i
+        For I = 1 To 15 Step 2
+            x = Asc(Mid(cod, I, 1)) - 47
+            n = n + Y(x)
+        Next I
         n = n Mod 26
         D = Chr(n + 65)
-        If Mid(cod, i, 1) = D Then
+        If Mid(cod, I, 1) = D Then
             err = False
         End If
     End If
@@ -146,25 +264,32 @@ Public Function valore(v As String) As Double
  valore = val(Replace(v, ",", "."))
  
 End Function
-Public Sub PopolaTDBCombo(c As TDBCombo, Tabella As String, Field As String, Optional codice As String, Optional Tutti As Boolean, Optional showCode As Boolean, Optional OrderBy As String = "", Optional SQL As String = "")
+Public Function FixDouble(v As Double) As String
+ Dim s As String
+ s = CStr(v)
+
+ FixDouble = Replace(s, ",", ".")
+ 
+End Function
+Public Sub PopolaTDBCombo(c As TDBCombo, tabella As String, Field As String, Optional Codice As String, Optional Tutti As Boolean, Optional showCode As Boolean, Optional OrderBy As String = "", Optional sql As String = "")
 Dim rs As ADODB.Recordset
 Dim campi As String
-Dim i As Integer
+Dim I As Integer
 
 
 campi = Field
-If codice <> "" Then campi = campi & "," & codice
-If SQL = "" Then
-    SQL = "SELECT " & campi & " FROM " & Tabella
+If Codice <> "" Then campi = campi & "," & Codice
+If sql = "" Then
+    sql = "SELECT " & campi & " FROM " & tabella
     If OrderBy <> "" Then
-      SQL = SQL & " ORDER BY " & OrderBy
+      sql = sql & " ORDER BY " & OrderBy
     End If
 End If
 If Tutti Then
- SQL = "SELECT First('- Mostra Tutto -') as [" & Field & "],'XXALLXX' FROM " & Tabella & " UNION ALL " & SQL
+ sql = "SELECT First('- Mostra Tutto -') as [" & Field & "],'XXALLXX' FROM " & tabella & " UNION ALL " & sql
 End If
 Set rs = newAdoRs
-rs.Open SQL, g_Settings.DBConnection
+rs.Open sql, g_Settings.DBConnection
 c.Clear
 Set c.RowSource = rs
 If Tutti Then
@@ -178,12 +303,12 @@ End If
   
 
 End Sub
-Public Sub PopolaCombo(c As ComboBox, Tabella As String, Field As String, Optional codice As String, Optional ByRef Col As Collection, Optional Tutti As Boolean)
+Public Sub PopolaCombo(c As ComboBox, tabella As String, Field As String, Optional Codice As String, Optional ByRef Col As Collection, Optional Tutti As Boolean)
 'Ronchi 12 giugno 2002
-On Error GoTo FINE
+On Error GoTo fine
 Dim rs As ADODB.Recordset
 Set rs = newAdoRs
-rs.Open Tabella, g_Settings.DBConnection
+rs.Open tabella, g_Settings.DBConnection
 c.Clear
 Set Col = New Collection
  If Tutti Then
@@ -192,59 +317,59 @@ Set Col = New Collection
  End If
 While Not rs.EOF
   c.AddItem rs(Field)
-  If codice <> "" Then Col.Add rs(codice).value
+  If Codice <> "" Then Col.Add rs(Codice).value
   rs.MoveNext
 Wend
 c.ListIndex = 0
 Exit Sub
-FINE:
+fine:
 On Error GoTo 0
 
 End Sub
 
 
-Public Function RitornaData(data As String) As String
+Public Function RitornaData(Data As String) As String
 
-Dim anno, mese, giorno As String
+Dim anno, Mese, Giorno As String
 
-If data = " " Or data = "" Then
-    RitornaData = data
+If Data = " " Or Data = "" Then
+    RitornaData = Data
 Else
-    anno = Mid(data, 1, 4)
-    mese = Mid(data, 5, 2)
-    giorno = Mid(data, 7, 2)
-    RitornaData = giorno + "/" + mese + "/" + anno
+    anno = Mid(Data, 1, 4)
+    Mese = Mid(Data, 5, 2)
+    Giorno = Mid(Data, 7, 2)
+    RitornaData = Giorno + "/" + Mese + "/" + anno
 End If
 
 End Function
 
-Public Function ElaboraData(data As String) As String
+Public Function ElaboraData(Data As String) As String
 
-Dim anno, mese, giorno As String
+Dim anno, Mese, Giorno As String
 
-If data = " " Or data = "" Then
-    ElaboraData = data
+If Data = " " Or Data = "" Then
+    ElaboraData = Data
 Else
-    If InStr(1, data, "/") Then data = Replace(data, "/", "")
-    giorno = Mid(data, 1, 2)
-    mese = Mid(data, 3, 2)
-    anno = Mid(data, 5, 4)
-    ElaboraData = anno + mese + giorno
+    If InStr(1, Data, "/") Then Data = Replace(Data, "/", "")
+    Giorno = Mid(Data, 1, 2)
+    Mese = Mid(Data, 3, 2)
+    anno = Mid(Data, 5, 4)
+    ElaboraData = anno + Mese + Giorno
 End If
 
 End Function
 
 Public Sub Ridimensiona(frm As Form, tipo As String)
  With frm
-  .fraTop.Top = 0
+  .FraTop.Top = 0
   Select Case tipo
      Case "small"
-           .Height = .fraTop.Top + .fraTop.Height + .fraComandi.Height + 400
-           .fraComandi.Top = .fraTop.Height + .fraTop.Top
+           .Height = .FraTop.Top + .FraTop.Height + .fraComandi.Height + 400
+           .fraComandi.Top = .FraTop.Height + .FraTop.Top
            .fraMain.Visible = False
      Case "big"
-           .Height = .fraTop.Top + .fraTop.Height + .fraComandi.Height + .fraMain.Height + 400
-           .fraMain.Top = .fraTop.Height + .fraTop.Top
+           .Height = .FraTop.Top + .FraTop.Height + .fraComandi.Height + .fraMain.Height + 400
+           .fraMain.Top = .FraTop.Height + .FraTop.Top
            .fraComandi.Top = .fraMain.Height + .fraMain.Top
            .fraMain.Visible = True
   End Select
@@ -261,22 +386,22 @@ Public Function Approssima(MiaValuta As Double) As Double
     Dim MyStr2 As String
     Dim MiaString As String
     Dim HaDecimali As Boolean
-    Dim i As Integer
+    Dim I As Integer
     HaDecimali = False
     If MiaValuta <> 0 Then
         MiaString = Trim(Str(MiaValuta))
-        For i = 1 To Len(MiaString)
-            MyStr = Mid(MiaString, i, 1)
+        For I = 1 To Len(MiaString)
+            MyStr = Mid(MiaString, I, 1)
             If MyStr = "." Then
                 HaDecimali = True
-                MyStr1 = Left(MiaString, i - 1)
+                MyStr1 = Left(MiaString, I - 1)
                 If (Len(Trim(MyStr1)) = 0) Then
                     MyStr1 = "0"
                 End If
-                MyStr2 = Right(MiaString, Len(MiaString) - i)
-                i = i + 1
+                MyStr2 = Right(MiaString, Len(MiaString) - I)
+                I = I + 1
             End If
-        Next i
+        Next I
         If HaDecimali = False Then
             Approssima = MiaString
             Exit Function

@@ -141,6 +141,8 @@ Source: ..\zip.exe; DestDir: {app}
 Source: ..\unzip.exe; DestDir: {app}
 Source: ..\Atap.chm; DestDir: {app}\Help
 
+
+
 ;Source: ..\atap.mdb; DestDir: {app}
 
 ;REPORTS
@@ -183,6 +185,8 @@ Source: ..\Report\SospesiLiquidazioneUNEP.rpt; DestDir: {app}\Report; Flags: ign
 Source: ..\Report\SospesiAttTribNewUNEP.rpt; DestDir: {app}\Report; Flags: ignoreversion overwritereadonly replacesameversion
 Source: ..\Report\SospesiNewUNEP.rpt; DestDir: {app}\Report; Flags: ignoreversion overwritereadonly replacesameversion
 Source: ..\Report\SospesiAttivit‡NewUNEP.rpt; DestDir: {app}\Report; Flags: ignoreversion overwritereadonly replacesameversion
+
+Source: ..\Dati\listacomuni.txt; DestDir: {app}\Dati; Flags: ignoreversion overwritereadonly replacesameversion
 
 
 

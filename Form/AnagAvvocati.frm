@@ -633,7 +633,7 @@ If Not PassaLoad Then
             
             'procedura estratto conto NON UNEP
             '--------------------------------------------------------------------------------------------
-            Riempi_PRT_EstrattoContoX "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, 1, 1, 1, 1, "N", False
+            Riempi_PRT_EstrattoContoX "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, 1, 1, 1, 1, "N", False, 0
             If GetADORecordset("PrtEstrattoConto", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                MsgBox "Nessun dato! Nessun Estratto conto per la cassetta " + TxtCodiceAvvocatoInt.Text, vbInformation, "Attenzione"
               
@@ -643,7 +643,7 @@ If Not PassaLoad Then
                     MSG_Avviso = MSG_Avviso & "Continuare?"
                     Response = MsgBox(MSG_Avviso, vbYesNo + vbInformation + vbDefaultButton1, "Avviso")
                     If Response = vbYes Then    ' User chose Yes.
-                        Riempi_PRT_Sospesi "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, "NULL", "NULL", False, True
+                        Riempi_PRT_Sospesi "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, "NULL", "NULL", False, True, 0
                         
                         If GetADORecordset("PrtSospesi", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                           MsgBox "Nessun dato sospeso!.", vbInformation, "Attenzione"
@@ -667,7 +667,7 @@ If Not PassaLoad Then
             '--------------------------------------------------------------------------------------------
               'procedura estratto conto  UNEP
             '--------------------------------------------------------------------------------------------
-            Riempi_PRT_EstrattoContoX "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, 1, 1, 1, 1, "N", True
+            Riempi_PRT_EstrattoContoX "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, 1, 1, 1, 1, "N", True, 1
             If GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                MsgBox "Nessun dato! Nessun Estratto UNEP conto per la cassetta " + TxtCodiceAvvocatoInt.Text, vbInformation, "Attenzione"
               
@@ -677,7 +677,7 @@ If Not PassaLoad Then
                     MSG_Avviso = MSG_Avviso & "Continuare?"
                     Response = MsgBox(MSG_Avviso, vbYesNo + vbInformation + vbDefaultButton1, "Avviso")
                     If Response = vbYes Then    ' User chose Yes.
-                        Riempi_PRT_Sospesi "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, "NULL", "NULL", True, True
+                        Riempi_PRT_Sospesi "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, "NULL", "NULL", True, True, 1
                         
                         If GetADORecordset("PrtSospesiUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                           MsgBox "Nessun dato sospeso!.", vbInformation, "Attenzione"
@@ -746,7 +746,7 @@ End Sub
 Private Sub CmdSalva_Click()
 
 Dim Response As Variant
-On Error GoTo FINE
+On Error GoTo fine
 g_Settings.DBConnection.BeginTrans
 
 If TxtCognomeNome.Text = "" Then
@@ -836,7 +836,7 @@ g_Settings.DBConnection.CommitTrans
 Unload Me
 Exit Sub
 
-FINE:
+fine:
 MsgBox err.Description & vbCrLf & "Salvataggio fallito"
 g_Settings.DBConnection.RollbackTrans
 
@@ -858,11 +858,11 @@ Private Function CalcolaOrdinamento() As Long
           CalcolaOrdinamento = (N2 + N1) / 2
 End Function
 Private Sub salvaUsufruenti(cod As String)
- Dim i As Integer
+ Dim I As Integer
  g_Settings.DBConnection.Execute "DELETE * FROM USUFRUENTI WHERE CODAVV='" & cod & "'"
- For i = 0 To LstUsufruenti.ListCount - 1
-   g_Settings.DBConnection.Execute "INSERT INTO USUFRUENTI(CODAVV,DescrizioneUsufr) VALUES ('" & cod & "','" & Replace(LstUsufruenti.List(i), "'", "''") & "')"
- Next i
+ For I = 0 To LstUsufruenti.ListCount - 1
+   g_Settings.DBConnection.Execute "INSERT INTO USUFRUENTI(CODAVV,DescrizioneUsufr) VALUES ('" & cod & "','" & Replace(LstUsufruenti.list(I), "'", "''") & "')"
+ Next I
  
 End Sub
 Private Sub Form_Load()
@@ -928,7 +928,7 @@ Public Function AbilitaCampi(SiNO As Boolean)
 End Function
 
 Public Function NascondiCampi(SiNO As Boolean)
-        lblCAP.Visible = SiNO
+        LblCAP.Visible = SiNO
         LblCellulare.Visible = SiNO
         LblCodiceFiscale.Visible = SiNO
         LblCognomeNome.Visible = SiNO
@@ -959,13 +959,13 @@ End Function
 
 
 Public Sub RiempiLstUsufruenti()
-Dim SQL As String
+Dim sql As String
 Dim rs As ADODB.Recordset
 
 Set rs = newAdoRs
-SQL = "SELECT * FROM USUFRUENTI WHERE CODAVV='" & TxtCodiceAvvocatoInt & "'"
+sql = "SELECT * FROM USUFRUENTI WHERE CODAVV='" & TxtCodiceAvvocatoInt & "'"
 
-rs.Open SQL, g_Settings.DBConnection
+rs.Open sql, g_Settings.DBConnection
 
 While Not rs.EOF
   LstUsufruenti.AddItem rs!DescrizioneUsufr
@@ -1021,14 +1021,14 @@ End Function
 
 Private Sub IAnagraficForm_RisultatoRicerca(sCodAvv As String, oAzione As TipoAzione)
 
-Dim SQL As String
+Dim sql As String
 Dim rs As ADODB.Recordset
 Azione = TipoAzione.Modifica
 If Not FindForm("AnagAvvocati") Then Load AnagAvvocati
 PassaLoad = True
 Set rs = newAdoRs
-SQL = "SELECT * FROM ANAGRAFICAAVVOCATI WHERE CODAVV='" & sCodAvv & "'"
-rs.Open SQL, g_Settings.DBConnection
+sql = "SELECT * FROM ANAGRAFICAAVVOCATI WHERE CODAVV='" & sCodAvv & "'"
+rs.Open sql, g_Settings.DBConnection
 Caricacampi Me, rs
 RiempiLstUsufruenti
 

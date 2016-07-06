@@ -1474,7 +1474,7 @@ Dim PassaLoad As Boolean
 Dim LocalLoad As Boolean
 Public Azione As TipoAzione
 Private sWhere As String
-Private moFrmRicerca As FrmRicerca
+Private moFrmRicerca As frmRicerca
 Private m_ID As Long
 
 Public isUnep As Boolean
@@ -1550,25 +1550,25 @@ ErrHandler:
 End Sub
 Private Sub CmdRicercaAnag_Click()
     
-    Set FrmRicerca.frmCaller = Me
-    FrmRicerca.tipo = "Anagrafica"
-    FrmRicerca.Filtro = " AND STAT<>'A' And CASSETTAROTTA<>'S'"
+    Set frmRicerca.frmCaller = Me
+    frmRicerca.tipo = "Anagrafica"
+    frmRicerca.Filtro = " AND STAT<>'A' And CASSETTAROTTA<>'S'"
     
     If isUnep Then
-       FrmRicerca.Filtro = FrmRicerca.Filtro & " AND NOT (CODAVV LIKE '525%' OR CODAVV LIKE '393%')"
+       frmRicerca.Filtro = frmRicerca.Filtro & " AND NOT (CODAVV LIKE '525%' OR CODAVV LIKE '393%')"
     End If
     If FindForm("frmRicerca") Then
-          Unload FrmRicerca
+          Unload frmRicerca
     End If
 
-    Load FrmRicerca
+    Load frmRicerca
 
 End Sub
 
 Private Sub CmdRicerca_Click()
     
    
-    Set moFrmRicerca = New FrmRicerca
+    Set moFrmRicerca = New frmRicerca
     Set moFrmRicerca.frmCaller = Me
     moFrmRicerca.Titolo = "Ricerca Notifiche"
     moFrmRicerca.tipo = "Ricerca"
@@ -1576,7 +1576,7 @@ Private Sub CmdRicerca_Click()
     moFrmRicerca.DefaultOrder = "Order By DataRegistrazione DESC, NumOrdinamento"
     moFrmRicerca.NCol = IIf(isUnep, 8, 7)
     moFrmRicerca.PosizioneCodice = 9
-    moFrmRicerca.Tabella = getCurrentTable()
+    moFrmRicerca.tabella = getCurrentTable()
     moFrmRicerca.isUnep = isUnep
     
     

@@ -352,7 +352,7 @@ Private m_Avvocato As String
 Private WithEvents moFilterManager As CFilterManager
 Attribute moFilterManager.VB_VarHelpID = -1
 Public TrasferimentoOK As Boolean
-Public IsUnep As Boolean
+Public isUnep As Boolean
 
 
 Private Sub ChkAbilitaAnteDef_Click()
@@ -432,11 +432,13 @@ Private Sub CmdOK_Click()
 
     
     Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, _
-                             Chk(0), Chk(2), Chk(1), Chk(3), prov, False
+                             Chk(0), Chk(2), Chk(1), Chk(3), prov, False, 0
            
     
     If Not GetADORecordset("PrtEstrattoConto", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
         If OptTipoStampa(0).value = True Or ChkAbilitaAnteDef.value = True Then
+            Dim fb As New FileBackuoHelper
+            fb.BackUp g_Settings.AtapUserBackupFolder
             GestStampaDefinitiva
         Else
       
@@ -527,7 +529,7 @@ g_Settings.DBConnection.Execute ("UPDATE Date_EstrattiConto SET DATA_ULTIMO_ESTC
     
 End Sub
 Public Sub AggiornaSaldo(rsAssegni As ADODB.Recordset)
-On Error GoTo FINE
+On Error GoTo fine
 Dim saldo As Double
 Dim saldoPrec As Double
 Dim dataEC As String
@@ -574,7 +576,7 @@ Dim rs As ADODB.Recordset
  End If
  g_Settings.DBConnection.Execute SQL
  Exit Sub
-FINE:
+fine:
  MsgBox err.Description & vbCrLf & SQL
  
 End Sub
@@ -628,23 +630,23 @@ End If
 'TabellaRPT.Close
 
 End Sub
-Public Sub aggiornaFattura(ByRef nFat As Long, codice As String, data As String, adempi As Double, _
+Public Sub aggiornaFattura(ByRef nFat As Long, codice As String, Data As String, adempi As Double, _
                             decreti As Double, Notifiche As Double, stratti As Double)
 Dim SQL As String
 Dim rs As ADODB.Recordset
 If codice = "525/158" Then
  Debug.Print "Errore"
 End If
-If GetADORecordset("StoricoFatture", "*", "codAVV='" & codice & "' and DATAFATTURA='" & Format(data, "yyyymmdd") & "'", g_Settings.DBConnection) Is Nothing Then
+If GetADORecordset("StoricoFatture", "*", "codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "'", g_Settings.DBConnection) Is Nothing Then
      Set rs = GetADORecordset("AnagraficaAvvocati", "*", "codAVV='" & codice & "'", g_Settings.DBConnection)
      
      If rs!AFAT <> "S" Then Exit Sub
      
      SQL = "INSERT INTO StoricoFatture (numOrdinamento,NOME,INDIRI,LOCALI,PROV,CAP,PIVA,codAvv," & _
-           "NumeroFattura,DataFattura,DataFatturaNormale,Valuta,ImportoIva,CompAdempEuro,CompDecrIngEuro,CompNotifEuro,CompSfpgEuro) " & _
+           "NumeroFattura,DataFattura,DataFatturaNormale,Valuta,ImportoIva,CodIVA, CompAdempEuro,CompDecrIngEuro,CompNotifEuro,CompSfpgEuro) " & _
            "VALUES (" & rs!numOrdinamento & ",'" & Replace(Left(rs!nome, 40), "'", "''") & "','" & Replace(Left(rs!INDIRI, 40), "'", "''") & "','" & Replace(Left(rs!LOCALI, 35), "'", "''") & _
            "','" & rs!prov & "','" & rs!CAP & "','" & rs!PIVA & "','" & codice & "'," & nFat & _
-           ",'" & Format(data, "yyyymmdd") & "','" & data & "','E',20," & Str(adempi) & "," & Str(decreti) & "," & Str(Notifiche) & "," & Str(stratti) & ");"
+           ",'" & Format(Data, "yyyymmdd") & "','" & Data & "','E'," & g_Settings.IVA & ",'" & g_Settings.CodIVA & "'," & Str(adempi) & "," & Str(decreti) & "," & Str(Notifiche) & "," & Str(stratti) & ");"
            nFat = nFat + 1
    Else
      SQL = "UPDATE StoricoFatture SET " & _
@@ -652,13 +654,13 @@ If GetADORecordset("StoricoFatture", "*", "codAVV='" & codice & "' and DATAFATTU
            ",CompDecrIngEuro=CompDecrIngEuro+" & Str(decreti) & _
            ",CompNotifEuro=CompNotifEuro+" & Str(Notifiche) & _
            ",CompSfpgEuro=CompSfpgEuro+" & Str(stratti) & _
-           " WHERE codAVV='" & codice & "' and DATAFATTURA='" & data & "';"
+           " WHERE codAVV='" & codice & "' and DATAFATTURA='" & Data & "';"
    
 End If
 g_Settings.DBConnection.Execute SQL
 
 End Sub
-Public Sub GeneraFattura(Numero As Integer, data As Date)
+Public Sub GeneraFattura(Numero As Integer, Data As Date)
 Dim nFat As Long
 Dim ValEuro As Variant
 Dim Query As String
@@ -690,7 +692,7 @@ While Not rsEstratto.EOF
  If rsEstratto(0) <> codice Then
    
    If adempi + decreti + Notifiche + sfratti > 0 Then
-     aggiornaFattura nFat, codice, "" & data, adempi, decreti, Notifiche, sfratti
+     aggiornaFattura nFat, codice, "" & Data, adempi, decreti, Notifiche, sfratti
         codice = rsEstratto(0)
         adempi = 0
         decreti = 0
@@ -709,7 +711,7 @@ While Not rsEstratto.EOF
  rsEstratto.MoveNext
 Wend
 If adempi + decreti + Notifiche + sfratti > 0 Then
-     aggiornaFattura nFat, codice, "" & data, adempi, decreti, Notifiche, sfratti
+     aggiornaFattura nFat, codice, "" & Data, adempi, decreti, Notifiche, sfratti
 End If
 End Sub
 Private Sub SalvaSaldiTemporanei()
@@ -717,7 +719,7 @@ Private Sub SalvaSaldiTemporanei()
 Dim qry As String
 
 Dim sp1, sp3, sp5 As Double
-On Error GoTo FINE
+On Error GoTo fine
 
 
 'Reset PrtEstrattoConto
@@ -731,7 +733,7 @@ qry = GetQuerySaldi("TempSaldi", " >= ")
 g_Settings.DBConnection.Execute qry
 
 Exit Sub
-FINE:
+fine:
  MsgBox err.Description
 
 End Sub
@@ -740,7 +742,7 @@ Private Sub CreaTabAssegni()
 Dim qry As String
 
 Dim sp1, sp3, sp5 As Double
-On Error GoTo FINE
+On Error GoTo fine
 
 
 'Reset PrtEstrattoConto
@@ -749,7 +751,7 @@ g_Settings.DBConnection.Execute qry
 qry = GetQuerySaldi("PrtAssegniCircolari", " >= ")
 g_Settings.DBConnection.Execute qry
 Exit Sub
-FINE:
+fine:
  MsgBox err.Description
 
 End Sub
@@ -829,7 +831,7 @@ Dim MSG_Avviso, Response As Variant
                         UpdateDataUltimoEstConto
                         
                         AggiornaTabellaSaldi
-                        ImpostazioniFatturazione.IsUnep = False
+                        ImpostazioniFatturazione.isUnep = False
                         ImpostazioniFatturazione.Show
                     End If
                End If

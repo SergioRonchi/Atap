@@ -1,9 +1,9 @@
 Attribute VB_Name = "libRST"
 Option Explicit
 
-Declare Function OpenProcess Lib "Kernel32" (ByVal dwDesiredAccess As Long, _
+Declare Function OpenProcess Lib "kernel32" (ByVal dwDesiredAccess As Long, _
                                                 ByVal bInheritHandle As Long, ByVal dwProcessId As Long) As Long
-Declare Function CloseHandle Lib "Kernel32" (ByVal hObject As Long) As Long
+Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
 Declare Sub Sleep Lib "kernel32.dll" (ByVal dwMilliseconds As Long)
 Public Function SafeMakeDir(D As String)
  If Dir(D, vbDirectory) = "" Then
@@ -16,10 +16,10 @@ If Dir(f) <> "" Then Kill f
 esci:
 End Function
 
-Public Sub formattaSaldo(lbl As Label, X As Double)
-lbl.Caption = Format(X, "##,##0.00")
+Public Sub formattaSaldo(lbl As Label, x As Double)
+lbl.Caption = Format(x, "##,##0.00")
 
-If X < 0 Then lbl.ForeColor = RGB(255, 0, 0) Else lbl.ForeColor = RGB(0, 0, 255)
+If x < 0 Then lbl.ForeColor = RGB(255, 0, 0) Else lbl.ForeColor = RGB(0, 0, 255)
 
 End Sub
 Public Function getPath(s As String) As String
@@ -53,19 +53,19 @@ Public Sub RiempiTestata(frm As Form, rs As ADODB.Recordset)
     frm.LblDescrCodAvv.Caption = rs!nome
     frm.TxtCodiceAvvocato = rs!codAvv
 End Sub
-Public Function ExistMDBTable(cn As ADODB.Connection, table As String)
+Public Function ExistMDBTable(CN As ADODB.Connection, table As String)
 
 On Local Error Resume Next
-cn.Execute ("SELECT * FROM " & table)
+CN.Execute ("SELECT * FROM " & table)
 ExistMDBTable = (err.Number = 0)
 err.Clear
 
 End Function
-Public Function ExistMDBField(cn As ADODB.Connection, table As String, Field As String)
+Public Function ExistMDBField(CN As ADODB.Connection, table As String, Field As String)
 Dim rsX As ADODB.Recordset
 On Local Error Resume Next
 err.Clear
-cn.Execute ("SELECT " & Field & " FROM " & table)
+CN.Execute ("SELECT " & Field & " FROM " & table)
 ExistMDBField = (err.Number = 0)
 err.Clear
 rsX.Close
@@ -81,7 +81,7 @@ Public Sub Caricacampi(frm As Form, rs As ADODB.Recordset, Optional noLabel As B
 Dim c As Control
 Dim i As Integer
 Dim r
-Dim X
+Dim x
   For Each c In frm.Controls
  
         If TypeOf c Is Label And noLabel = False Then
@@ -146,7 +146,7 @@ End Sub
 Public Sub CloseAllForms()
 Dim i As Integer
 
-For i = 0 To Forms.Count - 1
+For i = 0 To Forms.count - 1
   If Forms(i).name <> "Atap" And Forms(i).name <> "frmback" Then Unload Forms(i)
 Next i
 End Sub
@@ -154,7 +154,7 @@ Public Function FindForm(ByVal form_name As String) As Boolean
     Dim i As Integer
    
     ' Search the loaded forms.
-    For i = 0 To Forms.Count - 1
+    For i = 0 To Forms.count - 1
         If Forms(i).name = form_name Then
          
             FindForm = True
@@ -200,8 +200,8 @@ Public Function GetADORecordset(table As String, Fields As String, Where As Stri
  End If
 End Function
 
-Public Function SalvaRecord(frm As Form, tipo As TipoAzione, tabella As String, Progressivo As Boolean, Optional Where As String, Optional noLabel As Boolean) As Boolean
-On Error GoTo FINE
+Public Function SalvaRecord(frm As Form, tipo As TipoAzione, Tabella As String, Progressivo As Boolean, Optional Where As String, Optional noLabel As Boolean) As Boolean
+On Error GoTo fine
 Dim SQL As String
 Dim c As Control
 Dim codTribunale As String
@@ -210,8 +210,8 @@ tipo = UCase(tipo)
 g_Settings.DBConnection.BeginTrans
 If tipo = TipoAzione.Nuovo Then
   
-        If Progressivo Then frm.LblNumeroAtto = val(GetADOValue(tabella, "MAX(" & frm.Tag & ")", "Left(DataRegistrazione,4)='" & Format(frm.txtDataReg, "YYYY") & "' AND CodTribunaleApp='" & codTribunale & "'", g_Settings.DBConnection)) + 1
-          SQL = "INSERT INTO " & tabella & " ("
+        If Progressivo Then frm.LblNumeroAtto = val(GetADOValue(Tabella, "MAX(" & frm.Tag & ")", "Left(DataRegistrazione,4)='" & Format(frm.txtDataReg, "YYYY") & "' AND CodTribunaleApp='" & codTribunale & "'", g_Settings.DBConnection)) + 1
+          SQL = "INSERT INTO " & Tabella & " ("
           For Each c In frm.Controls
             If TypeOf c Is TextBox Or TypeOf c Is TDBNumber Or TypeOf c Is TDBDate Or TypeOf c Is TDBCombo Or TypeOf c Is ComboBox Or TypeOf c Is CheckBox Or (TypeOf c Is Label And noLabel = False) Then
                 If c.DataField <> "" And c.Tag <> "XXX" Then
@@ -259,7 +259,7 @@ If tipo = TipoAzione.Nuovo Then
          Next
            SQL = Left(SQL, Len(SQL) - 1) & ")"
 Else
-             SQL = "UPDATE " & tabella & " SET "
+             SQL = "UPDATE " & Tabella & " SET "
             
              
             For Each c In frm.Controls
@@ -310,14 +310,14 @@ Else
     End If
     'Ultimo controllo sul lock delle tabelle
     If tipo = TipoAzione.Nuovo Then
-      If IsTableLocked(tabella) Then
+      If IsTableLocked(Tabella) Then
         SQL = ""
-        err.Raise 1, tabella, "Tabella " & tabella & " bloccata da un altro utente."
+        err.Raise 1, Tabella, "Tabella " & Tabella & " bloccata da un altro utente."
       End If
     Else
-      If IsRecordLocked(Where, tabella) Then
+      If IsRecordLocked(Where, Tabella) Then
         SQL = ""
-        err.Raise 1, tabella, "Record della " & tabella & " bloccato da un altro utente."
+        err.Raise 1, Tabella, "Record della " & Tabella & " bloccato da un altro utente."
       End If
     End If
     
@@ -327,10 +327,10 @@ Else
     SalvaRecord = True
     g_Settings.DBConnection.CommitTrans
     Exit Function
-FINE:
+fine:
    If err.Number = -2147467259 Then 'Indice duplicato
      If Progressivo Then
-        frm.LblNumeroAtto = val(GetADOValue(tabella, "MAX(" & frm.Tag & ")", "Left(DataRegistrazione,4)='" & Format(frm.txtDataReg, "YYYY") & "' AND CodTribunaleApp='" & codTribunale & "'", g_Settings.DBConnection)) + 1
+        frm.LblNumeroAtto = val(GetADOValue(Tabella, "MAX(" & frm.Tag & ")", "Left(DataRegistrazione,4)='" & Format(frm.txtDataReg, "YYYY") & "' AND CodTribunaleApp='" & codTribunale & "'", g_Settings.DBConnection)) + 1
         MsgBox "Indice Duplicato!! " & vbCrLf & "Il sistema ha variato automaticamante il numero progressivo." & vbCrLf & "Riprovare premendo di nuovo su <Modifica>", vbOKOnly + vbInformation, "Atap"
        Else
         MsgBox "Indice Duplicato: la tabella contiene valori che non possono essere duplicati!! " & vbCrLf & "Ad esempio il codice deve essere univoco. " & vbCrLf & "Apportare le modifiche necessarie e riprovare.", vbOKOnly + vbInformation
@@ -369,7 +369,7 @@ End Select
 
 
 End Sub
-Public Function SalvaTutto(frm As Form, tabella As String, sWhere As String, Optional isUnep As Boolean) As Boolean
+Public Function SalvaTutto(frm As Form, Tabella As String, sWhere As String, Optional isUnep As Boolean) As Boolean
 Dim e As String
 Dim XXX As Boolean
 Dim Response
@@ -379,14 +379,14 @@ If e = "" Then
               'voce nuova
                 Response = MsgBox("Vuoi salvare i dati inseriti?", vbYesNo + vbInformation + vbDefaultButton2, "Attenzione")
                 If Response = vbYes Then    ' User chose Yes.
-                  XXX = SalvaRecord(frm, frm.Azione, tabella, True)
+                  XXX = SalvaRecord(frm, frm.Azione, Tabella, True)
                   
                 End If
              Else
               'modifica
                 Response = MsgBox("Vuoi salvare le modifiche effettuate?", vbYesNo + vbInformation + vbDefaultButton2, "Attenzione")
                 If Response = vbYes Then    ' User chose Yes.
-                  XXX = SalvaRecord(frm, frm.Azione, tabella, True, sWhere)
+                  XXX = SalvaRecord(frm, frm.Azione, Tabella, True, sWhere)
                   
                 End If
             End If
@@ -492,7 +492,7 @@ fN = FreeFile
     End If
 
 End Sub
-Function CheckCodFiscPIva(code As String) As Boolean
+Function CheckCodFiscPIva(Code As String) As Boolean
     Dim A, b, c, DECODE, valori, nro, trasfrom, trasto
     Dim i As Integer
     valori = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -500,16 +500,16 @@ Function CheckCodFiscPIva(code As String) As Boolean
     trasfrom = "0123456789"
     trasto = "0246813579"
     nro = 0
-    If Len(Trim(code)) <> 16 And Len(Trim(code)) <> 11 Then
+    If Len(Trim(Code)) <> 16 And Len(Trim(Code)) <> 11 Then
         'MsgBox ("Lunghezza non corretta")
         MsgBox ("Lunghezza P/IVA o C/FISCALE non corretti!" + vbCrLf), vbQuestion
         Exit Function
     End If
     'controllo codice fiscale
-    If Len(Trim(code)) = 16 Then
+    If Len(Trim(Code)) = 16 Then
       i = 1
       Do While i < 16
-        A = Mid(code, i, 1)
+        A = Mid(Code, i, 1)
         c = InStr(valori, A)
         If c = 0 Then
           'MsgBox ("Codice Fiscale contiene caratteri non corretti!" + vbCrLf), vbQuestion
@@ -526,7 +526,7 @@ Function CheckCodFiscPIva(code As String) As Boolean
         i = i + 1
       Loop
       nro = nro - Int(nro / 26) * 26 + 1
-      If Mid(code, 16, 1) = Mid(valori, nro, 1) Then
+      If Mid(Code, 16, 1) = Mid(valori, nro, 1) Then
         CheckCodFiscPIva = True
       Else
         'MsgBox ("Codice Fiscale non corretto!" + vbCrLf), vbQuestion
@@ -540,7 +540,7 @@ Function CheckCodFiscPIva(code As String) As Boolean
     '
     i = 1
     Do While i < 12
-        A = Mid(code, i, 1)
+        A = Mid(Code, i, 1)
         c = InStr(trasfrom, A)
         If c = 0 Then
             'MsgBox ("Partita IVA contiene caratteri non corretti!" + vbCrLf), vbQuestion
@@ -552,7 +552,7 @@ Function CheckCodFiscPIva(code As String) As Boolean
         If b = i Then
             nro = nro + val(Mid(trasto, c, 1))
         Else
-            nro = nro + val(Mid(code, i, 1))
+            nro = nro + val(Mid(Code, i, 1))
         End If
         i = i + 1
     Loop
@@ -598,16 +598,3 @@ Public Function Bisestile(A As Integer) As Boolean
   Bisestile = ((A Mod 4 = 0) And (A Mod 100 <> 0)) Or (A Mod 400 = 0)
 End Function
 
-Function ShellAndWait(ByVal strProg As String, ByVal lStyle As VbAppWinStyle)
-   Dim ProcessId As Long
-   Dim ProcessHandle As Long
-   Const Access As Long = &H100000
-   ProcessId = Shell(strProg, lStyle)
-   Do
-      ProcessHandle = OpenProcess(Access, False, ProcessId)
-      If ProcessHandle <> 0 Then
-         CloseHandle ProcessHandle
-      End If
-      DoEvents
-   Loop Until ProcessHandle = 0
-End Function

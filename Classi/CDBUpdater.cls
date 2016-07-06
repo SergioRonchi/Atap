@@ -288,6 +288,7 @@ While Not rs.EOF
   
 Wend
 
+' UNEP
 '-----------------------------------------------------------------------------------------------------------------------------------------
 If Not ExistMDBField(cn, "Sfratti", "Crono") Then
   cn.Execute "ALTER TABLE Sfratti ADD COLUMN IsUNEP Logical"
@@ -466,7 +467,34 @@ If Not ExistMDBField(cn, "Parametri", "Telefono") Then
   
 End If
 
+If Not ExistMDBField(cn, "Parametri", "CodIVA") Then
+  cn.Execute "ALTER TABLE  Parametri ADD COLUMN CodIVA TEXT(5)"
+  cn.Execute "UPDATE Parametri SET  CodIVA='022'"
+  
+  
+  cn.Execute "ALTER TABLE  StoricoFatture ADD COLUMN CodIVA TEXT(5)"
+  cn.Execute "UPDATE StoricoFatture SET  CodIVA='022' WHERE DataFattura>='20131001'"
+  cn.Execute "UPDATE StoricoFatture SET  CodIVA='020' WHERE DataFattura<'20131001'"
+  cn.Execute "UPDATE StoricoFatture SET  ImportoIVA=22 WHERE DataFattura>='20131001'"
+  
+  cn.Execute "ALTER TABLE  StoricoFattureUNEP ADD COLUMN CodIVA TEXT(5)"
+  cn.Execute "UPDATE StoricoFattureUNEP SET  CodIVA='022' WHERE DataFattura>='20131001'"
+ 
+End If
 
+
+If Not ExistMDBField(cn, "PrtEstrattoContoUNEP", "Quota") Then
+   cn.Execute "ALTER TABLE  PrtEstrattoContoUNEP ADD COLUMN Quota Double"
+   cn.Execute "ALTER TABLE  TempSaldiUNEP ADD COLUMN Quota Double"
+   cn.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD COLUMN Quota Double"
+   cn.Execute "ALTER TABLE  PrtSospesiUNEP ADD COLUMN Quota Double"
+ 
+End If
+
+If Not ExistMDBField(cn, "PrtAssegniCircolariUNEP", "Quota") Then
+   cn.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD COLUMN Quota Double"
+ 
+End If
 
 End Sub
 

@@ -1,16 +1,16 @@
 Attribute VB_Name = "mdlEstrattiConto"
 Option Explicit
-Public Function isToTransfer(tabella As String, schema As String) As Boolean
+Public Function isToTransfer(Tabella As String, schema As String) As Boolean
  isToTransfer = True
- tabella = UCase(tabella)
+ Tabella = UCase(Tabella)
  
- If tabella = "ADEMPI" Then isToTransfer = (InStr(1, schema, "A") <> 0)
- If tabella = "NOTIFICHE" Then isToTransfer = (InStr(1, schema, "N") <> 0)
- If tabella = "SFRATTI" Then isToTransfer = (InStr(1, schema, "S") <> 0)
- If tabella = "DECRETIINGIUNTIVI" Then isToTransfer = (InStr(1, schema, "D") <> 0)
+ If Tabella = "ADEMPI" Then isToTransfer = (InStr(1, schema, "A") <> 0)
+ If Tabella = "NOTIFICHE" Then isToTransfer = (InStr(1, schema, "N") <> 0)
+ If Tabella = "SFRATTI" Then isToTransfer = (InStr(1, schema, "S") <> 0)
+ If Tabella = "DECRETIINGIUNTIVI" Then isToTransfer = (InStr(1, schema, "D") <> 0)
 
- If tabella = "NOTIFICHE_UNEP" Then isToTransfer = (InStr(1, schema, "N") <> 0)
- If tabella = "SFRATTI_UNEP" Then isToTransfer = (InStr(1, schema, "S") <> 0)
+ If Tabella = "NOTIFICHE_UNEP" Then isToTransfer = (InStr(1, schema, "N") <> 0)
+ If Tabella = "SFRATTI_UNEP" Then isToTransfer = (InStr(1, schema, "S") <> 0)
 End Function
 Public Function GetFreeFile(NomeFile As String) As String
  Dim i As Integer
@@ -25,10 +25,10 @@ Public Function GetFreeFile(NomeFile As String) As String
 End Function
 Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String, isUnep As Boolean, Optional codAvv As String, Optional schema As String) As Boolean
   Dim rsTable As ADODB.Recordset
-  Dim SQL As String, tabella As String
+  Dim SQL As String, Tabella As String
   Dim sqlDEL As String
   Dim anno As String
-  Dim data As Boolean
+  Dim Data As Boolean
   Dim isUnepTable As Boolean
   Dim sWhere As String
   Dim isCodAvv As Boolean
@@ -68,27 +68,27 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
      
       While Not rsTable.EOF
         
-          tabella = rsTable!TABLE_NAME
-          isUnepTable = UCase(tabella) = "SFRATTI_UNEP" Or UCase(tabella) = "NOTIFICHE_UNEP"
-          If UCase(Left(tabella, 3)) <> "QRY" Then
-                    data = False
+          Tabella = rsTable!TABLE_NAME
+          isUnepTable = UCase(Tabella) = "SFRATTI_UNEP" Or UCase(Tabella) = "NOTIFICHE_UNEP"
+          If UCase(Left(Tabella, 3)) <> "QRY" Then
+                    Data = False
                     isCodAvv = False
                     
-                    If Left(tabella, 4) <> "MSys" And UCase(Left(tabella, 4)) <> "TEMP" And UCase(tabella) <> "TAB_NOTE" And UCase(Left(tabella, 4)) <> "~TMP" And UCase(Left(tabella, 3)) <> "qry" Then
+                    If Left(Tabella, 4) <> "MSys" And UCase(Left(Tabella, 4)) <> "TEMP" And UCase(Tabella) <> "TAB_NOTE" And UCase(Left(Tabella, 4)) <> "~TMP" And UCase(Left(Tabella, 3)) <> "qry" Then
                             Do
-                              If UCase(rsTable!COLUMN_NAME) = "DATAEVASIONEPRATICA" Then data = True
+                              If UCase(rsTable!COLUMN_NAME) = "DATAEVASIONEPRATICA" Then Data = True
                               If UCase(rsTable!COLUMN_NAME) = "CODAVV" Then isCodAvv = True
                               
                               rsTable.MoveNext
                               If rsTable.EOF Then Exit Do
-                            Loop While rsTable!TABLE_NAME = tabella
+                            Loop While rsTable!TABLE_NAME = Tabella
                             
-                            If data Then
-                                SQL = "SELECT *  INTO [" & tabella & "] IN '" & NomeFile & "' FROM [" & tabella & "]" & _
+                            If Data Then
+                                SQL = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]" & _
                                           " WHERE DataEvasionePratica>='" & Da & "' AND DataEvasionePratica<='" & A & "' "
                                 If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
 
-                                        sqlDEL = "DELETE * FROM [" & tabella & "] WHERE DataEvasionePratica>='" & Da & "' AND DataEvasionePratica<='" & A & "'"
+                                        sqlDEL = "DELETE * FROM [" & Tabella & "] WHERE DataEvasionePratica>='" & Da & "' AND DataEvasionePratica<='" & A & "'"
                                    Else
                                           
                                         sqlDEL = ""
@@ -96,26 +96,26 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                
                                
                               Else
-                                SQL = "SELECT *  INTO [" & tabella & "] IN '" & NomeFile & "' FROM [" & tabella & "]"
+                                SQL = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]"
                                 sqlDEL = ""
                             End If
                             If isCodAvv And codAvv <> "" Then
-                               If data Then
-                                 SQL = SQL & " AND [" & tabella & "].CodAvv='" & codAvv & "'"
+                               If Data Then
+                                 SQL = SQL & " AND [" & Tabella & "].CodAvv='" & codAvv & "'"
                                     If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
-                                        sqlDEL = sqlDEL & " AND [" & tabella & "].CodAvv='" & codAvv & "'"
+                                        sqlDEL = sqlDEL & " AND [" & Tabella & "].CodAvv='" & codAvv & "'"
                                     Else
                                         sqlDEL = ""
                                     End If
                                    Else
-                                    SQL = SQL & " WHERE [" & tabella & "].CodAvv='" & codAvv & "'"
+                                    SQL = SQL & " WHERE [" & Tabella & "].CodAvv='" & codAvv & "'"
                                     sqlDEL = ""
                                End If
                             End If
                             
-                            If Not isToTransfer(tabella, schema) Then
-                              SQL = SQL & " AND [" & tabella & "].CodAvv='XXXXX'"
-                              If sqlDEL <> "" Then sqlDEL = sqlDEL & " AND [" & tabella & "].CodAvv='XXXXX'"
+                            If Not isToTransfer(Tabella, schema) Then
+                              SQL = SQL & " AND [" & Tabella & "].CodAvv='XXXXX'"
+                              If sqlDEL <> "" Then sqlDEL = sqlDEL & " AND [" & Tabella & "].CodAvv='XXXXX'"
                             End If
                             g_Settings.DBConnection.Execute SQL
                             
@@ -254,17 +254,17 @@ Public Function getQryDecreti(isUnep As Boolean, tipo As String, Da As String, A
 End Function
 
 
-Public Function getQryNotifiche(isUnep As Boolean, tipo As String, Da As String, A As String, provvisorio As String, Optional Sospeso As Boolean) As String
+Public Function getQryNotifiche(tipoBimestre As Integer, isUnep As Boolean, tipo As String, Da As String, A As String, provvisorio As String, Optional Sospeso As Boolean) As String
     ' Notifiche
     Dim qrySQL As String
     Dim sSaldi As String
-    Dim tabella As String
+    Dim Tabella As String
     If isUnep Then
       sSaldi = "SaldiUNEP"
-      tabella = "NOTIFICHE_UNEP"
+      Tabella = "NOTIFICHE_UNEP"
     Else
      sSaldi = "Saldi"
-     tabella = "NOTIFICHE"
+     Tabella = "NOTIFICHE"
     End If
     qrySQL = "SELECT AnagraficaAvvocati.CODAVV, AnagraficaAvvocati.NOME, AnagraficaAvvocati.INDIRI, AnagraficaAvvocati.LOCALI, "
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, NumeroAtto, "
@@ -294,14 +294,18 @@ Public Function getQryNotifiche(isUnep As Boolean, tipo As String, Da As String,
     End If
     qrySQL = qrySQL & "TribunaliAppartenenza.DescrizioneTribunale, " & sSaldi & ".SaldoTotaleEuro," & sSaldi & ".PROG_Saldi +1,'" + Format(Now, "dd/mm/yyyy") + "',"
     qrySQL = qrySQL & "'E','" & provvisorio & "','" & Da & "','" & A & "', Parte1, Parte2, 'Notifiche', ImpDepositoE,AnagraficaAvvocati.NumOrdinamento,Left(Localita1,18), Note    "
-    qrySQL = qrySQL & "FROM " & sSaldi & " INNER JOIN ((" & tabella & " INNER JOIN AnagraficaAvvocati ON " & tabella & ".CODAVV = AnagraficaAvvocati.CODAVV) INNER JOIN TribunaliAppartenenza ON "
-    qrySQL = qrySQL & "" & tabella & ".CodTribunaleApp = TribunaliAppartenenza.CodiceTribunale) ON " & sSaldi & ".Codice = " & tabella & ".CODAVV "
+    If isUnep Then
+      qrySQL = qrySQL & ", 0 as Quota "
+      'qrySQL = qrySQL & "," & FixDouble(IIf(tipoBimestre = 2, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)) & " as Quota "
+    End If
+    qrySQL = qrySQL & "FROM " & sSaldi & " INNER JOIN ((" & Tabella & " INNER JOIN AnagraficaAvvocati ON " & Tabella & ".CODAVV = AnagraficaAvvocati.CODAVV) INNER JOIN TribunaliAppartenenza ON "
+    qrySQL = qrySQL & "" & Tabella & ".CodTribunaleApp = TribunaliAppartenenza.CodiceTribunale) ON " & sSaldi & ".Codice = " & Tabella & ".CODAVV "
 
     
     If Sospeso Then
-              qrySQL = qrySQL & "WHERE ((" & tabella & ".DataEvasionePratica)='') AND ((" & tabella & ".Annullo)='V') "
+              qrySQL = qrySQL & "WHERE ((" & Tabella & ".DataEvasionePratica)='') AND ((" & Tabella & ".Annullo)='V') "
      Else
-              qrySQL = qrySQL & "WHERE ((" & tabella & ".DataEvasionePratica)<>'') AND ((" & tabella & ".Annullo)='V') "
+              qrySQL = qrySQL & "WHERE ((" & Tabella & ".DataEvasionePratica)<>'') AND ((" & Tabella & ".Annullo)='V') "
     End If
 
     getQryNotifiche = qrySQL
@@ -309,17 +313,17 @@ Public Function getQryNotifiche(isUnep As Boolean, tipo As String, Da As String,
 End Function
 
 
-Public Function getQrySfratti(isUnep As Boolean, tipo As String, Da As String, A As String, provvisorio As String, Optional Sospeso As Boolean) As String
+Public Function getQrySfratti(tipoBimestre As Integer, isUnep As Boolean, tipo As String, Da As String, A As String, provvisorio As String, Optional Sospeso As Boolean) As String
     ' Sfratti
     Dim qrySQL As String
      Dim sSaldi As String
-    Dim tabella As String
+    Dim Tabella As String
     If isUnep Then
       sSaldi = "SaldiUNEP"
-      tabella = "SFRATTI_UNEP"
+      Tabella = "SFRATTI_UNEP"
     Else
       sSaldi = "Saldi"
-      tabella = "SFRATTI"
+      Tabella = "SFRATTI"
     End If
     qrySQL = "SELECT AnagraficaAvvocati.CODAVV, AnagraficaAvvocati.NOME, AnagraficaAvvocati.INDIRI, AnagraficaAvvocati.LOCALI, "
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, NumeroAtto, "
@@ -347,14 +351,18 @@ Public Function getQrySfratti(isUnep As Boolean, tipo As String, Da As String, A
     End If
     qrySQL = qrySQL & "TribunaliAppartenenza.DescrizioneTribunale, " & sSaldi & ".SaldoTotaleEuro," & sSaldi & ".PROG_Saldi +1,'" + Format(Now, "dd/mm/yyyy") + "',"
     qrySQL = qrySQL & "'E','" & provvisorio & "','" & Da & "','" & A & "', Parte1, Parte2, 'Sfratti/Pignoramenti', ImpDepositoE,AnagraficaAvvocati.NumOrdinamento,Left(Localita1,35)    "
-    qrySQL = qrySQL & " FROM " & sSaldi & " INNER JOIN ((" & tabella & " INNER JOIN AnagraficaAvvocati ON " & tabella & ".CODAVV = "
-    qrySQL = qrySQL & " AnagraficaAvvocati.CODAVV) INNER JOIN TribunaliAppartenenza ON " & tabella & ".CodTribunaleApp "
-    qrySQL = qrySQL & " = TribunaliAppartenenza.CodiceTribunale) ON " & sSaldi & ".Codice = " & tabella & ".CODAVV "
+    If isUnep Then
+      qrySQL = qrySQL & ", 0 as Quota "
+      'qrySQL = qrySQL & "," & FixDouble(IIf(tipoBimestre = 2, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)) & " as Quota "
+    End If
+    qrySQL = qrySQL & " FROM " & sSaldi & " INNER JOIN ((" & Tabella & " INNER JOIN AnagraficaAvvocati ON " & Tabella & ".CODAVV = "
+    qrySQL = qrySQL & " AnagraficaAvvocati.CODAVV) INNER JOIN TribunaliAppartenenza ON " & Tabella & ".CodTribunaleApp "
+    qrySQL = qrySQL & " = TribunaliAppartenenza.CodiceTribunale) ON " & sSaldi & ".Codice = " & Tabella & ".CODAVV "
     
     If Sospeso Then
-              qrySQL = qrySQL & " WHERE (((" & tabella & ".DataEvasionePratica)='') AND ((" & tabella & ".Annullo)='V'))"
+              qrySQL = qrySQL & " WHERE (((" & Tabella & ".DataEvasionePratica)='') AND ((" & Tabella & ".Annullo)='V'))"
      Else
-              qrySQL = qrySQL & " WHERE (((" & tabella & ".DataEvasionePratica)<>'') AND ((" & tabella & ".Annullo)='V'))"
+              qrySQL = qrySQL & " WHERE (((" & Tabella & ".DataEvasionePratica)<>'') AND ((" & Tabella & ".Annullo)='V'))"
     End If
     
     
@@ -363,10 +371,10 @@ Public Function getQrySfratti(isUnep As Boolean, tipo As String, Da As String, A
 End Function
 
 
-Public Sub update_EstConto_Adempimenti(tabella As String, qrySQL As String)
+Public Sub update_EstConto_Adempimenti(Tabella As String, qrySQL As String)
     Dim sqlUpdate As String
     
-    sqlUpdate = "INSERT INTO " & tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
+    sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
                 "DEPOSITO,SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
                 "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE, DATA_EVASIONE,DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
                 "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA,NumOrdinamento) " & _
@@ -378,10 +386,10 @@ End Sub
 
 
 
-Public Sub update_EstConto_Decreti(tabella As String, qrySQL As String)
+Public Sub update_EstConto_Decreti(Tabella As String, qrySQL As String)
     Dim sqlUpdate As String
     
-    sqlUpdate = "INSERT INTO " & tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
+    sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
                 "SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
                 "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE, DATA_EVASIONE,DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
                 "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA," & _
@@ -391,35 +399,46 @@ Public Sub update_EstConto_Decreti(tabella As String, qrySQL As String)
 End Sub
 
 
-Public Sub update_EstConto_Notifiche(tabella As String, qrySQL As String)
+Public Sub update_EstConto_Notifiche(isUnep As Boolean, Tabella As String, qrySQL As String)
   Dim sqlUpdate As String
-    If tabella = "PrtEstrattoConto" Or tabella = "PrtEstrattoContoUNEP" Then
-    sqlUpdate = "INSERT INTO " & tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
+    If Tabella = "PrtEstrattoConto" Or Tabella = "PrtEstrattoContoUNEP" Then
+        sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
                 "SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
                 "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE,Crono,DATA_EVASIONE, DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
                 "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA," & _
-                "Deposito,NumOrdinamento,Localita1, [Nota] ) " & _
-                qrySQL
+                "Deposito,NumOrdinamento,Localita1, [Nota] "
+                
+          
         Else
-                sqlUpdate = "INSERT INTO " & tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
+         sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
                 "SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
                 "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE,Crono,DATA_EVASIONE, DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
                 "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA," & _
-                "Deposito,NumOrdinamento,Localita1, [Note] ) " & _
-                qrySQL
+                "Deposito,NumOrdinamento,Localita1, [Note] "
+                
+               
      End If
+     If isUnep Then
+        sqlUpdate = sqlUpdate & ", Quota "
+     End If
+     sqlUpdate = sqlUpdate & "  ) " & qrySQL
     g_Settings.DBConnection.Execute sqlUpdate
 End Sub
 
 
-Public Sub update_EstConto_Sfratti(tabella As String, qrySQL As String)
+Public Sub update_EstConto_Sfratti(isUnep As Boolean, Tabella As String, qrySQL As String)
 Dim sqlUpdate As String
-    sqlUpdate = "INSERT INTO " & tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
+    sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
                 "SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
                 "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE,Crono, DATA_EVASIONE,DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
                 "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA," & _
-                "Deposito,NumOrdinamento,Localita1) " & _
-                qrySQL
+                "Deposito,NumOrdinamento,Localita1"
+                
+     If isUnep Then
+        sqlUpdate = sqlUpdate & ", Quota "
+     End If
+     sqlUpdate = sqlUpdate & "  ) " & qrySQL
+              
     g_Settings.DBConnection.Execute sqlUpdate
 End Sub
 
@@ -466,27 +485,73 @@ Set rs = New ADODB.Recordset
 rs.Open qrySQL, g_Settings.DBConnection
 While Not rs.EOF
 
-    update_EstConto_Notifiche "PrtEstrattoContoUNEP", RigaPerAvvocatoSenzaOperazioni(rs(0), importo)
+    update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", RigaPerAvvocatoSenzaOperazioni(rs(0), data1, data2, importo)
     
   rs.MoveNext
 Wend
           
 End Sub
-Public Function RigaPerAvvocatoSenzaOperazioni(codAvv As String, Optional importo As Double) As String
+Public Sub AggiungiAvvocatiQuota(data1 As String, data2 As String, codAvv As String, Optional importo As Double)
 Dim qrySQL As String
+Dim qryApp As String
+Dim qryDelete As String
+Dim qry1, qry2, qry3 As String
+
+    qry1 = ""
+    qry2 = ""
+    qry3 = ""
+    qryApp = ""
+    
+    If data1 <> "" Then
+       qry1 = " AND ( DataEvasionePratica >= '" & Format(data1, "yyyymmdd") & "')"
+    End If
+    If data2 <> "" Then
+        qry2 = " AND ( DataEvasionePratica <= '" & Format(data2, "yyyymmdd") & "')"
+    End If
+    
+    If codAvv <> "" Then
+        qry3 = " AND ( AnagraficaAvvocati.CODAVV = '" & codAvv & "')"
+    End If
+    
+    qryApp = qry1 & qry2 & qry3
+
+ qrySQL = "SELECT  CODAVV FROM ANAGRAFICAAVVOCATI " & _
+          "WHERE STAT='V' AND NOT (CODAVV LIKE '525%' OR CODAVV LIKE '393%') " & _
+          "ORDER BY ANAGRAFICAAVVOCATI.NumOrdinamento"
+          
+Dim rs As ADODB.Recordset
+Set rs = New ADODB.Recordset
+
+rs.Open qrySQL, g_Settings.DBConnection
+While Not rs.EOF
+
+    update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", RigaPerAvvocatoSenzaOperazioni(rs(0), data1, data2, importo)
+    
+  rs.MoveNext
+Wend
+          
+End Sub
+Public Function RigaPerAvvocatoSenzaOperazioni(codAvv As String, data1 As String, data2 As String, Optional importo As Double) As String
+Dim qrySQL As String
+'        sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
+'                "SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
+'                "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE,Crono,DATA_EVASIONE, DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
+'                "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA," & _
+'                "Deposito,NumOrdinamento,Localita1, [Nota] "
+
   qrySQL = "SELECT AnagraficaAvvocati.CODAVV, AnagraficaAvvocati.NOME, AnagraficaAvvocati.INDIRI, AnagraficaAvvocati.LOCALI, "
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, 0, "
-    qrySQL = qrySQL & " 0,'Costo Notifica',0,'', 0,'',0,'',0,'',0,'',0, " & CStr(importo) & ",'','','','','','', "
+    qrySQL = qrySQL & " 0,'Costo Notifica',0,'', 0,'',0,'',0,'',0,'',0, 0,'','','','','','', "
     qrySQL = qrySQL & "'', 0,0,'" + Format(Now, "dd/mm/yyyy") + "',"
-    qrySQL = qrySQL & "'E','','','', '', '', 'Notifiche', 0,AnagraficaAvvocati.NumOrdinamento,'', ''    "
-    qrySQL = qrySQL & "FROM AnagraficaAvvocati WHERE CODAVV='" & codAvv & "'"
+    qrySQL = qrySQL & "'E','','" & data1 & "','" & data2 & "', '', '', 'Notifiche', 0,AnagraficaAvvocati.NumOrdinamento,'', ''," & FixDouble(importo)
+    qrySQL = qrySQL & " FROM AnagraficaAvvocati WHERE CODAVV='" & codAvv & "'"
     
     RigaPerAvvocatoSenzaOperazioni = qrySQL
 End Function
 
 Public Sub Riempi_PRT_EstrattoContoX(data1 As String, data2 As String, codAvv As String, _
                                      adempimenti As Integer, Notifiche As Integer, decreti As Integer, sfratti As Integer, _
-                                     provvisorio As String, isUnep As Boolean)
+                                     provvisorio As String, isUnep As Boolean, tipoBimestre As Integer)
 
 Dim qrySQL As String
 Dim qryApp As String
@@ -540,11 +605,11 @@ On Error GoTo Riempi_PRT_EstrattoConto
     If sfratti = 1 Then
         'Inizio Sfratti
         If isUnep Then
-          qrySQL = getQrySfratti(True, "", data1, data2, provvisorio) & qryApp & "  ORDER BY SFRATTI_UNEP.NumOrdinamento"
-          update_EstConto_Sfratti "PrtEstrattoContoUNEP", qrySQL
+          qrySQL = getQrySfratti(tipoBimestre, True, "", data1, data2, provvisorio) & qryApp & "  ORDER BY SFRATTI_UNEP.NumOrdinamento"
+          update_EstConto_Sfratti True, "PrtEstrattoContoUNEP", qrySQL
         Else
-          qrySQL = getQrySfratti(False, "", data1, data2, provvisorio) & qryApp & "  ORDER BY SFRATTI.NumOrdinamento"
-          update_EstConto_Sfratti "PrtEstrattoConto", qrySQL
+          qrySQL = getQrySfratti(0, False, "", data1, data2, provvisorio) & qryApp & "  ORDER BY SFRATTI.NumOrdinamento"
+          update_EstConto_Sfratti False, "PrtEstrattoConto", qrySQL
         End If
     
         
@@ -556,11 +621,11 @@ On Error GoTo Riempi_PRT_EstrattoConto
     If Notifiche = 1 Then
             'Inizio Notifiche
         If isUnep Then
-          qrySQL = getQryNotifiche(True, "", data1, data2, provvisorio) & qryApp & "  ORDER BY Notifiche_UNEP.NumOrdinamento"
-          update_EstConto_Notifiche "PrtEstrattoContoUNEP", qrySQL
+          qrySQL = getQryNotifiche(tipoBimestre, True, "", data1, data2, provvisorio) & qryApp & "  ORDER BY Notifiche_UNEP.NumOrdinamento"
+          update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", qrySQL
         Else
-          qrySQL = getQryNotifiche(False, "", data1, data2, provvisorio) & qryApp & "  ORDER BY Notifiche.NumOrdinamento"
-          update_EstConto_Notifiche "PrtEstrattoConto", qrySQL
+          qrySQL = getQryNotifiche(0, False, "", data1, data2, provvisorio) & qryApp & "  ORDER BY Notifiche.NumOrdinamento"
+          update_EstConto_Notifiche False, "PrtEstrattoConto", qrySQL
 
         End If
              
@@ -590,7 +655,7 @@ End Sub
 
 Public Sub Riempi_PRT_Sospesi(data1 As String, data2 As String, codAvv As String, _
                               codTribunale As String, codAttività As String, isUnep As Boolean, _
-                              orderByData As Boolean)
+                              orderByData As Boolean, tipoBimestre As Integer)
 
 Dim qrySQL As String
 Dim qryDelete As String
@@ -662,12 +727,12 @@ Dim unepWhere As String
         If isUnep Then currentTable = currentTable & "_UNEP"
         qryAppSfr = qryTrib & qry1 & qry2 & qry3
         If orderByData Then
-         qrySQL = getQrySfratti(isUnep, "Attuale", data1, data1, "S", True) & qryAppSfr & " ORDER BY " & currentTable & ".DataRegistrazione"
+         qrySQL = getQrySfratti(tipoBimestre, isUnep, "Attuale", data1, data1, "S", True) & qryAppSfr & " ORDER BY " & currentTable & ".DataRegistrazione"
         Else
-         qrySQL = getQrySfratti(isUnep, "Attuale", data1, data1, "S", True) & qryAppSfr & " ORDER BY " & currentTable & ".NumOrdinamento"
+         qrySQL = getQrySfratti(tipoBimestre, isUnep, "Attuale", data1, data1, "S", True) & qryAppSfr & " ORDER BY " & currentTable & ".NumOrdinamento"
         End If
         'qrySQL = qrySQL & qryAppSfr
-        update_EstConto_Sfratti table, qrySQL
+        update_EstConto_Sfratti isUnep, table, qrySQL
         UpdateProgress (30)
     End If
     ' Fine Sfratti
@@ -680,11 +745,11 @@ Dim unepWhere As String
         If isUnep Then currentTable = currentTable & "_UNEP"
         qryAppNot = qryTrib & qry1 & qry2 & qry3
         If orderByData Then
-           qrySQL = getQryNotifiche(isUnep, "Attuale", data1, data1, "S", True) & qryAppNot & " ORDER BY " & currentTable & ".DataRegistrazione"
+           qrySQL = getQryNotifiche(tipoBimestre, isUnep, "Attuale", data1, data1, "S", True) & qryAppNot & " ORDER BY " & currentTable & ".DataRegistrazione"
         Else
-            qrySQL = getQryNotifiche(isUnep, "Attuale", data1, data1, "S", True) & qryAppNot & " ORDER BY " & currentTable & ".NumOrdinamento"
+            qrySQL = getQryNotifiche(tipoBimestre, isUnep, "Attuale", data1, data1, "S", True) & qryAppNot & " ORDER BY " & currentTable & ".NumOrdinamento"
         End If
-        update_EstConto_Notifiche table, qrySQL
+        update_EstConto_Notifiche isUnep, table, qrySQL
         UpdateProgress (50)
     End If
     'Fine Notifiche

@@ -3,7 +3,7 @@ Object = "{A49CE0E0-C0F9-11D2-B0EA-00A024695830}#1.0#0"; "tidate8.ocx"
 Begin VB.Form StampaAssCircProvUNEP 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Stampa Assegni Circolari Provvisoria UNEP"
-   ClientHeight    =   3480
+   ClientHeight    =   4440
    ClientLeft      =   45
    ClientTop       =   210
    ClientWidth     =   4875
@@ -11,9 +11,36 @@ Begin VB.Form StampaAssCircProvUNEP
    MaxButton       =   0   'False
    MDIChild        =   -1  'True
    MinButton       =   0   'False
-   ScaleHeight     =   3480
+   ScaleHeight     =   4440
    ScaleWidth      =   4875
    ShowInTaskbar   =   0   'False
+   Begin VB.Frame Frame2 
+      Caption         =   "Periodo"
+      Height          =   615
+      Left            =   120
+      TabIndex        =   18
+      Top             =   2880
+      Width           =   4680
+      Begin VB.OptionButton optMese 
+         Caption         =   "Bimestre"
+         Height          =   255
+         Index           =   1
+         Left            =   2400
+         TabIndex        =   20
+         Top             =   240
+         Value           =   -1  'True
+         Width           =   975
+      End
+      Begin VB.OptionButton optMese 
+         Caption         =   "Mese"
+         Height          =   255
+         Index           =   0
+         Left            =   120
+         TabIndex        =   19
+         Top             =   240
+         Width           =   975
+      End
+   End
    Begin VB.PictureBox PictureUNEP 
       Appearance      =   0  'Flat
       BackColor       =   &H80000005&
@@ -24,7 +51,7 @@ Begin VB.Form StampaAssCircProvUNEP
       ScaleHeight     =   465
       ScaleWidth      =   465
       TabIndex        =   17
-      Top             =   2880
+      Top             =   3840
       Width           =   495
    End
    Begin VB.CommandButton CmdAnnulla 
@@ -32,7 +59,7 @@ Begin VB.Form StampaAssCircProvUNEP
       Height          =   500
       Left            =   3480
       TabIndex        =   15
-      Top             =   2880
+      Top             =   3840
       Width           =   1380
    End
    Begin VB.CommandButton CmdOK 
@@ -40,7 +67,7 @@ Begin VB.Form StampaAssCircProvUNEP
       Height          =   500
       Left            =   600
       TabIndex        =   14
-      Top             =   2880
+      Top             =   3840
       Width           =   1380
    End
    Begin VB.Frame FrmMetodoStampa 
@@ -275,7 +302,7 @@ Begin VB.Form StampaAssCircProvUNEP
       Height          =   500
       Left            =   2040
       TabIndex        =   4
-      Top             =   2880
+      Top             =   3840
       Width           =   1380
    End
 End
@@ -315,7 +342,7 @@ Dim MSG_Avviso, Response As Variant
     LockPrtTable ("PrtEstrattoContoUNEP")
     
     Riempi_PRT_EstrattoConto
-    
+    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
    
     If GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
             MsgBox "Nessun dato evaso! Impossibile creare la stampa Elenco Assegni Circolari Provvisoria.", vbInformation, "Attenzione"
@@ -389,14 +416,14 @@ On Error GoTo Riempi_PRT_EstrattoConto
    
 
     'Inizio Sfratti
-    qrySQL = getQrySfratti(True, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY SFRATTI_UNEP.NumOrdinamento"
-    update_EstConto_Sfratti "PrtEstrattoContoUNEP", qrySQL
+    qrySQL = getQrySfratti(IIf(optMese(0).value, 1, 2), True, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY SFRATTI_UNEP.NumOrdinamento"
+    update_EstConto_Sfratti True, "PrtEstrattoContoUNEP", qrySQL
     UpdateProgress 50, "Notifiche"
     ' Fine Sfratti
     
     'Inizio Notifiche
-    qrySQL = getQryNotifiche(True, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY Notifiche_UNEP.NumOrdinamento"
-    update_EstConto_Notifiche "PrtEstrattoContoUNEP", qrySQL
+    qrySQL = getQryNotifiche(IIf(optMese(0).value, 1, 2), True, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY Notifiche_UNEP.NumOrdinamento"
+    update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", qrySQL
     UpdateProgress 75, "Decreti"
     'Fine Notifiche
 
@@ -416,13 +443,13 @@ Public Sub CreazioneStampaAssegniCircolari()
 On Error GoTo FINE
 Dim SQL As String
 
-SQL = "INSERT INTO PrtAssegniCircolariUNEP ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, COMPETENZE, SALDO, SALDO_PRECEDENTE, DATA_INIZIO, DATA_FINE, NumOrdinamento,DESCR_ATTIVITA,Valuta ) " & _
+SQL = "INSERT INTO PrtAssegniCircolariUNEP ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, COMPETENZE, SALDO, SALDO_PRECEDENTE, DATA_INIZIO, DATA_FINE, NumOrdinamento,DESCR_ATTIVITA,Valuta, Quota ) " & _
       "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome, Sum(PrtEstrattoContoUNEP.DEPOSITO) AS SommaDiDEPOSITO, Sum(PrtEstrattoContoUNEP.SPESE1) AS SommaDiSPESE1," & _
       "Sum(PrtEstrattoContoUNEP.SPESE2) AS SommaDiSPESE2, Sum(PrtEstrattoContoUNEP.SPESE3) AS SommaDiSPESE3, Sum(PrtEstrattoContoUNEP.SPESE4) AS SommaDiSPESE4," & _
       "Sum(PrtEstrattoContoUNEP.SPESE5) AS SommaDiSPESE5, Sum(PrtEstrattoContoUNEP.SPESE6) AS SommaDiSPESE6, Sum(PrtEstrattoContoUNEP.COMPETENZE) AS SommaDiCOMPETENZE," & _
       "Sum(PrtEstrattoContoUNEP.SALDO) AS actSaldo, First(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
       "First(PrtEstrattoContoUNEP.DATA_INIZIO) AS PrimoDiDATA_INIZIO, First(PrtEstrattoContoUNEP.DATA_FINE) AS PrimoDiDATA_FINE," & _
-      "First(AnagraficaAvvocati.NumOrdinamento) AS PrimoDiNumOrdinamento,' ','E' " & _
+      "First(AnagraficaAvvocati.NumOrdinamento) AS PrimoDiNumOrdinamento,' ','E',Sum(PrtEstrattoContoUNEP.Quota) " & _
       "FROM PrtEstrattoContoUNEP INNER JOIN AnagraficaAvvocati ON PrtEstrattoContoUNEP.CODAVV = AnagraficaAvvocati.CODAVV " & _
       "GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome " & _
       "Having (((Sum([PrtEstrattoContoUNEP].[saldo]) + First([PrtEstrattoContoUNEP].[SALDO_PRECEDENTE])) >= " & Str(g_Settings.LimiteSaldo) & ")) " & _

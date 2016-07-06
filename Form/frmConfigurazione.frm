@@ -3,17 +3,32 @@ Object = "{49CBFCC0-1337-11D2-9BBF-00A024695830}#1.0#0"; "tinumb8.ocx"
 Begin VB.Form frmConfigurazione 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Configurazione"
-   ClientHeight    =   3465
+   ClientHeight    =   4290
    ClientLeft      =   45
    ClientTop       =   315
-   ClientWidth     =   6105
+   ClientWidth     =   6930
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3465
-   ScaleWidth      =   6105
+   ScaleHeight     =   4290
+   ScaleWidth      =   6930
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.TextBox txtBackup 
+      Enabled         =   0   'False
+      Height          =   375
+      Left            =   120
+      TabIndex        =   15
+      Top             =   2880
+      Width           =   6615
+   End
+   Begin VB.TextBox txtCodIva 
+      Height          =   375
+      Left            =   2880
+      TabIndex        =   12
+      Top             =   240
+      Width           =   1455
+   End
    Begin VB.TextBox txtIBAN 
       Height          =   285
       Left            =   120
@@ -31,17 +46,17 @@ Begin VB.Form frmConfigurazione
    Begin VB.CommandButton CmdOK 
       Caption         =   "&OK"
       Height          =   500
-      Left            =   2640
+      Left            =   3600
       TabIndex        =   3
-      Top             =   2760
+      Top             =   3720
       Width           =   1500
    End
    Begin VB.CommandButton CmdAnnulla 
       Caption         =   "E&sci"
       Height          =   500
-      Left            =   4320
+      Left            =   5280
       TabIndex        =   2
-      Top             =   2760
+      Top             =   3720
       Width           =   1500
    End
    Begin TDBNumber6Ctl.TDBNumber tdbIVA 
@@ -106,7 +121,7 @@ Begin VB.Form frmConfigurazione
       Height          =   255
       Left            =   2880
       TabIndex        =   4
-      Top             =   240
+      Top             =   960
       Width           =   1935
       _Version        =   65536
       _ExtentX        =   3413
@@ -155,7 +170,7 @@ Begin VB.Form frmConfigurazione
       ReadOnly        =   0
       Separator       =   "."
       ShowContextMenu =   -1
-      ValueVT         =   142409729
+      ValueVT         =   75366401
       Value           =   0
       MaxValueVT      =   5
       MinValueVT      =   5
@@ -218,6 +233,22 @@ Begin VB.Form frmConfigurazione
       MaxValueVT      =   5
       MinValueVT      =   5
    End
+   Begin VB.Label Label7 
+      Caption         =   "Path per il backup automatico"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   14
+      Top             =   2520
+      Width           =   1335
+   End
+   Begin VB.Label Label6 
+      Caption         =   "Codice IVA"
+      Height          =   255
+      Left            =   2880
+      TabIndex        =   13
+      Top             =   0
+      Width           =   975
+   End
    Begin VB.Label Label5 
       Caption         =   "IBAN"
       Height          =   255
@@ -247,7 +278,7 @@ Begin VB.Form frmConfigurazione
       Height          =   255
       Left            =   2880
       TabIndex        =   5
-      Top             =   0
+      Top             =   720
       Width           =   2655
    End
    Begin VB.Label Label1 
@@ -276,6 +307,7 @@ Private Sub CmdOK_Click()
   g_Settings.LimiteSaldo = numLimitesaldo.value
   g_Settings.Banca = txtBanca.Text
   g_Settings.IBAN = txtIBAN.Text
+  g_Settings.CodIVA = txtCodIva.Text
  Unload Me
 End Sub
 
@@ -285,4 +317,6 @@ Private Sub Form_Load()
     numLimitesaldo.value = g_Settings.LimiteSaldo
     txtBanca.Text = g_Settings.Banca
     txtIBAN.Text = g_Settings.IBAN
+    txtCodIva = g_Settings.CodIVA
+    txtBackup = g_Settings.AtapUserBackupFolder
 End Sub

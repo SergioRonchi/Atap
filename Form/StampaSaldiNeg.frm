@@ -407,14 +407,14 @@ On Error GoTo Errore_PRT_EstrattoConto
     'Fine Adempimenti
     UpdateProgress (30)
     'Inizio Sfratti
-    qrySQL = getQrySfratti(False, "Futuro", TxtRicDataIn.Text, TxtRicDataFin.Text, "S") & qryApp & " ORDER BY SFRATTI.NumOrdinamento"
+    qrySQL = getQrySfratti(0, False, "Futuro", TxtRicDataIn.Text, TxtRicDataFin.Text, "S") & qryApp & " ORDER BY SFRATTI.NumOrdinamento"
     qrySQL = qrySQL & qryApp
-    update_EstConto_Sfratti "PrtEstrattoConto", qrySQL ', NumEstConto
+    update_EstConto_Sfratti False, "PrtEstrattoConto", qrySQL ', NumEstConto
     ' Fine Sfratti
     UpdateProgress (45)
     'Inizio Notifiche
-    qrySQL = getQryNotifiche(False, "Futuro", TxtRicDataIn.Text, TxtRicDataFin.Text, "S") & qryApp & "  ORDER BY Notifiche.NumOrdinamento"
-    update_EstConto_Notifiche "PrtEstrattoConto", qrySQL ', NumEstConto
+    qrySQL = getQryNotifiche(0, False, "Futuro", TxtRicDataIn.Text, TxtRicDataFin.Text, "S") & qryApp & "  ORDER BY Notifiche.NumOrdinamento"
+    update_EstConto_Notifiche False, "PrtEstrattoConto", qrySQL ', NumEstConto
     'Fine Notifiche
     UpdateProgress (70)
     'Inizio Decreti
@@ -434,7 +434,7 @@ Errore_PRT_EstrattoConto:
 End Sub
 
 Private Sub createQuery()
-On Error GoTo FINE
+On Error GoTo fine
 
 Dim qry As String
     
@@ -472,7 +472,7 @@ Dim qry As String
           
     g_Settings.DBConnection.Execute qry
     Exit Sub
-FINE:
+fine:
  MsgBox err.Description & vbCrLf & qry
 End Sub
 

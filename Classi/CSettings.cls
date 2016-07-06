@@ -12,7 +12,7 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-
+Private m_ExportPath As String
 Private m_Dbname As String
 Private m_reportPath As String
 Private m_dbPath As String
@@ -31,9 +31,15 @@ Private m_QuotaSoci As Double
 Private m_LimiteSaldo As Double
 Private m_Banca As String
 Private m_IBAN As String
+Private m_CodIVA As String
+Private m_AtapUserFolder As String
+Private m_AtapUserFolderTemp As String
+Private m_AtapUserFolderBackup As String
 
 Private m_CurrentDbName As String
 Private Const K_NomeInRegistry As String = "AtapDB"
+
+Private m_StrutturaComuni As Collection
 
 
 
@@ -45,6 +51,11 @@ Private Sub Class_Initialize()
      m_TIMESTAMP = Format(Now, "YYMMDDhhmmss")
      m_USER_LOCK = GetUserLock
 
+     m_ExportPath = GetSetting(K_NomeInRegistry, "Export", "Path", "")
+     
+     If Dir(m_ExportPath, vbDirectory) = "" Then
+      m_ExportPath = ""
+     End If
      
      LeggeRegistroPerDB (K_NomeInRegistry)
      m_reportPath = app.Path & "\Report"
@@ -72,9 +83,29 @@ Private Sub Class_Initialize()
     m_LimiteSaldo = GetADOValue("Parametri", "LimiteSaldo", "1=1", Me.DBConnection)
     m_Banca = GetADOValue("Parametri", "Banca", "1=1", Me.DBConnection)
     m_IBAN = GetADOValue("Parametri", "IBAN", "1=1", Me.DBConnection)
-End Sub
+    
+    m_AtapUserFolder = GetCommonUserFolder & "\Atap"
+    SafeMakeDir m_AtapUserFolder
+    m_AtapUserFolderTemp = m_AtapUserFolder & "\Temp"
+    SafeMakeDir m_AtapUserFolderTemp
+    m_AtapUserFolderBackup = m_AtapUserFolder & "\Backup"
+    SafeMakeDir m_AtapUserFolderBackup
+    
+    Set m_StrutturaComuni = New Collection
+ LoadComuniCollection "Dati\ListaComuni.txt", m_StrutturaComuni
 
+End Sub
+Public Property Get ExportPath() As String
+
+ ExportPath = m_ExportPath
+End Property
+Public Property Let ExportPath(s As String)
+
+ m_ExportPath = s
+ SaveSetting K_NomeInRegistry, "Export", "Path", s
+End Property
 Public Sub ConnettiDB(sFile As String)
+On Error Resume Next
  m_Conn.Close
  Set m_Conn = Connetti(sFile)
  m_CurrentDbName = sFile
@@ -91,37 +122,44 @@ End Property
 Public Property Get IVA() As Double
  IVA = m_IVA
 End Property
-Public Property Let IVA(X As Double)
-  m_IVA = X
+Public Property Let IVA(x As Double)
+  m_IVA = x
   Me.DBConnection.Execute "UPDATE Parametri SET IVA=" & Str(m_IVA)
 End Property
 Public Property Get QuotaSoci() As Double
  QuotaSoci = m_QuotaSoci
 End Property
-Public Property Let QuotaSoci(X As Double)
-  m_QuotaSoci = X
+Public Property Let QuotaSoci(x As Double)
+  m_QuotaSoci = x
   Me.DBConnection.Execute "UPDATE Parametri SET QuotaSoci=" & Str(m_QuotaSoci)
 End Property
-Public Property Let LimiteSaldo(X As Double)
-  m_LimiteSaldo = X
+Public Property Let LimiteSaldo(x As Double)
+  m_LimiteSaldo = x
   Me.DBConnection.Execute "UPDATE Parametri SET LimiteSaldo=" & Str(m_LimiteSaldo)
 End Property
 Public Property Get LimiteSaldo() As Double
  LimiteSaldo = m_LimiteSaldo
 End Property
-Public Property Let Banca(X As String)
-  m_Banca = X
+Public Property Let Banca(x As String)
+  m_Banca = x
   Me.DBConnection.Execute "UPDATE Parametri SET Banca='" & Replace(m_Banca, "'", "''") & "'"
 End Property
 Public Property Get Banca() As String
  Banca = m_Banca
 End Property
-Public Property Let IBAN(X As String)
-  m_IBAN = X
+Public Property Let IBAN(x As String)
+  m_IBAN = x
   Me.DBConnection.Execute "UPDATE Parametri SET IBAN='" & Replace(m_IBAN, "'", "''") & "'"
 End Property
 Public Property Get IBAN() As String
  IBAN = m_IBAN
+End Property
+Public Property Let CodIVA(x As String)
+  m_CodIVA = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CodIVA='" & Replace(m_CodIVA, "'", "''") & "'"
+End Property
+Public Property Get CodIVA() As String
+ CodIVA = m_CodIVA
 End Property
 
 
@@ -149,6 +187,18 @@ Public Property Get HistoryPath() As String
 End Property
 Public Property Get dbPath() As String
  dbPath = m_dbPath
+End Property
+Public Property Get AtapUserFolder()
+ AtapUserFolder = m_AtapUserFolder
+ 
+End Property
+Public Property Get AtapUserTempFolder()
+ AtapUserTempFolder = m_AtapUserFolderTemp
+ 
+End Property
+Public Property Get AtapUserBackupFolder()
+ AtapUserBackupFolder = m_AtapUserFolderBackup
+ 
 End Property
 Public Property Get dbFile() As String
  dbFile = m_Dbname
@@ -263,29 +313,46 @@ Private Function isFistAcces(MDBFile As String)
  isFistAcces = (Dir(fileName) = "")
 End Function
 
-Private Sub BackUp(Path As String)
-Dim sEXE As String, sPath1 As String, sPath2 As String, sDir As String, r As Integer
-Dim fName As String
-Dim tempFile As String
-Dim fileName As String
-On Error GoTo errback
 
- Screen.MousePointer = vbHourglass
- fileName = GetFileNameWithoutExtension(m_Dbname) & "_" & Weekday(Now)
- SafeKill m_LocalTempPath & "\TMP_*.mdb"
- tempFile = m_LocalTempPath & "\TMP_" & m_TIMESTAMP & ".mdb"
- Call CompactDatabase(m_Dbname, tempFile)
+
+
+Private Sub LoadComuniCollection(file As String, list As Collection)
+     Dim Num
+     Dim Fields
+     Dim count As Long
+     Dim riga As String
+     Dim row As ComuneRecord
+     Num = FreeFile
+             
+    Open file For Input As #Num
+    
  
- If Dir(tempFile) <> "" Then
- 
-   ZipFile Path, fileName, m_LocalTempPath, "\TMP_" & m_TIMESTAMP & ".mdb"
- 
- End If
- Screen.MousePointer = vbDefault
- 
- Exit Sub
- 
-errback:
- MsgBox err.Description, vbOKOnly + vbExclamation
+    While Not EOF(Num)
+      Line Input #Num, riga
+      If count > 0 Then
+        Fields = Split(riga, ";")
+        Set row = New ComuneRecord
+        row.Instat = Fields(0)
+        row.FieldName = Fields(1)
+        row.Province = Fields(2)
+        row.Region = Fields(3)
+        row.Prefix = Fields(4)
+        row.CAP = Fields(5)
+        row.FiscalCode = Fields(6)
+        row.People = Fields(7)
+        row.Link = Fields(8)
+        list.Add row, row.FiscalCode
+        
+      End If
+      count = count + 1
+    Wend
+    
+    Close Num
 End Sub
-
+Public Function GetComune(Code As String) As ComuneRecord
+Dim o As ComuneRecord
+On Error GoTo fine
+Set o = m_StrutturaComuni(Code)
+Set GetComune = o
+fine:
+End Function

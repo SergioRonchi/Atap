@@ -380,14 +380,14 @@ On Error GoTo Riempi_PRT_EstrattoConto
     'Fine Adempimenti
 
     'Inizio Sfratti
-    qrySQL = getQrySfratti(False, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY SFRATTI.NumOrdinamento"
-    update_EstConto_Sfratti "PrtEstrattoConto", qrySQL
+    qrySQL = getQrySfratti(0, False, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY SFRATTI.NumOrdinamento"
+    update_EstConto_Sfratti False, "PrtEstrattoConto", qrySQL
     UpdateProgress 50, "Notifiche"
     ' Fine Sfratti
     
     'Inizio Notifiche
-    qrySQL = getQryNotifiche(False, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY Notifiche.NumOrdinamento"
-    update_EstConto_Notifiche "PrtEstrattoConto", qrySQL
+    qrySQL = getQryNotifiche(0, False, "Futuro", TxtRicDataIn.Text, TxtRicDataIn.Text, "S") & qryApp & "  ORDER BY Notifiche.NumOrdinamento"
+    update_EstConto_Notifiche False, "PrtEstrattoConto", qrySQL
     UpdateProgress 75, "Decreti"
     'Fine Notifiche
 
@@ -408,10 +408,10 @@ Riempi_PRT_EstrattoConto:
 End Sub
 
 Public Sub CreazioneStampaAssegniCircolari()
-On Error GoTo FINE
-Dim SQL As String
+On Error GoTo fine
+Dim sql As String
 
-SQL = "INSERT INTO PrtAssegniCircolari ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, COMPETENZE, SALDO, SALDO_PRECEDENTE, DATA_INIZIO, DATA_FINE, NumOrdinamento,DESCR_ATTIVITA,Valuta ) " & _
+sql = "INSERT INTO PrtAssegniCircolari ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, COMPETENZE, SALDO, SALDO_PRECEDENTE, DATA_INIZIO, DATA_FINE, NumOrdinamento,DESCR_ATTIVITA,Valuta ) " & _
       "SELECT PrtEstrattoConto.CODAVV, PrtEstrattoConto.Nome, Sum(PrtEstrattoConto.DEPOSITO) AS SommaDiDEPOSITO, Sum(PrtEstrattoConto.SPESE1) AS SommaDiSPESE1," & _
       "Sum(PrtEstrattoConto.SPESE2) AS SommaDiSPESE2, Sum(PrtEstrattoConto.SPESE3) AS SommaDiSPESE3, Sum(PrtEstrattoConto.SPESE4) AS SommaDiSPESE4," & _
       "Sum(PrtEstrattoConto.SPESE5) AS SommaDiSPESE5, Sum(PrtEstrattoConto.SPESE6) AS SommaDiSPESE6, Sum(PrtEstrattoConto.COMPETENZE) AS SommaDiCOMPETENZE," & _
@@ -426,10 +426,10 @@ SQL = "INSERT INTO PrtAssegniCircolari ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2,
 'Reset PrtEstrattoConto
 g_Settings.DBConnection.BeginTrans
 g_Settings.DBConnection.Execute "DELETE  * FROM PrtAssegniCircolari;"
-g_Settings.DBConnection.Execute SQL
+g_Settings.DBConnection.Execute sql
 g_Settings.DBConnection.CommitTrans
 Exit Sub
-FINE:
+fine:
  MsgBox "Creazione degli assegni non riuscita: " & err.Description, vbOKOnly + vbCritical
  g_Settings.DBConnection.RollbackTrans
 End Sub

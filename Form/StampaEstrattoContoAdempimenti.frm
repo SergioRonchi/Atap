@@ -326,7 +326,7 @@ Private Sub CmdOK_Click()
     LockPrtTable ("PrtEstrattoConto")
  
     
-    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, 1, 0, 0, 0, "N", False
+    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, 1, 0, 0, 0, "N", False, 0
     If Not GetADORecordset("PrtEstrattoConto", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
       
           Call Stampa.gestioneReport("", "", 0, IIf(OptModSt(0).value, crptToWindow, crptToPrinter), "EstrattoConto.rpt", 1, "Tipo='CANCELLERIE'")

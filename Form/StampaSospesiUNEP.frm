@@ -46,11 +46,38 @@ Begin VB.Form StampaSospesiUNEP
       Width           =   1380
    End
    Begin VB.Frame FrmStampa 
-      Height          =   5535
+      Height          =   6015
       Left            =   90
       TabIndex        =   6
       Top             =   0
       Width           =   5325
+      Begin VB.Frame Frame2 
+         Caption         =   "Periodo"
+         Height          =   615
+         Left            =   240
+         TabIndex        =   26
+         Top             =   5280
+         Width           =   4935
+         Begin VB.OptionButton optMese 
+            Caption         =   "Mese"
+            Height          =   255
+            Index           =   0
+            Left            =   120
+            TabIndex        =   28
+            Top             =   240
+            Width           =   975
+         End
+         Begin VB.OptionButton optMese 
+            Caption         =   "Bimestre"
+            Height          =   255
+            Index           =   1
+            Left            =   1080
+            TabIndex        =   27
+            Top             =   240
+            Value           =   -1  'True
+            Width           =   975
+         End
+      End
       Begin VB.Frame FrmMetodoStampa 
          Caption         =   "Modalità Stampa"
          Height          =   645
@@ -689,7 +716,7 @@ End If
 If Not IsNull(cmbAttività.SelectedItem) Then
         codAttività = cmbAttività.Columns(1).value
 End If
-    Riempi_PRT_Sospesi TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, codTribunale, codAttività, True, False
+    Riempi_PRT_Sospesi TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, codTribunale, codAttività, True, False, IIf(optMese(0).value, 1, 2)
     
     Dim NomeFile As String
     If Not GetADORecordset("PrtSospesiUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then

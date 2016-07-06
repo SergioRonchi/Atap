@@ -33,7 +33,7 @@ Begin VB.MDIForm Atap
             Style           =   6
             Alignment       =   1
             AutoSize        =   2
-            TextSave        =   "29/02/2016"
+            TextSave        =   "23/06/2016"
          EndProperty
          BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             AutoSize        =   1
@@ -46,13 +46,14 @@ Begin VB.MDIForm Atap
          EndProperty
          BeginProperty Panel4 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Style           =   2
+            Enabled         =   0   'False
             TextSave        =   "BLOC NUM"
          EndProperty
          BeginProperty Panel5 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             Style           =   5
             Alignment       =   2
             AutoSize        =   2
-            TextSave        =   "15.47"
+            TextSave        =   "10.35"
          EndProperty
       EndProperty
    End
@@ -304,6 +305,16 @@ Begin VB.MDIForm Atap
       Begin VB.Menu mnuS1 
          Caption         =   "-"
       End
+      Begin VB.Menu mnuEsporta 
+         Caption         =   "Esporta Contabilità ..."
+         Visible         =   0   'False
+      End
+      Begin VB.Menu mnuBackup 
+         Caption         =   "Esegui backup"
+      End
+      Begin VB.Menu mnuss2 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnuEsci 
          Caption         =   "E&sci"
       End
@@ -462,7 +473,7 @@ Begin VB.MDIForm Atap
       Begin VB.Menu mnuGestioneCambioCassetta 
          Caption         =   "&Gestione Cambio Cassetta"
       End
-      Begin VB.Menu mnuS 
+      Begin VB.Menu mnus 
          Caption         =   "-"
       End
       Begin VB.Menu mnuSblocca 
@@ -542,14 +553,14 @@ Private Sub mnuAnticipi_Click()
 End Sub
 
 Private Sub mnuApriCorrente_Click()
-On Error GoTo FINE
+On Error GoTo fine
 pctStorico.Visible = False
 tmrStorico.Enabled = False
 g_Settings.ConnettiDB (g_Settings.dbFile)
 
 MsgBox "Database Corrente Aperto correttamente", vbInformation
 Exit Sub
-FINE:
+fine:
  MsgBox err.Description, vbCritical
 End Sub
 
@@ -578,6 +589,13 @@ If frmApriStorico.aperto Then
 End If
 End Sub
 
+Private Sub mnuBackup_Click()
+ Dim fb As New FileBackuoHelper
+ pctStorico.Visible = False
+ tmrStorico.Enabled = False
+ fb.BackUp g_Settings.AtapUserBackupFolder
+End Sub
+
 Private Sub mnuCalc_Click()
  Shell ("Calc.exe")
 End Sub
@@ -586,6 +604,13 @@ End Sub
 
 Private Sub mnuEsci_Click()
 Uscita
+End Sub
+
+Private Sub mnuEsporta_Click()
+
+ Dim frm As frmEsportaProfis
+ Set frm = New frmEsportaProfis
+ frm.Show vbModal
 End Sub
 
 Private Sub mnuEstrattoConto_Click()
@@ -629,7 +654,7 @@ Dim i As Integer
      Me.Toolbar1.ImageList = ImageList1
      Toolbar1.ButtonWidth = 464
      Toolbar1.ButtonHeight = 464
-     For i = 1 To Toolbar1.Buttons.Count
+     For i = 1 To Toolbar1.Buttons.count
        If Toolbar1.Buttons(i).Description <> "" Then
            Toolbar1.Buttons(i).Image = ImageList1.ListImages(Toolbar1.Buttons(i).Description).Index
        End If
@@ -639,7 +664,7 @@ Dim i As Integer
      Me.Toolbar1.ImageList = ImageListSmall
      Toolbar1.ButtonWidth = 300
      Toolbar1.ButtonHeight = 300
-    For i = 1 To Toolbar1.Buttons.Count
+    For i = 1 To Toolbar1.Buttons.count
      If Toolbar1.Buttons(i).Description <> "" Then
       Toolbar1.Buttons(i).Image = ImageListSmall.ListImages(Toolbar1.Buttons(i).Description).Index
      End If

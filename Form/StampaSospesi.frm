@@ -676,7 +676,7 @@ End If
 If Not IsNull(cmbAttività.SelectedItem) Then
         codAttività = cmbAttività.Columns(1).value
 End If
-    Riempi_PRT_Sospesi TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, codTribunale, codAttività, False, False
+    Riempi_PRT_Sospesi TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, codTribunale, codAttività, False, False, 0
     
     Dim NomeFile As String
     If Not GetADORecordset("PrtSospesi", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
