@@ -1,5 +1,22 @@
 Attribute VB_Name = "mdlEstrattiConto"
 Option Explicit
+Public Function GetAvvocatoSingoloPerEstratto(codAvv As String) As AvvocatiPerEstratto
+Dim obj As AvvocatiPerEstratto
+Dim I As Integer
+
+Set obj = New AvvocatiPerEstratto
+ obj.ListaEsclusi = False
+ obj.Tutti = codAvv = ""
+ If Not obj.Tutti Then
+ 
+     obj.Lista.Add codAvv
+    
+
+ End If
+ 
+ Set GetAvvocatoSingoloPerEstratto = obj
+End Function
+
 Public Function isToTransfer(Tabella As String, schema As String) As Boolean
  isToTransfer = True
  Tabella = UCase(Tabella)
@@ -13,17 +30,17 @@ Public Function isToTransfer(Tabella As String, schema As String) As Boolean
  If Tabella = "SFRATTI_UNEP" Then isToTransfer = (InStr(1, schema, "S") <> 0)
 End Function
 Public Function GetFreeFile(NomeFile As String) As String
- Dim i As Integer
+ Dim I As Integer
  Dim s As String
- i = 1
+ I = 1
  s = NomeFile
  While Dir(s) <> ""
-   s = NomeFile & "_" & i
-   i = i + 1
+   s = NomeFile & "_" & I
+   I = I + 1
  Wend
  GetFreeFile = s
 End Function
-Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String, isUnep As Boolean, Optional codAvv As String, Optional schema As String) As Boolean
+Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String, isUnep As Boolean, Optional avvocatiEstratti As AvvocatiPerEstratto, Optional schema As String) As Boolean
   Dim rsTable As ADODB.Recordset
   Dim SQL As String, Tabella As String
   Dim sqlDEL As String
@@ -32,6 +49,7 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
   Dim isUnepTable As Boolean
   Dim sWhere As String
   Dim isCodAvv As Boolean
+  Dim currentAvv
   
   On Error GoTo errtrasf
   Screen.MousePointer = vbHourglass
@@ -99,19 +117,64 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                                 SQL = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]"
                                 sqlDEL = ""
                             End If
-                            If isCodAvv And codAvv <> "" Then
-                               If Data Then
-                                 SQL = SQL & " AND [" & Tabella & "].CodAvv='" & codAvv & "'"
-                                    If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
-                                        sqlDEL = sqlDEL & " AND [" & Tabella & "].CodAvv='" & codAvv & "'"
-                                    Else
-                                        sqlDEL = ""
-                                    End If
+                            If isCodAvv And avvocatiEstratti.Tutti = False Then
+                              If avvocatiEstratti.ListaEsclusi = False Then
+                                            If Data Then
+                                                     SQL = SQL & " AND ("
+                                                     For Each currentAvv In avvocatiEstratti.Lista
+                                                        SQL = SQL & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
+                                                     Next
+                                                     SQL = Mid(SQL, 1, Len(SQL) - 3) & " ) "
+                                                     If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
+                                                          sqlDEL = sqlDEL & " AND ("
+                                                          For Each currentAvv In avvocatiEstratti.Lista
+                                                             sqlDEL = sqlDEL & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
+                                                          Next
+                                                          sqlDEL = Mid(sqlDEL, 1, Len(sqlDEL) - 3) & " ) "
+                                                      Else
+                                                           sqlDEL = ""
+                                                      End If 'If (isUnep And isUnepTable)....
+                                                 
+                                                Else
+                                                
+                                                     SQL = SQL & " WHERE ("
+                                                     For Each currentAvv In avvocatiEstratti.Lista
+                                                       SQL = SQL & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
+                                                     Next
+                                                     SQL = Mid(SQL, 1, Len(SQL) - 3) & " ) "
+                                                     
+                                                     sqlDEL = ""
+                                            End If 'If Data Then
                                    Else
-                                    SQL = SQL & " WHERE [" & Tabella & "].CodAvv='" & codAvv & "'"
-                                    sqlDEL = ""
-                               End If
-                            End If
+                                             If Data Then
+                                                     SQL = SQL & " AND "
+                                                     For Each currentAvv In avvocatiEstratti.Lista
+                                                        SQL = SQL & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
+                                                     Next
+                                                     SQL = Mid(SQL, 1, Len(SQL) - 4) & "  "
+                                                     If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
+                                                          sqlDEL = sqlDEL & " AND "
+                                                          For Each currentAvv In avvocatiEstratti.Lista
+                                                             sqlDEL = sqlDEL & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
+                                                          Next
+                                                          sqlDEL = Mid(sqlDEL, 1, Len(sqlDEL) - 4) & "  "
+                                                      Else
+                                                           sqlDEL = ""
+                                                      End If 'If (isUnep And isUnepTable)....
+                                                 
+                                                Else
+                                                
+                                                     SQL = SQL & " WHERE "
+                                                     For Each currentAvv In avvocatiEstratti.Lista
+                                                       SQL = SQL & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
+                                                     Next
+                                                     SQL = Mid(SQL, 1, Len(SQL) - 4) & "  "
+                                                     
+                                                     sqlDEL = ""
+                                            End If 'If Data Then
+                                    
+                               End If 'If avvocatiEstratti.ListaEsclusi = False Then
+                            End If 'If isCodAvv And avvocatiEstratti.Tutti = False Then
                             
                             If Not isToTransfer(Tabella, schema) Then
                               SQL = SQL & " AND [" & Tabella & "].CodAvv='XXXXX'"
@@ -449,75 +512,53 @@ Public Function getNewNumFattura() As Integer
  getNewNumFattura = GetADOValue("StoricoFatture", "Max(NumeroFattura)", "Left(DataFattura,4)='" & year(Now) & "'", g_Settings.DBConnection, True) + 1
  
 End Function
-Public Sub AggiungiAvvocatiSenzaOperazioni(data1 As String, data2 As String, codAvv As String, Optional importo As Double)
+
+Public Sub AggiungiAvvocatiQuota(data1 As String, data2 As String, codAvv As AvvocatiPerEstratto, Optional importo As Double)
 Dim qrySQL As String
 Dim qryApp As String
 Dim qryDelete As String
 Dim qry1, qry2, qry3 As String
+Dim item
 
     qry1 = ""
     qry2 = ""
     qry3 = ""
     qryApp = ""
     
-    If data1 <> "" Then
-       qry1 = " AND ( DataEvasionePratica >= '" & Format(data1, "yyyymmdd") & "')"
-    End If
-    If data2 <> "" Then
-        qry2 = " AND ( DataEvasionePratica <= '" & Format(data2, "yyyymmdd") & "')"
-    End If
+
     
-    If codAvv <> "" Then
-        qry3 = " AND ( AnagraficaAvvocati.CODAVV = '" & codAvv & "')"
-    End If
+      If codAvv.ListaEsclusi = False Then
+       'La lista contiene quelli per cui fare l'E.C.
+        If codAvv.Tutti = False Then
+              qry3 = " AND ("
+              For Each item In codAvv.Lista
+                qry3 = qry3 & " AnagraficaAvvocati.CODAVV = '" & item & "' OR "
+              Next
+              qry3 = Mid(qry3, 1, Len(qry3) - 3) & " )"
+
+        End If
+      Else
+       'La lista contiene quelli da escludere dall'E.C.
+        If codAvv.Tutti = False Then
+           
+              qry3 = " AND "
+              For Each item In codAvv.Lista
+                qry3 = qry3 & " AnagraficaAvvocati.CODAVV <> '" & item & "' AND "
+              Next
+              qry3 = Mid(qry3, 1, Len(qry3) - 4) & " "
+
+
+         Else
+            qry3 = " AND (1=0) " 'Esclude tutti
+        End If
+     End If
     
     qryApp = qry1 & qry2 & qry3
 
  qrySQL = "SELECT  CODAVV FROM ANAGRAFICAAVVOCATI " & _
           "WHERE STAT='V' AND NOT (CODAVV LIKE '525%' OR CODAVV LIKE '393%') " & _
-          "and CODAVV NOT IN(SELECT CODAVV FROM  SFRATTI_UNEP WHERE 1=1   " & qryApp & ") " & _
-          "and CODAVV NOT IN(SELECT CODAVV FROM  NOTIFICHE_UNEP WHERE 1=1   " & qryApp & ") " & _
-          "ORDER BY ANAGRAFICAAVVOCATI.NumOrdinamento"
-          
-Dim rs As ADODB.Recordset
-Set rs = New ADODB.Recordset
-
-rs.Open qrySQL, g_Settings.DBConnection
-While Not rs.EOF
-
-    update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", RigaPerAvvocatoSenzaOperazioni(rs(0), data1, data2, importo)
-    
-  rs.MoveNext
-Wend
-          
-End Sub
-Public Sub AggiungiAvvocatiQuota(data1 As String, data2 As String, codAvv As String, Optional importo As Double)
-Dim qrySQL As String
-Dim qryApp As String
-Dim qryDelete As String
-Dim qry1, qry2, qry3 As String
-
-    qry1 = ""
-    qry2 = ""
-    qry3 = ""
-    qryApp = ""
-    
-    If data1 <> "" Then
-       qry1 = " AND ( DataEvasionePratica >= '" & Format(data1, "yyyymmdd") & "')"
-    End If
-    If data2 <> "" Then
-        qry2 = " AND ( DataEvasionePratica <= '" & Format(data2, "yyyymmdd") & "')"
-    End If
-    
-    If codAvv <> "" Then
-        qry3 = " AND ( AnagraficaAvvocati.CODAVV = '" & codAvv & "')"
-    End If
-    
-    qryApp = qry1 & qry2 & qry3
-
- qrySQL = "SELECT  CODAVV FROM ANAGRAFICAAVVOCATI " & _
-          "WHERE STAT='V' AND NOT (CODAVV LIKE '525%' OR CODAVV LIKE '393%') " & _
-          "ORDER BY ANAGRAFICAAVVOCATI.NumOrdinamento"
+          qry3 & _
+          " ORDER BY ANAGRAFICAAVVOCATI.NumOrdinamento"
           
 Dim rs As ADODB.Recordset
 Set rs = New ADODB.Recordset
@@ -538,18 +579,19 @@ Dim qrySQL As String
 '                "SPESE5,DESCR_SPESE5,SPESE6,DESCR_SPESE6,COMPETENZE,SALDO,DATA_PRESENTAZIONE, DATA_RESTITUZIONE,Crono,DATA_EVASIONE, DATARegistrazione,AttivitaRichiesta,DESCR_TRIBUNALE," & _
 '                "SALDO_PRECEDENTE,NUM_EST_CONTO,DATA_EST_CONTO,VALUTA,PROVVISORIO,DATA_INIZIO,DATA_FINE,Parte1,Parte2,DESCR_ATTIVITA," & _
 '                "Deposito,NumOrdinamento,Localita1, [Nota] "
-
+  Dim saldoPrecedente As Double
+  saldoPrecedente = GetADOValue("SaldiUnep", "SaldoTotaleEuro", "Codice='" & codAvv & "'", g_Settings.DBConnection, True)
   qrySQL = "SELECT AnagraficaAvvocati.CODAVV, AnagraficaAvvocati.NOME, AnagraficaAvvocati.INDIRI, AnagraficaAvvocati.LOCALI, "
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, 0, "
     qrySQL = qrySQL & " 0,'Costo Notifica',0,'', 0,'',0,'',0,'',0,'',0, 0,'','','','','','', "
-    qrySQL = qrySQL & "'', 0,0,'" + Format(Now, "dd/mm/yyyy") + "',"
+    qrySQL = qrySQL & "'', " & FixDouble(saldoPrecedente) & ",0,'" + Format(Now, "dd/mm/yyyy") + "',"
     qrySQL = qrySQL & "'E','','" & data1 & "','" & data2 & "', '', '', 'Notifiche', 0,AnagraficaAvvocati.NumOrdinamento,'', ''," & FixDouble(importo)
     qrySQL = qrySQL & " FROM AnagraficaAvvocati WHERE CODAVV='" & codAvv & "'"
     
     RigaPerAvvocatoSenzaOperazioni = qrySQL
 End Function
 
-Public Sub Riempi_PRT_EstrattoContoX(data1 As String, data2 As String, codAvv As String, _
+Public Sub Riempi_PRT_EstrattoContoX(data1 As String, data2 As String, oCodAvv As AvvocatiPerEstratto, _
                                      adempimenti As Integer, Notifiche As Integer, decreti As Integer, sfratti As Integer, _
                                      provvisorio As String, isUnep As Boolean, tipoBimestre As Integer)
 
@@ -558,6 +600,7 @@ Dim qryApp As String
 Dim qryDelete As String
 Dim qry1, qry2, qry3 As String
 Dim NumErrori As Integer
+Dim item
     
 ' Valuta Corrente
 
@@ -576,9 +619,32 @@ On Error GoTo Riempi_PRT_EstrattoConto
         qry2 = " AND ( DataEvasionePratica <= '" & Format(data2, "yyyymmdd") & "')"
     End If
     
-    If codAvv <> "" Then
-        qry3 = " AND ( AnagraficaAvvocati.CODAVV = '" & codAvv & "')"
-    End If
+    If oCodAvv.ListaEsclusi = False Then
+       'La lista contiene quelli per cui fare l'E.C.
+        If oCodAvv.Tutti = False Then
+              qry3 = " AND ("
+              For Each item In oCodAvv.Lista
+                qry3 = qry3 & " AnagraficaAvvocati.CODAVV = '" & item & "' OR "
+              Next
+              qry3 = Mid(qry3, 1, Len(qry3) - 3) & " )"
+
+        End If
+      Else
+       'La lista contiene quelli da escludere dall'E.C.
+        If oCodAvv.Tutti = False Then
+           
+              qry3 = " AND "
+              For Each item In oCodAvv.Lista
+                qry3 = qry3 & " AnagraficaAvvocati.CODAVV <> '" & item & "' AND "
+              Next
+              qry3 = Mid(qry3, 1, Len(qry3) - 4) & " "
+
+
+         Else
+            qry3 = " AND (1=0) " 'Esclude tutti
+        End If
+     End If
+
     
     qryApp = qry1 & qry2 & qry3
     

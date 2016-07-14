@@ -367,6 +367,8 @@ Private Sub CmdOK_Click()
 
 
 Dim MSG_Avviso, Response As Variant
+  Dim avvocatiEstratti As AvvocatiPerEstratto
+  Set avvocatiEstratti = GetAvvocatoSingoloPerEstratto(TxtCodiceAvvocato.Text)
     
     If IsPrtTableLocked("PrtSaldiUNEP") Then
       MsgBox "Attenzione: " & vbCrLf & _
@@ -380,9 +382,8 @@ Dim MSG_Avviso, Response As Variant
     LockPrtTable ("PrtSaldiUNEP")
     
     Riempi_PRT_EstrattoConto
-    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, IIf(optMese(1).value, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)
-    'If TxtCodiceAvvocato.Text = "" Then AggiungiAvvocatiSenzaOperazioni TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, IIf(optMese(1).value, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)
-    
+    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(1).value, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)
+     
 
     createQuery
     If Not GetADORecordset("PrtSaldiUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
@@ -473,7 +474,7 @@ Errore_PRT_EstrattoConto:
 End Sub
 
 Private Sub createQuery()
-On Error GoTo FINE
+On Error GoTo fine
 
 Dim qry As String
     
@@ -511,7 +512,7 @@ Dim qry As String
           
     g_Settings.DBConnection.Execute qry
     Exit Sub
-FINE:
+fine:
  MsgBox err.Description & vbCrLf & qry
 End Sub
 

@@ -3,16 +3,16 @@ Object = "{A49CE0E0-C0F9-11D2-B0EA-00A024695830}#1.0#0"; "tidate8.ocx"
 Begin VB.Form StampaEstrattoContoUNEP 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Stampa Estratto Conto UNEP"
-   ClientHeight    =   6060
+   ClientHeight    =   8685
    ClientLeft      =   45
    ClientTop       =   210
-   ClientWidth     =   5940
+   ClientWidth     =   6180
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MDIChild        =   -1  'True
    MinButton       =   0   'False
-   ScaleHeight     =   6060
-   ScaleWidth      =   5940
+   ScaleHeight     =   8685
+   ScaleWidth      =   6180
    ShowInTaskbar   =   0   'False
    Begin VB.PictureBox PictureUNEP 
       Appearance      =   0  'Flat
@@ -23,8 +23,8 @@ Begin VB.Form StampaEstrattoContoUNEP
       Picture         =   "StampaEstrattoContoUNEP.frx":0000
       ScaleHeight     =   465
       ScaleWidth      =   465
-      TabIndex        =   23
-      Top             =   5520
+      TabIndex        =   21
+      Top             =   8160
       Width           =   495
    End
    Begin VB.CommandButton CmdAnnulla 
@@ -32,7 +32,7 @@ Begin VB.Form StampaEstrattoContoUNEP
       Height          =   500
       Left            =   4440
       TabIndex        =   10
-      Top             =   5520
+      Top             =   8040
       Width           =   1380
    End
    Begin VB.CommandButton CmdOK 
@@ -40,51 +40,83 @@ Begin VB.Form StampaEstrattoContoUNEP
       Height          =   500
       Left            =   3000
       TabIndex        =   9
-      Top             =   5520
+      Top             =   8040
       Width           =   1380
    End
    Begin VB.Frame FrmTipoStampa 
       Caption         =   "Tipo Stampa"
-      Height          =   5220
+      Height          =   7860
       Left            =   0
       TabIndex        =   2
       Top             =   135
-      Width           =   5925
+      Width           =   6045
       Begin VB.Frame FrmProvvisoria 
-         Height          =   2115
+         Height          =   4875
          Left            =   120
          TabIndex        =   11
-         Top             =   1200
+         Top             =   1080
          Width           =   5640
+         Begin VB.CommandButton cmdElimina 
+            Caption         =   "Elimina"
+            Height          =   315
+            Left            =   4200
+            TabIndex        =   32
+            Top             =   1740
+            Width           =   975
+         End
+         Begin VB.OptionButton optExclude 
+            Caption         =   "Stampa E.C. per tutte tranne quelle elencate"
+            Height          =   255
+            Left            =   360
+            TabIndex        =   30
+            Top             =   1680
+            Width           =   3495
+         End
+         Begin VB.OptionButton optInclude 
+            Caption         =   "Stampa E.C. per cassette elencate"
+            Height          =   255
+            Left            =   360
+            TabIndex        =   29
+            Top             =   1440
+            Value           =   -1  'True
+            Width           =   3495
+         End
+         Begin VB.ListBox lstCassette 
+            Height          =   2400
+            Left            =   240
+            TabIndex        =   28
+            Top             =   2040
+            Width           =   4935
+         End
          Begin VB.Frame fraScelta 
             BorderStyle     =   0  'None
             Caption         =   "Frame1"
             Height          =   615
             Left            =   120
-            TabIndex        =   18
+            TabIndex        =   16
             Top             =   720
-            Width           =   4695
+            Width           =   5415
             Begin VB.CommandButton CmdRicercaA 
-               Caption         =   "->"
-               Height          =   285
+               Caption         =   "Aggiungi Cassetta"
+               Height          =   525
                Left            =   2625
-               TabIndex        =   21
+               TabIndex        =   19
                Top             =   0
-               Width           =   330
+               Width           =   1290
             End
             Begin VB.TextBox TxtCodiceAvvocato 
                Height          =   285
                Left            =   1185
                MaxLength       =   10
-               TabIndex        =   20
+               TabIndex        =   18
                Top             =   0
                Width           =   1350
             End
             Begin VB.CommandButton CmdRicercaAnag 
                Caption         =   "&Ricerca Anagrafica"
                Height          =   525
-               Left            =   3420
-               TabIndex        =   19
+               Left            =   4200
+               TabIndex        =   17
                Top             =   0
                Width           =   1215
             End
@@ -92,7 +124,7 @@ Begin VB.Form StampaEstrattoContoUNEP
                Caption         =   "Cod. Cassetta:"
                Height          =   255
                Left            =   0
-               TabIndex        =   22
+               TabIndex        =   20
                Top             =   30
                Width           =   1110
             End
@@ -226,21 +258,12 @@ Begin VB.Form StampaEstrattoContoUNEP
             CenturyMode     =   0
          End
          Begin VB.Label LblDescrCodAvv 
-            Caption         =   "TUTTE LE CASSETTE"
-            ForeColor       =   &H00C00000&
-            Height          =   450
-            Left            =   120
-            TabIndex        =   17
-            Top             =   1560
-            Width           =   4545
-         End
-         Begin VB.Label LblDescr 
-            Caption         =   "Descrizione:"
-            Height          =   255
-            Left            =   120
-            TabIndex        =   16
-            Top             =   1320
-            Width           =   1110
+            Caption         =   "Label2"
+            Height          =   375
+            Left            =   240
+            TabIndex        =   31
+            Top             =   4440
+            Width           =   4935
          End
          Begin VB.Label LblRicDataFin 
             Caption         =   "Data Fine :"
@@ -263,28 +286,28 @@ Begin VB.Form StampaEstrattoContoUNEP
          Caption         =   "Sfratti/Pignor."
          Height          =   255
          Index           =   3
-         Left            =   1440
+         Left            =   1320
          TabIndex        =   8
          Tag             =   "Pignoramenti"
-         Top             =   960
+         Top             =   720
          Width           =   1335
       End
       Begin VB.CheckBox Chk 
          Caption         =   "Notifiche"
          Height          =   255
          Index           =   2
-         Left            =   360
+         Left            =   240
          TabIndex        =   7
          Tag             =   "Notifiche"
-         Top             =   960
+         Top             =   720
          Width           =   1095
       End
       Begin VB.CheckBox ChkAbilitaAnteDef 
          Caption         =   "Abilita anteprima in stampa definitiva"
          Height          =   255
-         Left            =   1080
+         Left            =   1800
          TabIndex        =   6
-         Top             =   4800
+         Top             =   7560
          Width           =   3015
       End
       Begin VB.Frame FrmMetodoStampa 
@@ -292,7 +315,7 @@ Begin VB.Form StampaEstrattoContoUNEP
          Height          =   645
          Left            =   120
          TabIndex        =   4
-         Top             =   4080
+         Top             =   6840
          Width           =   5640
          Begin VB.OptionButton OptModSt 
             Caption         =   "Anteprima"
@@ -337,13 +360,13 @@ Begin VB.Form StampaEstrattoContoUNEP
          Caption         =   "Periodo"
          Height          =   615
          Left            =   120
-         TabIndex        =   24
-         Top             =   3360
+         TabIndex        =   22
+         Top             =   6000
          Width           =   5655
          Begin VB.ComboBox cmbBinestreAnno 
             Height          =   315
             Left            =   4320
-            TabIndex        =   29
+            TabIndex        =   27
             Top             =   240
             Width           =   1095
          End
@@ -352,7 +375,7 @@ Begin VB.Form StampaEstrattoContoUNEP
             ItemData        =   "StampaEstrattoContoUNEP.frx":0892
             Left            =   3120
             List            =   "StampaEstrattoContoUNEP.frx":0894
-            TabIndex        =   28
+            TabIndex        =   26
             Top             =   240
             Width           =   1095
          End
@@ -361,7 +384,7 @@ Begin VB.Form StampaEstrattoContoUNEP
             Height          =   255
             Index           =   1
             Left            =   1080
-            TabIndex        =   26
+            TabIndex        =   24
             Top             =   240
             Value           =   -1  'True
             Width           =   975
@@ -371,7 +394,7 @@ Begin VB.Form StampaEstrattoContoUNEP
             Height          =   255
             Index           =   0
             Left            =   120
-            TabIndex        =   25
+            TabIndex        =   23
             Top             =   240
             Width           =   975
          End
@@ -379,7 +402,7 @@ Begin VB.Form StampaEstrattoContoUNEP
             Caption         =   "Bimestre:"
             Height          =   255
             Left            =   2400
-            TabIndex        =   27
+            TabIndex        =   25
             Top             =   240
             Width           =   1110
          End
@@ -417,7 +440,7 @@ Private Sub RisolviOrdinamentoErrato()
  Dim rs As ADODB.Recordset, rs1 As ADODB.Recordset, rs2 As ADODB.Recordset
  Dim numOrd As Long
  Dim n As Long
- Dim i As Long
+ Dim I As Long
  Set rs = newAdoRs
  
  rs.Open "SELECT NumOrdinamento,Count(*) AS N FROM AnagraficaAvvocati  Group By NumOrdinamento HAVING Count(*)>1", g_Settings.DBConnection
@@ -436,10 +459,10 @@ Private Sub RisolviOrdinamentoErrato()
     rs1.Close
     Set rs2 = newAdoRs
     rs2.Open "SELECT CodAvv FROM AnagraficaAvvocati  Where NumOrdinamento=" & numOrd, g_Settings.DBConnection
-    i = 0
+    I = 0
     While Not rs2.EOF
-      g_Settings.DBConnection.Execute "UPDATE AnagraficaAvvocati SET NumOrdinamento=NumOrdinamento + " & i & " WHERE CodAvv='" & rs2(0) & "'"
-      i = i + 1
+      g_Settings.DBConnection.Execute "UPDATE AnagraficaAvvocati SET NumOrdinamento=NumOrdinamento + " & I & " WHERE CodAvv='" & rs2(0) & "'"
+      I = I + 1
       rs2.MoveNext
     Wend
     rs2.Close
@@ -449,8 +472,17 @@ Private Sub RisolviOrdinamentoErrato()
 
 rs.Close
 End Sub
+
+Private Sub cmdElimina_Click()
+If lstCassette.ListIndex >= 0 Then
+  lstCassette.RemoveItem lstCassette.ListIndex
+End If
+End Sub
+
 Private Sub CmdOK_Click()
   Dim prov As String
+  Dim avvocatiEstratti As AvvocatiPerEstratto
+  Set avvocatiEstratti = GetAvvocatiPerEstratto
   
   If Not IsDate(TxtRicDataIn.Text) Or Not IsDate(TxtRicDataFin.Text) Then
     MsgBox "Inserire l'intervallo di date", vbOKOnly + vbCritical
@@ -476,15 +508,15 @@ Private Sub CmdOK_Click()
     
     g_Settings.DBConnection.Execute "INSERT INTO PrtData(Tipo, Bimestre, BimestreAnno) VALUES(" & IIf(optMese(0).value, 1, 2) & "," & cmbBimestre.ListIndex + 1 & "," & cmbBinestreAnno.list(cmbBinestreAnno.ListIndex) & ")"
     
-    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, 0, Chk(2), 0, Chk(3), prov, True, IIf(optMese(0).value, 1, 2)
+    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, 0, Chk(2), 0, Chk(3), prov, True, IIf(optMese(0).value, 1, 2)
            
-    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
+    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
     
     If Not GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
         If OptTipoStampa(0).value = True Or ChkAbilitaAnteDef.value = True Then
             Dim fb As New FileBackuoHelper
             fb.BackUp g_Settings.AtapUserBackupFolder
-            GestStampaDefinitiva
+            GestStampaDefinitiva avvocatiEstratti
         Else
       
           Call Stampa.gestioneReport("", "", 0, IIf(OptModSt(0).value, crptToWindow, crptToPrinter), "EstrattoContoUNEP.rpt", 1, "Tipo='ESTRATTO'")
@@ -502,8 +534,43 @@ Private Sub CmdOK_Click()
     DelockPrtTable ("PrtEstrattoContoUNEP")
   
 End Sub
+Private Function GetAvvocatiPerEstratto() As AvvocatiPerEstratto
+Dim obj As AvvocatiPerEstratto
+Dim I As Integer
+Dim codAvv As String
+Set obj = New AvvocatiPerEstratto
+ obj.ListaEsclusi = optExclude.value
+ For I = 0 To lstCassette.ListCount - 1
+   codAvv = lstCassette.list(I)
+   If codAvv = K_TUTTI Then
+     obj.Tutti = True
+    Else
+     obj.Lista.Add codAvv
+   End If
+ Next
+ 
+ If obj.Tutti Then
+   Set obj.Lista = New Collection
+ End If
+ If obj.Lista.count = 1 Then
+  obj.Singolo = obj.Lista(1)
+ End If
+ Set GetAvvocatiPerEstratto = obj
+End Function
 
 
+Private Sub CmdRicercaA_Click()
+If TxtCodiceAvvocato.Text = "" Then
+   lstCassette.Clear
+   lstCassette.AddItem K_TUTTI
+ Else
+   If lstCassette.ListCount = 1 And lstCassette.list(0) = K_TUTTI Then
+     lstCassette.Clear
+   End If
+   lstCassette.AddItem TxtCodiceAvvocato.Text
+End If
+
+End Sub
 
 Private Sub Form_Load()
 Dim c As Control
@@ -519,8 +586,9 @@ Dim c As Control
     
      optMese(1).value = True
      optMese_Click (1)
-    
+    lstCassette.AddItem " -- Tutte le cassette -- "
 End Sub
+
 Private Sub moFilterManager_Validate(IsValid As Boolean)
    CmdOK.Enabled = IsValid
 End Sub
@@ -612,9 +680,9 @@ Dim c As Control
 End Sub
 
 
-Public Sub TrasferimentoDatiAlDbStorico()
+Public Sub TrasferimentoDatiAlDbStorico(avvocatiEstratti As AvvocatiPerEstratto)
 On Error GoTo ErroreTrasferimento
-Dim i As Integer
+Dim I As Integer
 Dim schema As String
 Dim nome As String
 
@@ -623,8 +691,21 @@ Dim nome As String
   If Chk(3).value = 1 Then schema = schema + Left(Chk(3).Caption, 1)
 
 
-nome = TxtCodiceAvvocato.Text
-If nome = "" Then nome = "COMPLETO"
+nome = ""
+If avvocatiEstratti.Lista.count = 1 Then
+   If avvocatiEstratti.ListaEsclusi Then
+     nome = "Completo_Escluso_" & avvocatiEstratti.Lista(1)
+    Else
+     nome = avvocatiEstratti.Lista(1)
+   End If
+  Else
+    If avvocatiEstratti.ListaEsclusi Then
+     nome = "Parziale_ConEsclusione"
+    Else
+     nome = "Parziale"
+   End If
+End If
+If avvocatiEstratti.Tutti Then nome = "COMPLETO"
 Dim d1 As String
 Dim d2 As String
 
@@ -643,7 +724,7 @@ Else
 End If
 
 
-TrasferimentoOK = Trasferisci(g_Settings.StoricoEC_UNEP & "\ECUNEP_" & Format(Date, "yyyymmdd") & "_" & nome & ".mdb", d1, d2, True, Trim(TxtCodiceAvvocato.Text), schema)
+TrasferimentoOK = Trasferisci(g_Settings.StoricoEC_UNEP & "\ECUNEP_" & Format(Date, "yyyymmdd") & "_" & nome & ".mdb", d1, d2, True, avvocatiEstratti, schema)
  
 Exit Sub
 
@@ -934,7 +1015,7 @@ Dim qry As String
 qry = "INSERT INTO " & destinationTable & " ( CODAVV, NOME, DESCR_ATTIVITA, DEPOSITO, COMPETENZE, SALDO, " & _
      "SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, SALDO_PRECEDENTE, VALUTA,NumOrdinamento,DATA_INIZIO,DATA_FINE,Quota ) " & _
      "SELECT CODAVV, NOME, 'XXX', Sum(PrtEstrattoContoUNEP.DEPOSITO) AS DEP," & _
-     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6] - Q AS Ass," & _
+     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q  AS Ass," & _
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1])) AS S1, Sum(PrtEstrattoContoUNEP.SPESE2) AS S2," & _
      "Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) AS S3, Sum(PrtEstrattoContoUNEP.SPESE4) AS S4, " & _
      "Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) AS S5, Sum(PrtEstrattoContoUNEP.SPESE6) AS S6," & _
@@ -945,7 +1026,7 @@ qry = "INSERT INTO " & destinationTable & " ( CODAVV, NOME, DESCR_ATTIVITA, DEPO
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1]))-" & _
      "Sum(PrtEstrattoContoUNEP.SPESE2) -Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) - " & _
      "Sum(PrtEstrattoContoUNEP.SPESE4) - Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) - " & _
-     "Sum(PrtEstrattoContoUNEP.SPESE6) - SUM(Quota) " & condition & Str(g_Settings.LimiteSaldo)
+     "Sum(PrtEstrattoContoUNEP.SPESE6) -SUM(Quota) " & condition & Str(g_Settings.LimiteSaldo)
   GetQuerySaldi = qry
 End Function
 
@@ -961,7 +1042,7 @@ g_Settings.DBConnection.Execute "DELETE * FROM PrtAssegniCircolariUNEP where (sa
 
 End Sub
 
-Public Sub GestStampaDefinitiva()
+Public Sub GestStampaDefinitiva(avvocatiEstratti As AvvocatiPerEstratto)
 
 Dim MSG_Avviso, Response As Variant
     MSG_Avviso = "Durante questa operazione è necessario non modificare alcun dato." & Chr(10)
@@ -998,7 +1079,7 @@ Dim MSG_Avviso, Response As Variant
                 MSG_Avviso = MSG_Avviso & "(Obbligatorio per rendere definitivo l'estratto conto)"
                 Response = MsgBox(MSG_Avviso, vbYesNo + vbInformation + vbDefaultButton1, "Avviso")
                 If Response = vbYes Then    ' User chose Yes.
-                    TrasferimentoDatiAlDbStorico
+                    TrasferimentoDatiAlDbStorico avvocatiEstratti
                     
                     If TrasferimentoOK = True Then
                         UpdateDataUltimoEstConto

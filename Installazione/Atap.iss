@@ -125,7 +125,7 @@ Source: ..\..\..\DeployFiles\vbAccellerator\vbalIml6.ocx; DestDir: {sys}; Flags:
 
 
 ;MS ADO
-Source: ..\..\..\DeployFiles\ado\msado21.tlb; DestDir: {sys}; Flags: regtypelib
+;Source: ..\..\..\DeployFiles\ado\msado21.tlb; DestDir: {sys}; Flags: regtypelib
 ;Source: C:\Programmi\File comuni\System\ado\msado27.tlb; DestDir: {sys}; Flags: regtypelib
 
 ;Source: C:\WINDOWS\system32\hhctrl.ocx; DestDir: {sys}; Flags: regserver

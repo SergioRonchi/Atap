@@ -1,5 +1,10 @@
 Attribute VB_Name = "mdlComuni"
 Option Explicit
+
+
+Public Property Get K_TUTTI() As String
+ K_TUTTI = " -- Tutte le cassette -- "
+End Property
 Public Sub RicercaPerCodice(frm As IAnagraficForm, Azione As TipoAzione)
 'Ricerca Avvocato
 Dim txtDataReg As String

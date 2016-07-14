@@ -60,6 +60,7 @@ Private Sub m_CmdAnagrafica_Click()
     Set m_searcForm.frmCaller = Nothing
     m_searcForm.tipo = "Anagrafica"
     m_searcForm.Filtro = " AND STAT<>'A' And CASSETTAROTTA<>'S'"
+
     If FindForm("frmRicerca") Then
           Unload m_searcForm
     End If

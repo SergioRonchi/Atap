@@ -409,6 +409,8 @@ rs.Close
 End Sub
 Private Sub CmdOK_Click()
   Dim prov As String
+    Dim avvocatiEstratti As AvvocatiPerEstratto
+  Set avvocatiEstratti = GetAvvocatoSingoloPerEstratto(TxtCodiceAvvocato.Text)
    If Not IsDate(TxtRicDataIn.Text) Or Not IsDate(TxtRicDataFin.Text) Then
     MsgBox "Inserire l'intervallo di date", vbOKOnly + vbCritical
     Exit Sub
@@ -431,7 +433,7 @@ Private Sub CmdOK_Click()
 
 
     
-    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, _
+    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, _
                              Chk(0), Chk(2), Chk(1), Chk(3), prov, False, 0
            
     

@@ -122,40 +122,40 @@ End Property
 Public Property Get IVA() As Double
  IVA = m_IVA
 End Property
-Public Property Let IVA(x As Double)
-  m_IVA = x
+Public Property Let IVA(X As Double)
+  m_IVA = X
   Me.DBConnection.Execute "UPDATE Parametri SET IVA=" & Str(m_IVA)
 End Property
 Public Property Get QuotaSoci() As Double
  QuotaSoci = m_QuotaSoci
 End Property
-Public Property Let QuotaSoci(x As Double)
-  m_QuotaSoci = x
+Public Property Let QuotaSoci(X As Double)
+  m_QuotaSoci = X
   Me.DBConnection.Execute "UPDATE Parametri SET QuotaSoci=" & Str(m_QuotaSoci)
 End Property
-Public Property Let LimiteSaldo(x As Double)
-  m_LimiteSaldo = x
+Public Property Let LimiteSaldo(X As Double)
+  m_LimiteSaldo = X
   Me.DBConnection.Execute "UPDATE Parametri SET LimiteSaldo=" & Str(m_LimiteSaldo)
 End Property
 Public Property Get LimiteSaldo() As Double
  LimiteSaldo = m_LimiteSaldo
 End Property
-Public Property Let Banca(x As String)
-  m_Banca = x
+Public Property Let Banca(X As String)
+  m_Banca = X
   Me.DBConnection.Execute "UPDATE Parametri SET Banca='" & Replace(m_Banca, "'", "''") & "'"
 End Property
 Public Property Get Banca() As String
  Banca = m_Banca
 End Property
-Public Property Let IBAN(x As String)
-  m_IBAN = x
+Public Property Let IBAN(X As String)
+  m_IBAN = X
   Me.DBConnection.Execute "UPDATE Parametri SET IBAN='" & Replace(m_IBAN, "'", "''") & "'"
 End Property
 Public Property Get IBAN() As String
  IBAN = m_IBAN
 End Property
-Public Property Let CodIVA(x As String)
-  m_CodIVA = x
+Public Property Let CodIVA(X As String)
+  m_CodIVA = X
   Me.DBConnection.Execute "UPDATE Parametri SET CodIVA='" & Replace(m_CodIVA, "'", "''") & "'"
 End Property
 Public Property Get CodIVA() As String

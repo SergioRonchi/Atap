@@ -329,6 +329,8 @@ Private Sub CmdOK_Click()
 
 
 Dim MSG_Avviso, Response As Variant
+    Dim avvocatiEstratti As AvvocatiPerEstratto
+  Set avvocatiEstratti = GetAvvocatoSingoloPerEstratto(TxtCodiceAvvocato.Text)
     
     If IsPrtTableLocked("PrtAssegniCircolariUNEP") Or IsPrtTableLocked("PrtEstrattoContoUNEP") Then
       MsgBox "Attenzione: " & vbCrLf & _
@@ -342,7 +344,7 @@ Dim MSG_Avviso, Response As Variant
     LockPrtTable ("PrtEstrattoContoUNEP")
     
     Riempi_PRT_EstrattoConto
-    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, TxtCodiceAvvocato.Text, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
+    AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
    
     If GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
             MsgBox "Nessun dato evaso! Impossibile creare la stampa Elenco Assegni Circolari Provvisoria.", vbInformation, "Attenzione"
@@ -440,19 +442,19 @@ Riempi_PRT_EstrattoConto:
 End Sub
 
 Public Sub CreazioneStampaAssegniCircolari()
-On Error GoTo FINE
+On Error GoTo fine
 Dim SQL As String
 
 SQL = "INSERT INTO PrtAssegniCircolariUNEP ( CODAVV, Nome, DEPOSITO, SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, COMPETENZE, SALDO, SALDO_PRECEDENTE, DATA_INIZIO, DATA_FINE, NumOrdinamento,DESCR_ATTIVITA,Valuta, Quota ) " & _
       "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome, Sum(PrtEstrattoContoUNEP.DEPOSITO) AS SommaDiDEPOSITO, Sum(PrtEstrattoContoUNEP.SPESE1) AS SommaDiSPESE1," & _
       "Sum(PrtEstrattoContoUNEP.SPESE2) AS SommaDiSPESE2, Sum(PrtEstrattoContoUNEP.SPESE3) AS SommaDiSPESE3, Sum(PrtEstrattoContoUNEP.SPESE4) AS SommaDiSPESE4," & _
       "Sum(PrtEstrattoContoUNEP.SPESE5) AS SommaDiSPESE5, Sum(PrtEstrattoContoUNEP.SPESE6) AS SommaDiSPESE6, Sum(PrtEstrattoContoUNEP.COMPETENZE) AS SommaDiCOMPETENZE," & _
-      "Sum(PrtEstrattoContoUNEP.SALDO) AS actSaldo, First(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
+      "Sum(PrtEstrattoContoUNEP.SALDO) - Sum(PrtEstrattoContoUNEP.Quota) AS actSaldo, First(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
       "First(PrtEstrattoContoUNEP.DATA_INIZIO) AS PrimoDiDATA_INIZIO, First(PrtEstrattoContoUNEP.DATA_FINE) AS PrimoDiDATA_FINE," & _
-      "First(AnagraficaAvvocati.NumOrdinamento) AS PrimoDiNumOrdinamento,' ','E',Sum(PrtEstrattoContoUNEP.Quota) " & _
+      "First(AnagraficaAvvocati.NumOrdinamento) AS PrimoDiNumOrdinamento,' ','E',Sum(PrtEstrattoContoUNEP.Quota) as Q " & _
       "FROM PrtEstrattoContoUNEP INNER JOIN AnagraficaAvvocati ON PrtEstrattoContoUNEP.CODAVV = AnagraficaAvvocati.CODAVV " & _
       "GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome " & _
-      "Having (((Sum([PrtEstrattoContoUNEP].[saldo]) + First([PrtEstrattoContoUNEP].[SALDO_PRECEDENTE])) >= " & Str(g_Settings.LimiteSaldo) & ")) " & _
+      "Having Sum([PrtEstrattoContoUNEP].[saldo]) + First([PrtEstrattoContoUNEP].[SALDO_PRECEDENTE]) - Sum(PrtEstrattoContoUNEP.Quota) >= " & Str(g_Settings.LimiteSaldo) & " " & _
       "ORDER BY First(AnagraficaAvvocati.NumOrdinamento);"
 
 'Reset PrtAssegniCircolariUNEP
@@ -461,7 +463,7 @@ g_Settings.DBConnection.Execute "DELETE  * FROM PrtAssegniCircolariUNEP;"
 g_Settings.DBConnection.Execute SQL
 g_Settings.DBConnection.CommitTrans
 Exit Sub
-FINE:
+fine:
  MsgBox "Creazione degli assegni non riuscita: " & err.Description, vbOKOnly + vbCritical
  g_Settings.DBConnection.RollbackTrans
 End Sub

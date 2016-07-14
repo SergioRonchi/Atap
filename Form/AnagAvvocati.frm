@@ -604,10 +604,14 @@ Public Azione As TipoAzione
 Dim PassaLoad As Boolean
 Implements IAnagraficForm
 Implements IForm
+
 Private Sub ChkBlocco_Click()
 Dim XXX As Boolean
 Dim MSG_Avviso As String
 Dim Response As Long
+  Dim avvocatiEstratti As AvvocatiPerEstratto
+  Set avvocatiEstratti = GetAvvocatoSingoloPerEstratto(TxtCodiceAvvocatoInt.Text)
+
 If ChkBlocco = 1 Then
   ChkBlocco.Picture = ImageList1.ListImages("aperto").Picture
   ChkBlocco.Caption = "Assegna Cassetta"
@@ -633,7 +637,7 @@ If Not PassaLoad Then
             
             'procedura estratto conto NON UNEP
             '--------------------------------------------------------------------------------------------
-            Riempi_PRT_EstrattoContoX "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, 1, 1, 1, 1, "N", False, 0
+            Riempi_PRT_EstrattoContoX "01/01/1900", Date, avvocatiEstratti, 1, 1, 1, 1, "N", False, 0
             If GetADORecordset("PrtEstrattoConto", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                MsgBox "Nessun dato! Nessun Estratto conto per la cassetta " + TxtCodiceAvvocatoInt.Text, vbInformation, "Attenzione"
               
@@ -659,7 +663,7 @@ If Not PassaLoad Then
                                 Exit Sub
                             End If
         
-                        XXX = Trasferisci(g_Settings.StoricoLiquidazioniPath & "\LIQ" & TxtCodiceAvvocatoInt.Text & "_" & Format(Date, "YYYYMMDD") & ".mdb", "19000101", Format(Date, "YYYYMMDD"), False, TxtCodiceAvvocatoInt.Text, "ADNS")
+                        XXX = Trasferisci(g_Settings.StoricoLiquidazioniPath & "\LIQ" & TxtCodiceAvvocatoInt.Text & "_" & Format(Date, "YYYYMMDD") & ".mdb", "19000101", Format(Date, "YYYYMMDD"), False, avvocatiEstratti, "ADNS")
                     End If
               End If
               
@@ -667,7 +671,7 @@ If Not PassaLoad Then
             '--------------------------------------------------------------------------------------------
               'procedura estratto conto  UNEP
             '--------------------------------------------------------------------------------------------
-            Riempi_PRT_EstrattoContoX "01/01/1900", Date, TxtCodiceAvvocatoInt.Text, 1, 1, 1, 1, "N", True, 1
+            Riempi_PRT_EstrattoContoX "01/01/1900", Date, avvocatiEstratti, 1, 1, 1, 1, "N", True, 1
             If GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                MsgBox "Nessun dato! Nessun Estratto UNEP conto per la cassetta " + TxtCodiceAvvocatoInt.Text, vbInformation, "Attenzione"
               
@@ -693,7 +697,7 @@ If Not PassaLoad Then
                                 Exit Sub
                             End If
         
-                        XXX = Trasferisci(g_Settings.StoricoLiquidazioniPath & "\LIQUNEP" & TxtCodiceAvvocatoInt.Text & "_" & Format(Date, "YYYYMMDD") & ".mdb", "19000101", Format(Date, "YYYYMMDD"), True, TxtCodiceAvvocatoInt.Text, "ADNS")
+                        XXX = Trasferisci(g_Settings.StoricoLiquidazioniPath & "\LIQUNEP" & TxtCodiceAvvocatoInt.Text & "_" & Format(Date, "YYYYMMDD") & ".mdb", "19000101", Format(Date, "YYYYMMDD"), True, avvocatiEstratti, "ADNS")
                     End If
               End If
               
@@ -858,11 +862,11 @@ Private Function CalcolaOrdinamento() As Long
           CalcolaOrdinamento = (N2 + N1) / 2
 End Function
 Private Sub salvaUsufruenti(cod As String)
- Dim I As Integer
+ Dim i As Integer
  g_Settings.DBConnection.Execute "DELETE * FROM USUFRUENTI WHERE CODAVV='" & cod & "'"
- For I = 0 To LstUsufruenti.ListCount - 1
-   g_Settings.DBConnection.Execute "INSERT INTO USUFRUENTI(CODAVV,DescrizioneUsufr) VALUES ('" & cod & "','" & Replace(LstUsufruenti.list(I), "'", "''") & "')"
- Next I
+ For i = 0 To LstUsufruenti.ListCount - 1
+   g_Settings.DBConnection.Execute "INSERT INTO USUFRUENTI(CODAVV,DescrizioneUsufr) VALUES ('" & cod & "','" & Replace(LstUsufruenti.list(i), "'", "''") & "')"
+ Next i
  
 End Sub
 Private Sub Form_Load()
@@ -959,13 +963,13 @@ End Function
 
 
 Public Sub RiempiLstUsufruenti()
-Dim sql As String
+Dim SQL As String
 Dim rs As ADODB.Recordset
 
 Set rs = newAdoRs
-sql = "SELECT * FROM USUFRUENTI WHERE CODAVV='" & TxtCodiceAvvocatoInt & "'"
+SQL = "SELECT * FROM USUFRUENTI WHERE CODAVV='" & TxtCodiceAvvocatoInt & "'"
 
-rs.Open sql, g_Settings.DBConnection
+rs.Open SQL, g_Settings.DBConnection
 
 While Not rs.EOF
   LstUsufruenti.AddItem rs!DescrizioneUsufr
@@ -1021,14 +1025,14 @@ End Function
 
 Private Sub IAnagraficForm_RisultatoRicerca(sCodAvv As String, oAzione As TipoAzione)
 
-Dim sql As String
+Dim SQL As String
 Dim rs As ADODB.Recordset
 Azione = TipoAzione.Modifica
 If Not FindForm("AnagAvvocati") Then Load AnagAvvocati
 PassaLoad = True
 Set rs = newAdoRs
-sql = "SELECT * FROM ANAGRAFICAAVVOCATI WHERE CODAVV='" & sCodAvv & "'"
-rs.Open sql, g_Settings.DBConnection
+SQL = "SELECT * FROM ANAGRAFICAAVVOCATI WHERE CODAVV='" & sCodAvv & "'"
+rs.Open SQL, g_Settings.DBConnection
 Caricacampi Me, rs
 RiempiLstUsufruenti
 
