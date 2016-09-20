@@ -866,25 +866,52 @@ T = GetADOValue("PrtData", "Tipo", "1=1", g_Settings.DBConnection, True)
 bimestre = GetADOValue("PrtData", "Bimestre", "1=1", g_Settings.DBConnection, True)
 anno = GetADOValue("PrtData", "BimestreAnno", "1=1", g_Settings.DBConnection, True)
 
-If T = 1 Then quotaBimestrale = quotaBimestrale / 2
+If T = 1 Then
+      quotaBimestrale = quotaBimestrale / 2
+      Select Case bimestre
+      Case 1
+        strBimestre = "GENNAIO " & anno
+      Case 2
+        strBimestre = "FEBBRAIO " & anno
+      Case 3
+        strBimestre = "MARZO " & anno
+      Case 4
+        strBimestre = "APRILE " & anno
+      Case 5
+        strBimestre = "MAGGIO " & anno
+      Case 6
+        strBimestre = "GIUGNO " & anno
+              Case 7
+        strBimestre = "LUGLIO " & anno
+              Case 8
+        strBimestre = "AGOSTO " & anno
+              Case 9
+        strBimestre = "SETTEMBRE " & anno
+              Case 10
+        strBimestre = "OTTOBRE " & anno
+              Case 11
+        strBimestre = "NOVEMBRE " & anno
+              Case 12
+        strBimestre = "DICEMBRE " & anno
+    End Select
+  Else
+    Select Case bimestre
+      Case 1
+        strBimestre = "GENNAIO-FEBBRAIO " & anno
+      Case 2
+        strBimestre = "MARZO-APRILE " & anno
+      Case 3
+        strBimestre = "MAGGIO-GIUGNO " & anno
+      Case 4
+        strBimestre = "LUGLIO-AGOSTO " & anno
+      Case 5
+        strBimestre = "SETTEMBRE-OTTOBRE " & anno
+      Case 6
+        strBimestre = "NOVEMBRE-DICEMBRE " & anno
+    End Select
+  End If
 
-
-Select Case bimestre
-  Case 1
-    strBimestre = "GENNAIO-FEBBRAIO " & anno
-  Case 2
-    strBimestre = "MARZO-APRILE " & anno
-  Case 3
-    strBimestre = "MAGGIO-GIUGNO " & anno
-  Case 3
-    strBimestre = "LUGLIO-AGOSTO " & anno
-  Case 5
-    strBimestre = "SETTEMBRE-OTTOBRE " & anno
-  Case 6
-    strBimestre = "NOVEMBRE-DICEMBRE " & anno
-End Select
-
-If GetADORecordset("StoricoFattureUNEP", "*", "codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "'", g_Settings.DBConnection) Is Nothing Then
+If GetADORecordset("StoricoFattureUNEP", "*", "Bimestre='" & strBimestre & "' AND codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "'", g_Settings.DBConnection) Is Nothing Then
      Set rs = GetADORecordset("AnagraficaAvvocati", "*", "codAVV='" & codice & "'", g_Settings.DBConnection)
      
      If rs!AFAT <> "S" Then Exit Sub
@@ -903,13 +930,13 @@ If GetADORecordset("StoricoFattureUNEP", "*", "codAVV='" & codice & "' and DATAF
            ",CompNotifEuro=CompNotifEuro+" & Str(Notifiche) & _
            ",CompSfpgEuro=CompSfpgEuro+" & Str(stratti) & _
            ",Quota=Quota+" & Str(quota) & _
-           " WHERE codAVV='" & codice & "' and DATAFATTURA='" & Data & "';"
+           " WHERE codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "' AND Bimestre='" & strBimestre & "'"
    
 End If
 g_Settings.DBConnection.Execute SQL
 
 End Sub
-Public Sub GeneraFattura(Numero As Integer, Data As Date)
+Public Sub GeneraFattura(Numero As Long, Data As Date)
 Dim nFat As Long
 Dim ValEuro As Variant
 Dim Query As String
