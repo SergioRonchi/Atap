@@ -36,6 +36,12 @@ Private m_AtapUserFolder As String
 Private m_AtapUserFolderTemp As String
 Private m_AtapUserFolderBackup As String
 
+Private m_CodTestata As String
+Private m_CodTestataIncasso As String
+Private m_CodQVar As String
+Private m_CodQFissa As String
+Private m_CodCompetenze As String
+
 Private m_CurrentDbName As String
 Private Const K_NomeInRegistry As String = "AtapDB"
 
@@ -78,12 +84,29 @@ Private Sub Class_Initialize()
     Loop While m_Conn Is Nothing
     'Set GLO_Report = Connetti(app.Path & "\Report.mdb")
     dbUpdater.UpdateDatabase m_Conn
-    m_IVA = GetADOValue("Parametri", "IVA", "1=1", Me.DBConnection)
-    m_QuotaSoci = GetADOValue("Parametri", "QuotaSoci", "1=1", Me.DBConnection)
-    m_LimiteSaldo = GetADOValue("Parametri", "LimiteSaldo", "1=1", Me.DBConnection)
-    m_Banca = GetADOValue("Parametri", "Banca", "1=1", Me.DBConnection)
-    m_IBAN = GetADOValue("Parametri", "IBAN", "1=1", Me.DBConnection)
     
+    Dim rs As ADODB.Recordset
+    
+    Set rs = newAdoRs
+    
+    rs.Open "SELECT * FROM Parametri", Me.DBConnection
+    
+    If Not rs.EOF Then
+      m_IVA = rs("IVA")
+      m_QuotaSoci = rs("QuotaSoci")
+      m_LimiteSaldo = rs("LimiteSaldo")
+      m_Banca = rs("Banca")
+      m_IBAN = rs("IBAN")
+      m_CodTestata = rs("CECodTestata")
+       m_CodTestataIncasso = rs("CECodTestataIncasso")
+      m_CodQVar = rs("CECodQVar")
+      m_CodQFissa = rs("CECodQFixed")
+      m_CodCompetenze = rs("CECodCompetenze")
+    End If
+    
+    
+    
+     
     m_AtapUserFolder = GetCommonUserFolder & "\Atap"
     SafeMakeDir m_AtapUserFolder
     m_AtapUserFolderTemp = m_AtapUserFolder & "\Temp"
@@ -92,7 +115,7 @@ Private Sub Class_Initialize()
     SafeMakeDir m_AtapUserFolderBackup
     
     Set m_StrutturaComuni = New Collection
- LoadComuniCollection "Dati\ListaComuni.txt", m_StrutturaComuni
+ LoadComuniCollection app.Path & "\Dati\ListaComuni.txt", m_StrutturaComuni
 
 End Sub
 Public Property Get ExportPath() As String
@@ -122,46 +145,81 @@ End Property
 Public Property Get IVA() As Double
  IVA = m_IVA
 End Property
-Public Property Let IVA(X As Double)
-  m_IVA = X
+Public Property Let IVA(x As Double)
+  m_IVA = x
   Me.DBConnection.Execute "UPDATE Parametri SET IVA=" & Str(m_IVA)
 End Property
 Public Property Get QuotaSoci() As Double
  QuotaSoci = m_QuotaSoci
 End Property
-Public Property Let QuotaSoci(X As Double)
-  m_QuotaSoci = X
+Public Property Let QuotaSoci(x As Double)
+  m_QuotaSoci = x
   Me.DBConnection.Execute "UPDATE Parametri SET QuotaSoci=" & Str(m_QuotaSoci)
 End Property
-Public Property Let LimiteSaldo(X As Double)
-  m_LimiteSaldo = X
+Public Property Let LimiteSaldo(x As Double)
+  m_LimiteSaldo = x
   Me.DBConnection.Execute "UPDATE Parametri SET LimiteSaldo=" & Str(m_LimiteSaldo)
 End Property
 Public Property Get LimiteSaldo() As Double
  LimiteSaldo = m_LimiteSaldo
 End Property
-Public Property Let Banca(X As String)
-  m_Banca = X
+Public Property Let Banca(x As String)
+  m_Banca = x
   Me.DBConnection.Execute "UPDATE Parametri SET Banca='" & Replace(m_Banca, "'", "''") & "'"
 End Property
 Public Property Get Banca() As String
  Banca = m_Banca
 End Property
-Public Property Let IBAN(X As String)
-  m_IBAN = X
+Public Property Let IBAN(x As String)
+  m_IBAN = x
   Me.DBConnection.Execute "UPDATE Parametri SET IBAN='" & Replace(m_IBAN, "'", "''") & "'"
 End Property
 Public Property Get IBAN() As String
  IBAN = m_IBAN
 End Property
-Public Property Let CodIVA(X As String)
-  m_CodIVA = X
+Public Property Let CodIVA(x As String)
+  m_CodIVA = x
   Me.DBConnection.Execute "UPDATE Parametri SET CodIVA='" & Replace(m_CodIVA, "'", "''") & "'"
 End Property
 Public Property Get CodIVA() As String
  CodIVA = m_CodIVA
 End Property
 
+Public Property Let CodTestata(x As String)
+  m_CodTestata = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CECodTestata='" & Replace(m_CodTestata, "'", "''") & "'"
+End Property
+Public Property Get CodTestata() As String
+ CodTestata = m_CodTestata
+End Property
+Public Property Get CodTestataIncasso() As String
+ CodTestataIncasso = m_CodTestataIncasso
+End Property
+Public Property Let CodTestataIncasso(x As String)
+  m_CodTestataIncasso = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CECodTestataIncasso='" & Replace(m_CodTestataIncasso, "'", "''") & "'"
+End Property
+Public Property Let CodQuataFissa(x As String)
+  m_CodQFissa = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CECodQFixed='" & Replace(m_CodQFissa, "'", "''") & "'"
+End Property
+Public Property Get CodQuataFissa() As String
+ CodQuataFissa = m_CodQFissa
+End Property
+Public Property Let CodQuotaVariabile(x As String)
+  m_CodQVar = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CECodQVar='" & Replace(m_CodQVar, "'", "''") & "'"
+End Property
+Public Property Get CodQuotaVariabile() As String
+ CodQuotaVariabile = m_CodQVar
+End Property
+Public Property Let CodCompetenze(x As String)
+  m_CodCompetenze = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CECodCompetenze='" & Replace(m_CodCompetenze, "'", "''") & "'"
+End Property
+Public Property Get CodCompetenze() As String
+ CodCompetenze = m_CodCompetenze
+End Property
 
 Public Property Get StoricoLiquidazioniPath() As String
  StoricoLiquidazioniPath = m_StoricoLiquidazioniPath

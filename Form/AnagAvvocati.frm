@@ -4,29 +4,29 @@ Object = "{60CCE6A8-5C61-4F30-8513-F57EED62E86A}#8.0#0"; "todl8.ocx"
 Begin VB.Form AnagAvvocati 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Gestione Anagrafica Avvocati"
-   ClientHeight    =   7260
+   ClientHeight    =   7965
    ClientLeft      =   420
    ClientTop       =   600
-   ClientWidth     =   8265
+   ClientWidth     =   10065
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MDIChild        =   -1  'True
    MinButton       =   0   'False
-   ScaleHeight     =   7260
-   ScaleWidth      =   8265
+   ScaleHeight     =   7965
+   ScaleWidth      =   10065
    ShowInTaskbar   =   0   'False
    Begin VB.CommandButton cmdEsci 
       Caption         =   "E&sci"
       Height          =   450
-      Left            =   6960
+      Left            =   8640
       TabIndex        =   45
-      Top             =   6600
+      Top             =   7320
       Width           =   1095
    End
    Begin MSComctlLib.ImageList ImageList1 
-      Left            =   480
-      Top             =   3480
+      Left            =   360
+      Top             =   3960
       _ExtentX        =   1005
       _ExtentY        =   1005
       BackColor       =   -2147483643
@@ -60,8 +60,8 @@ Begin VB.Form AnagAvvocati
       Height          =   2085
       Left            =   90
       TabIndex        =   37
-      Top             =   4440
-      Width           =   8115
+      Top             =   5160
+      Width           =   9795
       Begin VB.CommandButton CmdAggiungiUsuf 
          Caption         =   ">>"
          Height          =   240
@@ -85,7 +85,7 @@ Begin VB.Form AnagAvvocati
          List            =   "AnagAvvocati.frx":08A6
          TabIndex        =   18
          Top             =   120
-         Width           =   3525
+         Width           =   5085
       End
       Begin VB.TextBox TxtNewUsufruente 
          Height          =   285
@@ -98,13 +98,13 @@ Begin VB.Form AnagAvvocati
    End
    Begin VB.Frame FrmComandiAnag 
       Height          =   720
-      Left            =   90
+      Left            =   0
       TabIndex        =   35
-      Top             =   6480
-      Width           =   8130
+      Top             =   7200
+      Width           =   9930
       Begin VB.CommandButton cmdPrint 
          Height          =   465
-         Left            =   5640
+         Left            =   7320
          Picture         =   "AnagAvvocati.frx":08A8
          Style           =   1  'Graphical
          TabIndex        =   40
@@ -115,23 +115,41 @@ Begin VB.Form AnagAvvocati
       Begin VB.CommandButton CmdSalva 
          Caption         =   "&Salva"
          Height          =   450
-         Left            =   4440
+         Left            =   6120
          TabIndex        =   21
          Top             =   120
          Width           =   1095
       End
    End
    Begin VB.Frame FrmAnagrafica 
-      Height          =   4460
+      Height          =   5175
       Left            =   90
       TabIndex        =   19
       Top             =   0
-      Width           =   8115
+      Width           =   9795
+      Begin VB.TextBox txtMail2 
+         DataField       =   "MAIL2"
+         Height          =   285
+         Left            =   5040
+         MaxLength       =   100
+         TabIndex        =   48
+         Top             =   3465
+         Width           =   4485
+      End
+      Begin VB.TextBox txtPEC 
+         DataField       =   "PEC"
+         Height          =   285
+         Left            =   240
+         MaxLength       =   100
+         TabIndex        =   46
+         Top             =   3465
+         Width           =   4485
+      End
       Begin VB.TextBox txtOrdine 
          DataField       =   "NumOrdinamento"
          Enabled         =   0   'False
          Height          =   285
-         Left            =   5040
+         Left            =   8160
          Locked          =   -1  'True
          MaxLength       =   35
          TabIndex        =   44
@@ -141,9 +159,9 @@ Begin VB.Form AnagAvvocati
       End
       Begin VB.Frame FrmNote 
          Height          =   1080
-         Left            =   1200
+         Left            =   1320
          TabIndex        =   38
-         Top             =   3240
+         Top             =   3960
          Width           =   5775
          Begin VB.TextBox TxtNote3 
             DataField       =   "NOTE3"
@@ -185,16 +203,16 @@ Begin VB.Form AnagAvvocati
          DataField       =   "Nome"
          Height          =   285
          Left            =   1665
-         MaxLength       =   50
+         MaxLength       =   100
          TabIndex        =   1
          Top             =   650
-         Width           =   4590
+         Width           =   5910
       End
       Begin VB.CheckBox ChkBlocco 
          Caption         =   "Libera Cassetta"
          DataField       =   "STAT"
          Height          =   795
-         Left            =   6360
+         Left            =   8040
          Picture         =   "AnagAvvocati.frx":09F2
          Style           =   1  'Graphical
          TabIndex        =   20
@@ -214,10 +232,10 @@ Begin VB.Form AnagAvvocati
          DataField       =   "EMAIL"
          Height          =   285
          Left            =   5040
-         MaxLength       =   30
+         MaxLength       =   100
          TabIndex        =   11
          Top             =   2880
-         Width           =   2925
+         Width           =   4605
       End
       Begin VB.TextBox TxtFax 
          DataField       =   "FAX"
@@ -277,24 +295,24 @@ Begin VB.Form AnagAvvocati
          DataField       =   "Locali"
          Height          =   285
          Left            =   1200
-         MaxLength       =   35
+         MaxLength       =   100
          TabIndex        =   4
          Top             =   1800
-         Width           =   3420
+         Width           =   6300
       End
       Begin VB.TextBox TxtIndirizzo 
          DataField       =   "Indiri"
          Height          =   285
          Left            =   240
-         MaxLength       =   40
+         MaxLength       =   100
          TabIndex        =   2
          Top             =   1200
-         Width           =   3870
+         Width           =   7335
       End
       Begin TrueOleDBList80.TDBCombo CmbProvincia 
          DataField       =   "PROV"
          Height          =   315
-         Left            =   5040
+         Left            =   7560
          TabIndex        =   43
          Top             =   1800
          Width           =   2175
@@ -440,6 +458,22 @@ Begin VB.Form AnagAvvocati
          _StyleDefs(59)  =   "Named:id=42:FilterBar"
          _StyleDefs(60)  =   ":id=42,.parent=33"
       End
+      Begin VB.Label Label2 
+         Caption         =   "Mail 2 :"
+         Height          =   255
+         Left            =   5040
+         TabIndex        =   49
+         Top             =   3240
+         Width           =   675
+      End
+      Begin VB.Label Label1 
+         Caption         =   "PEC :"
+         Height          =   255
+         Left            =   240
+         TabIndex        =   47
+         Top             =   3240
+         Width           =   675
+      End
       Begin VB.Label LblAnagAnnullata 
          Alignment       =   2  'Center
          BackColor       =   &H00000000&
@@ -455,7 +489,7 @@ Begin VB.Form AnagAvvocati
          EndProperty
          ForeColor       =   &H000000FF&
          Height          =   285
-         Left            =   2040
+         Left            =   2880
          TabIndex        =   36
          Top             =   120
          Visible         =   0   'False
@@ -520,7 +554,7 @@ Begin VB.Form AnagAvvocati
       Begin VB.Label LblProvincia 
          Caption         =   "Provincia :"
          Height          =   255
-         Left            =   5040
+         Left            =   7560
          TabIndex        =   27
          Top             =   1560
          Width           =   855
@@ -572,7 +606,7 @@ Begin VB.Form AnagAvvocati
       TabIndex        =   41
       Top             =   960
       Visible         =   0   'False
-      Width           =   8130
+      Width           =   9810
       Begin VB.Label LblCassetta 
          Caption         =   "Cassetta Libera"
          BeginProperty Font 
@@ -862,11 +896,11 @@ Private Function CalcolaOrdinamento() As Long
           CalcolaOrdinamento = (N2 + N1) / 2
 End Function
 Private Sub salvaUsufruenti(cod As String)
- Dim i As Integer
+ Dim I As Integer
  g_Settings.DBConnection.Execute "DELETE * FROM USUFRUENTI WHERE CODAVV='" & cod & "'"
- For i = 0 To LstUsufruenti.ListCount - 1
-   g_Settings.DBConnection.Execute "INSERT INTO USUFRUENTI(CODAVV,DescrizioneUsufr) VALUES ('" & cod & "','" & Replace(LstUsufruenti.list(i), "'", "''") & "')"
- Next i
+ For I = 0 To LstUsufruenti.ListCount - 1
+   g_Settings.DBConnection.Execute "INSERT INTO USUFRUENTI(CODAVV,DescrizioneUsufr) VALUES ('" & cod & "','" & Replace(LstUsufruenti.list(I), "'", "''") & "')"
+ Next I
  
 End Sub
 Private Sub Form_Load()
@@ -917,6 +951,9 @@ Public Function AbilitaCampi(SiNO As Boolean)
 '        TxtDescrUsuf.Enabled = SiNO
         TxtCognomeNome.Enabled = SiNO
         TxtEMail.Enabled = SiNO
+        txtPEC.Enabled = SiNO
+        txtMail2.Enabled = SiNO
+        
         TxtFax.Enabled = SiNO
         TxtIndirizzo.Enabled = SiNO
         TxtLocalità.Enabled = SiNO

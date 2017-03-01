@@ -358,7 +358,7 @@ Public Function getQryNotifiche(tipoBimestre As Integer, isUnep As Boolean, tipo
     qrySQL = qrySQL & "TribunaliAppartenenza.DescrizioneTribunale, " & sSaldi & ".SaldoTotaleEuro," & sSaldi & ".PROG_Saldi +1,'" + Format(Now, "dd/mm/yyyy") + "',"
     qrySQL = qrySQL & "'E','" & provvisorio & "','" & Da & "','" & A & "', Parte1, Parte2, 'Notifiche', ImpDepositoE,AnagraficaAvvocati.NumOrdinamento,Left(Localita1,18), Note    "
     If isUnep Then
-      qrySQL = qrySQL & ", 0 as Quota "
+      qrySQL = qrySQL & ", 0 as Quota, 0 as Deduzione "
       'qrySQL = qrySQL & "," & FixDouble(IIf(tipoBimestre = 2, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)) & " as Quota "
     End If
     qrySQL = qrySQL & "FROM " & sSaldi & " INNER JOIN ((" & Tabella & " INNER JOIN AnagraficaAvvocati ON " & Tabella & ".CODAVV = AnagraficaAvvocati.CODAVV) INNER JOIN TribunaliAppartenenza ON "
@@ -415,7 +415,7 @@ Public Function getQrySfratti(tipoBimestre As Integer, isUnep As Boolean, tipo A
     qrySQL = qrySQL & "TribunaliAppartenenza.DescrizioneTribunale, " & sSaldi & ".SaldoTotaleEuro," & sSaldi & ".PROG_Saldi +1,'" + Format(Now, "dd/mm/yyyy") + "',"
     qrySQL = qrySQL & "'E','" & provvisorio & "','" & Da & "','" & A & "', Parte1, Parte2, 'Sfratti/Pignoramenti', ImpDepositoE,AnagraficaAvvocati.NumOrdinamento,Left(Localita1,35)    "
     If isUnep Then
-      qrySQL = qrySQL & ", 0 as Quota "
+      qrySQL = qrySQL & ", 0 as Quota,  0 as Deduzione "
       'qrySQL = qrySQL & "," & FixDouble(IIf(tipoBimestre = 2, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)) & " as Quota "
     End If
     qrySQL = qrySQL & " FROM " & sSaldi & " INNER JOIN ((" & Tabella & " INNER JOIN AnagraficaAvvocati ON " & Tabella & ".CODAVV = "
@@ -482,7 +482,7 @@ Public Sub update_EstConto_Notifiche(isUnep As Boolean, Tabella As String, qrySQ
                
      End If
      If isUnep Then
-        sqlUpdate = sqlUpdate & ", Quota "
+        sqlUpdate = sqlUpdate & ", Quota, Deduzione "
      End If
      sqlUpdate = sqlUpdate & "  ) " & qrySQL
     g_Settings.DBConnection.Execute sqlUpdate
@@ -498,7 +498,7 @@ Dim sqlUpdate As String
                 "Deposito,NumOrdinamento,Localita1"
                 
      If isUnep Then
-        sqlUpdate = sqlUpdate & ", Quota "
+        sqlUpdate = sqlUpdate & ", Quota, Deduzione "
      End If
      sqlUpdate = sqlUpdate & "  ) " & qrySQL
               
@@ -518,6 +518,7 @@ Dim qrySQL As String
 Dim qryApp As String
 Dim qryDelete As String
 Dim qry1, qry2, qry3 As String
+Dim whereData As String
 Dim item
 
     qry1 = ""
@@ -554,25 +555,35 @@ Dim item
      End If
     
     qryApp = qry1 & qry2 & qry3
+    
+    If data1 <> "" Then
+       whereData = "  DataEvasionePratica >= '" & Format(data1, "yyyymmdd") & "' "
+    End If
+    If data2 <> "" Then
+        whereData = whereData & " AND DataEvasionePratica <= '" & Format(data2, "yyyymmdd") & "' "
+    End If
 
- qrySQL = "SELECT  CODAVV FROM ANAGRAFICAAVVOCATI " & _
+ qrySQL = "SELECT  CODAVV, " & _
+          "(SELECT SUM(Importo) FROM DEDUZIONI_UNEP WHERE ANNULLO<>'A' AND DEDUZIONI_UNEP.CodAVV=ANAGRAFICAAVVOCATI.CODAVV AND  " & whereData & ") AS Deduzione " & _
+          " FROM ANAGRAFICAAVVOCATI " & _
           "WHERE STAT='V' AND NOT (CODAVV LIKE '525%' OR CODAVV LIKE '393%') " & _
           qry3 & _
           " ORDER BY ANAGRAFICAAVVOCATI.NumOrdinamento"
           
 Dim rs As ADODB.Recordset
+Dim deduzione As Double
 Set rs = New ADODB.Recordset
 
 rs.Open qrySQL, g_Settings.DBConnection
 While Not rs.EOF
-
-    update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", RigaPerAvvocatoSenzaOperazioni(rs(0), data1, data2, importo)
+    deduzione = IIf(IsNull(rs(1)), 0, rs(1))
+    update_EstConto_Notifiche True, "PrtEstrattoContoUNEP", RigaPerAvvocatoSenzaOperazioni(rs(0), data1, data2, importo, deduzione)
     
   rs.MoveNext
 Wend
           
 End Sub
-Public Function RigaPerAvvocatoSenzaOperazioni(codAvv As String, data1 As String, data2 As String, Optional importo As Double) As String
+Public Function RigaPerAvvocatoSenzaOperazioni(codAvv As String, data1 As String, data2 As String, importo As Double, deduzione As Double) As String
 Dim qrySQL As String
 '        sqlUpdate = "INSERT INTO " & Tabella & " (CodAvv,Nome,INDIRI,LOCALI,PROV,CAP,TELEFCELL,TELEF,CRONOLOGICO," & _
 '                "SPESE1,DESCR_SPESE1,SPESE2,DESCR_SPESE2,SPESE3,DESCR_SPESE3,SPESE4,DESCR_SPESE4," & _
@@ -585,12 +596,86 @@ Dim qrySQL As String
     qrySQL = qrySQL & "AnagraficaAvvocati.PROV, AnagraficaAvvocati.CAP, AnagraficaAvvocati.TELEFCELL, AnagraficaAvvocati.TELEF, 0, "
     qrySQL = qrySQL & " 0,'Costo Notifica',0,'', 0,'',0,'',0,'',0,'',0, 0,'','','','','','', "
     qrySQL = qrySQL & "'', " & FixDouble(saldoPrecedente) & ",0,'" + Format(Now, "dd/mm/yyyy") + "',"
-    qrySQL = qrySQL & "'E','','" & data1 & "','" & data2 & "', '', '', 'Notifiche', 0,AnagraficaAvvocati.NumOrdinamento,'', ''," & FixDouble(importo)
+    qrySQL = qrySQL & "'E','','" & data1 & "','" & data2 & "', '', '', 'Notifiche', 0,AnagraficaAvvocati.NumOrdinamento,'', ''," & FixDouble(importo) & "," & FixDouble(deduzione)
     qrySQL = qrySQL & " FROM AnagraficaAvvocati WHERE CODAVV='" & codAvv & "'"
     
     RigaPerAvvocatoSenzaOperazioni = qrySQL
 End Function
+Public Sub AggiungiDeduzioni(data1 As String, data2 As String, oCodAvv As AvvocatiPerEstratto)
+Dim qrySQL As String
+Dim qryApp As String
+Dim qryDelete As String
+Dim qry1, qry2, qry3 As String
+Dim sqlUpdate As String
+Dim NumErrori As Integer
+Dim item
+    
+' Valuta Corrente
 
+
+On Error GoTo ERR_AggiungiDeduzioni
+    
+    qry1 = ""
+    qry2 = ""
+    qry3 = ""
+    qryApp = "ANNULLO <> 'A' "
+    
+    If data1 <> "" Then
+       qry1 = " AND ( DataEvasionePratica  >= '" & Format(data1, "yyyymmdd") & "')"
+    End If
+    If data2 <> "" Then
+        qry2 = " AND ( DataEvasionePratica <= '" & Format(data2, "yyyymmdd") & "')"
+    End If
+    
+    If oCodAvv.ListaEsclusi = False Then
+       'La lista contiene quelli per cui fare l'E.C.
+        If oCodAvv.Tutti = False Then
+              qry3 = " AND ("
+              For Each item In oCodAvv.Lista
+                qry3 = qry3 & " CODAVV = '" & item & "' OR "
+              Next
+              qry3 = Mid(qry3, 1, Len(qry3) - 3) & " )"
+
+        End If
+      Else
+       'La lista contiene quelli da escludere dall'E.C.
+        If oCodAvv.Tutti = False Then
+           
+              qry3 = " AND "
+              For Each item In oCodAvv.Lista
+                qry3 = qry3 & " CODAVV <> '" & item & "' AND "
+              Next
+              qry3 = Mid(qry3, 1, Len(qry3) - 4) & " "
+
+
+         Else
+            qry3 = " AND (1=0) " 'Esclude tutti
+        End If
+     End If
+
+    
+    qryApp = qryApp & qry1 & qry2 & qry3
+    
+    qryDelete = "DELETE FROM PrtDeduzioniUNEP;"
+    g_Settings.DBConnection.Execute qryDelete
+    
+    sqlUpdate = "INSERT INTO PrtDeduzioniUNEP (CodAvv,Data,Nota,Importo) " & _
+                "SELECT CODAVV, Mid(DataEvasionePratica,7,2) & '/' & Mid(DataEvasionePratica,5,2) & '/' & Mid(DataEvasionePratica,1,4), Nota, Importo " & _
+                "FROM DEDUZIONI_UNEP WHERE  " & qryApp
+                                
+              
+    g_Settings.DBConnection.Execute sqlUpdate
+    
+    
+
+Exit Sub
+
+ERR_AggiungiDeduzioni:
+   
+        MsgBox "Attenzione errore in stampa Estratto Conto!" & Chr(10) & err & " - " & Error(err), vbCritical, "Attenzione"
+   
+Resume Next
+End Sub
 Public Sub Riempi_PRT_EstrattoContoX(data1 As String, data2 As String, oCodAvv As AvvocatiPerEstratto, _
                                      adempimenti As Integer, Notifiche As Integer, decreti As Integer, sfratti As Integer, _
                                      provvisorio As String, isUnep As Boolean, tipoBimestre As Integer)

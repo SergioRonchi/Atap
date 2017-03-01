@@ -29,7 +29,7 @@ Public RegimeIVAEsigibilDiff As String
 Public TipoPagamento As String
 Public ModPagamento As String
 Public IncassoAccreditoDifferito As String
-Public CodPartita As String
+Public codPartita As String
 Public Scadenze As String
 Public NuovaScadenza As String
 Public RegistroIVA As String
@@ -54,8 +54,8 @@ Public ImportoIVA As String
 Public ImportoValuta As String
 Public CodValutaEstera As String
 Public Cambio As String
-Public CodAliquotaIVA As String
-Public CodArticoloIVA As String
+Public codAliquotaIVA As String
+Public codArticoloIVA As String
 Public CodCentroCosto As String
 Public CodAttISTAT As String
 Public NumUnitProd As String
@@ -88,7 +88,7 @@ Dim s As String
     s = s & TipoPagamento & ";"
     s = s & ModPagamento & ";"
     s = s & IncassoAccreditoDifferito & ";"
-    s = s & CodPartita & ";"
+    s = s & codPartita & ";"
     s = s & Scadenze & ";"
     s = s & NuovaScadenza & ";"
     s = s & RegistroIVA & ";"
@@ -113,8 +113,8 @@ Dim s As String
     s = s & ImportoValuta & ";"
     s = s & CodValutaEstera & ";"
     s = s & Cambio & ";"
-    s = s & CodAliquotaIVA & ";"
-    s = s & CodArticoloIVA & ";"
+    s = s & codAliquotaIVA & ";"
+    s = s & codArticoloIVA & ";"
     s = s & CodCentroCosto & ";"
     s = s & CodAttISTAT & ";"
     s = s & NumUnitProd & ";"
@@ -127,7 +127,7 @@ Dim s As String
 
     CreateRow = s
 End Function
-Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Integer, dataFattura As String, numFattura As String, CF As String, PIVA As String, dImp As Double, dImpIVA As Double, sCodAliquota As String, desc As String)
+Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Integer, dataFattura As String, numFattura As String, CF As String, PIVA As String, dImp As Double, dImpIVA As Double, sCodAliquota As String, sCodArticolo As String, desc As String, codCE As String)
 
  
   N_mov = numMovimento
@@ -144,16 +144,17 @@ Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Integer
    ProtocolloIVA = numFattura
    Valenza = "0"
    Fiscale = "0"
-   CodPartita = numFattura & "|" & year(dataFattura)
+   codPartita = numFattura & "|" & year(dataFattura)
    TipoRiga = "0"
-   CodConto = "100101003"
+   CodConto = g_Settings.CodTestata
    CFnominativo = IIf(PIVA <> "", PIVA, CF)
+   ImportoIVA = ""
  Else
    TipoRiga = "2"
-   CodConto = "600101010"
-   CodAliquotaIVA = sCodAliquota
-   CodArticoloIVA = "005"
-    DescrizioneMov = desc
+   CodConto = codCE
+   codAliquotaIVA = sCodAliquota
+   codArticoloIVA = sCodArticolo
+   DescrizioneMov = desc
  End If
 End Sub
 Private Sub Class_Initialize()

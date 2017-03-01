@@ -503,13 +503,15 @@ Private Sub CmdOK_Click()
     End If
     LockPrtTable ("PrtAssegniCircolariUNEP")
     LockPrtTable ("PrtEstrattoContoUNEP")
-
+    
     g_Settings.DBConnection.Execute "DELETE * FROM PrtData"
     
     g_Settings.DBConnection.Execute "INSERT INTO PrtData(Tipo, Bimestre, BimestreAnno) VALUES(" & IIf(optMese(0).value, 1, 2) & "," & cmbBimestre.ListIndex + 1 & "," & cmbBinestreAnno.list(cmbBinestreAnno.ListIndex) & ")"
     
     Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, 0, Chk(2), 0, Chk(3), prov, True, IIf(optMese(0).value, 1, 2)
-           
+   
+    AggiungiDeduzioni TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti
+    
     AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
     
     If Not GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
@@ -1040,20 +1042,20 @@ Private Function GetQuerySaldi(destinationTable As String, condition As String) 
 Dim qry As String
 
 qry = "INSERT INTO " & destinationTable & " ( CODAVV, NOME, DESCR_ATTIVITA, DEPOSITO, COMPETENZE, SALDO, " & _
-     "SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, SALDO_PRECEDENTE, VALUTA,NumOrdinamento,DATA_INIZIO,DATA_FINE,Quota ) " & _
+     "SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, SALDO_PRECEDENTE, VALUTA,NumOrdinamento,DATA_INIZIO,DATA_FINE,Quota, Deduzione ) " & _
      "SELECT CODAVV, NOME, 'XXX', Sum(PrtEstrattoContoUNEP.DEPOSITO) AS DEP," & _
-     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q  AS Ass," & _
+     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q +DED AS Ass," & _
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1])) AS S1, Sum(PrtEstrattoContoUNEP.SPESE2) AS S2," & _
      "Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) AS S3, Sum(PrtEstrattoContoUNEP.SPESE4) AS S4, " & _
      "Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) AS S5, Sum(PrtEstrattoContoUNEP.SPESE6) AS S6," & _
-     "fIRST(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS S_PRECEDENTE, 'E' AS Valuta,NumOrdinamento,DATA_INIZIO,DATA_FINE,SUM(Quota) as Q " & _
+     "fIRST(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS S_PRECEDENTE, 'E' AS Valuta,NumOrdinamento,DATA_INIZIO,DATA_FINE,SUM(Quota) as Q, SUM(Deduzione) as DED " & _
      "From PrtEstrattoContoUNEP " & _
      "GROUP BY PrtEstrattoContoUNEP.CODAVV,PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, NumOrdinamento,DATA_INIZIO,DATA_FINE " & _
      " HAVING   Sum(PrtEstrattoContoUNEP.DEPOSITO) + fIRST(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) -Sum(PrtEstrattoContoUNEP.COMPETENZE)-" & _
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1]))-" & _
      "Sum(PrtEstrattoContoUNEP.SPESE2) -Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) - " & _
      "Sum(PrtEstrattoContoUNEP.SPESE4) - Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) - " & _
-     "Sum(PrtEstrattoContoUNEP.SPESE6) -SUM(Quota) " & condition & Str(g_Settings.LimiteSaldo)
+     "Sum(PrtEstrattoContoUNEP.SPESE6) -SUM(Quota) + SUM(Deduzione) " & condition & Str(g_Settings.LimiteSaldo)
   GetQuerySaldi = qry
 End Function
 

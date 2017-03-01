@@ -449,12 +449,12 @@ SQL = "INSERT INTO PrtAssegniCircolariUNEP ( CODAVV, Nome, DEPOSITO, SPESE1, SPE
       "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome, Sum(PrtEstrattoContoUNEP.DEPOSITO) AS SommaDiDEPOSITO, Sum(PrtEstrattoContoUNEP.SPESE1) AS SommaDiSPESE1," & _
       "Sum(PrtEstrattoContoUNEP.SPESE2) AS SommaDiSPESE2, Sum(PrtEstrattoContoUNEP.SPESE3) AS SommaDiSPESE3, Sum(PrtEstrattoContoUNEP.SPESE4) AS SommaDiSPESE4," & _
       "Sum(PrtEstrattoContoUNEP.SPESE5) AS SommaDiSPESE5, Sum(PrtEstrattoContoUNEP.SPESE6) AS SommaDiSPESE6, Sum(PrtEstrattoContoUNEP.COMPETENZE) AS SommaDiCOMPETENZE," & _
-      "Sum(PrtEstrattoContoUNEP.SALDO) - Sum(PrtEstrattoContoUNEP.Quota) AS actSaldo, First(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
+      "Sum(PrtEstrattoContoUNEP.SALDO) - Sum(PrtEstrattoContoUNEP.Quota) + Sum(PrtEstrattoContoUNEP.Deduzione) AS actSaldo, First(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS prevSaldo," & _
       "First(PrtEstrattoContoUNEP.DATA_INIZIO) AS PrimoDiDATA_INIZIO, First(PrtEstrattoContoUNEP.DATA_FINE) AS PrimoDiDATA_FINE," & _
       "First(AnagraficaAvvocati.NumOrdinamento) AS PrimoDiNumOrdinamento,' ','E',Sum(PrtEstrattoContoUNEP.Quota) as Q " & _
       "FROM PrtEstrattoContoUNEP INNER JOIN AnagraficaAvvocati ON PrtEstrattoContoUNEP.CODAVV = AnagraficaAvvocati.CODAVV " & _
       "GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome " & _
-      "Having Sum([PrtEstrattoContoUNEP].[saldo]) + First([PrtEstrattoContoUNEP].[SALDO_PRECEDENTE]) - Sum(PrtEstrattoContoUNEP.Quota) >= " & Str(g_Settings.LimiteSaldo) & " " & _
+      "Having Sum([PrtEstrattoContoUNEP].[saldo]) + First([PrtEstrattoContoUNEP].[SALDO_PRECEDENTE]) - Sum(PrtEstrattoContoUNEP.Quota) + Sum(PrtEstrattoContoUNEP.Deduzione) >= " & Str(g_Settings.LimiteSaldo) & " " & _
       "ORDER BY First(AnagraficaAvvocati.NumOrdinamento);"
 
 'Reset PrtAssegniCircolariUNEP

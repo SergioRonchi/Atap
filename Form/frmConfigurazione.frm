@@ -3,23 +3,106 @@ Object = "{49CBFCC0-1337-11D2-9BBF-00A024695830}#1.0#0"; "tinumb8.ocx"
 Begin VB.Form frmConfigurazione 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Configurazione"
-   ClientHeight    =   4290
+   ClientHeight    =   7170
    ClientLeft      =   45
    ClientTop       =   315
-   ClientWidth     =   6930
+   ClientWidth     =   8415
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   4290
-   ScaleWidth      =   6930
+   ScaleHeight     =   7170
+   ScaleWidth      =   8415
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.Frame Frame1 
+      Caption         =   "Codici del Piano dei Conti"
+      Height          =   2895
+      Left            =   120
+      TabIndex        =   16
+      Top             =   1320
+      Width           =   8175
+      Begin VB.TextBox txtCodTestataIncasso 
+         Height          =   375
+         Left            =   2400
+         TabIndex        =   25
+         Top             =   720
+         Width           =   3255
+      End
+      Begin VB.TextBox txtCodComp 
+         Height          =   375
+         Left            =   2400
+         TabIndex        =   24
+         Top             =   2280
+         Width           =   3255
+      End
+      Begin VB.TextBox txtCodVar 
+         Height          =   375
+         Left            =   2400
+         TabIndex        =   22
+         Top             =   1800
+         Width           =   3255
+      End
+      Begin VB.TextBox txtCodFix 
+         Height          =   375
+         Left            =   2400
+         TabIndex        =   20
+         Top             =   1320
+         Width           =   3255
+      End
+      Begin VB.TextBox txtCodTestata 
+         Height          =   375
+         Left            =   2400
+         TabIndex        =   18
+         Top             =   240
+         Width           =   3255
+      End
+      Begin VB.Label Label12 
+         Caption         =   "Testata Incasso"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   26
+         Top             =   840
+         Width           =   2055
+      End
+      Begin VB.Label Label11 
+         Caption         =   "Competenze"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   23
+         Top             =   2400
+         Width           =   2055
+      End
+      Begin VB.Label Label10 
+         Caption         =   "Quote Variabili"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   21
+         Top             =   1920
+         Width           =   2055
+      End
+      Begin VB.Label Label9 
+         Caption         =   "Quote Associative Fisse"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   19
+         Top             =   1440
+         Width           =   2055
+      End
+      Begin VB.Label Label8 
+         Caption         =   "Testata fattura"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   17
+         Top             =   360
+         Width           =   2055
+      End
+   End
    Begin VB.TextBox txtBackup 
       Enabled         =   0   'False
       Height          =   375
       Left            =   120
       TabIndex        =   15
-      Top             =   2880
+      Top             =   6000
       Width           =   6615
    End
    Begin VB.TextBox txtCodIva 
@@ -33,30 +116,30 @@ Begin VB.Form frmConfigurazione
       Height          =   285
       Left            =   120
       TabIndex        =   11
-      Top             =   2160
+      Top             =   5280
       Width           =   5655
    End
    Begin VB.TextBox txtBanca 
       Height          =   285
       Left            =   120
       TabIndex        =   9
-      Top             =   1560
+      Top             =   4680
       Width           =   5655
    End
    Begin VB.CommandButton CmdOK 
       Caption         =   "&OK"
       Height          =   500
-      Left            =   3600
+      Left            =   5160
       TabIndex        =   3
-      Top             =   3720
+      Top             =   6600
       Width           =   1500
    End
    Begin VB.CommandButton CmdAnnulla 
       Caption         =   "E&sci"
       Height          =   500
-      Left            =   5280
+      Left            =   6840
       TabIndex        =   2
-      Top             =   3720
+      Top             =   6600
       Width           =   1500
    End
    Begin TDBNumber6Ctl.TDBNumber tdbIVA 
@@ -238,7 +321,7 @@ Begin VB.Form frmConfigurazione
       Height          =   255
       Left            =   120
       TabIndex        =   14
-      Top             =   2520
+      Top             =   5760
       Width           =   1335
    End
    Begin VB.Label Label6 
@@ -254,7 +337,7 @@ Begin VB.Form frmConfigurazione
       Height          =   255
       Left            =   120
       TabIndex        =   10
-      Top             =   1920
+      Top             =   5040
       Width           =   2655
    End
    Begin VB.Label Label4 
@@ -262,7 +345,7 @@ Begin VB.Form frmConfigurazione
       Height          =   255
       Left            =   120
       TabIndex        =   8
-      Top             =   1320
+      Top             =   4440
       Width           =   2655
    End
    Begin VB.Label Label3 
@@ -308,6 +391,11 @@ Private Sub CmdOK_Click()
   g_Settings.Banca = txtBanca.Text
   g_Settings.IBAN = txtIBAN.Text
   g_Settings.CodIVA = txtCodIva.Text
+  g_Settings.CodCompetenze = txtCodComp.Text
+  g_Settings.CodTestata = txtCodTestata.Text
+  g_Settings.CodQuotaVariabile = txtCodVar.Text
+  g_Settings.CodQuataFissa = txtCodFix.Text
+  g_Settings.CodTestataIncasso = txtCodTestataIncasso.Text
  Unload Me
 End Sub
 
@@ -319,4 +407,10 @@ Private Sub Form_Load()
     txtIBAN.Text = g_Settings.IBAN
     txtCodIva = g_Settings.CodIVA
     txtBackup = g_Settings.AtapUserBackupFolder
+    txtCodTestata = g_Settings.CodTestata
+    txtCodTestataIncasso = g_Settings.CodTestataIncasso
+    txtCodFix = g_Settings.CodQuataFissa
+    txtCodVar = g_Settings.CodQuotaVariabile
+    txtCodComp = g_Settings.CodCompetenze
 End Sub
+

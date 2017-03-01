@@ -22,7 +22,7 @@ Public Property Get GLO_OGGI() As String
    GLO_OGGI = Format(Date, "yyyymmdd")
 End Property
 Public Sub SettaDate(Dal As Object, Al As Object, Scelta As Integer)
-Dim D As Date, x As Integer
+Dim d As Date, x As Integer
 Dim Mese As String, Giorno As String, gset As Integer
 Dim MesePrec As String
 
@@ -34,18 +34,18 @@ Dim m_SysValuta As String
 Dim m_SysDecimale As String
 Dim m_SysSeparatore As String
 Dim m_RegionalData As String
-D = Date
+d = Date
 
-x = month(D)
+x = month(d)
 MesePrec = x - 1
 If MesePrec < 1 Then MesePrec = 12
 
 Mese = IIf(x < 10, "0" & x, x)
 
-x = day(D)
+x = day(d)
 Giorno = IIf(x < 10, "0" & x, x)
 
-gset = Weekday(D, vbMonday)
+gset = Weekday(d, vbMonday)
 
  Call GetTheLocaleInfo(m_SysDataFormat, SysShortData, m_SysLang, m_SysCountry, m_SysValuta, m_SysDecimale, m_SysSeparatore)
 
@@ -54,45 +54,45 @@ Select Case Scelta
        Dal = getRegionalData(GLO_OGGI, SysShortData, True)
        Al = getRegionalData(GLO_OGGI, SysShortData, True)
   Case 1 'DA ieri
-       Dal = getRegionalData(Format(D - 1, "yyyymmdd"), SysShortData, True)
+       Dal = getRegionalData(Format(d - 1, "yyyymmdd"), SysShortData, True)
        Al = getRegionalData(GLO_OGGI, SysShortData, True)
   Case 2 'Questa settimana
-        Dal = getRegionalData(Format(D - gset + 1, "yyyymmdd"), SysShortData, True)
+        Dal = getRegionalData(Format(d - gset + 1, "yyyymmdd"), SysShortData, True)
         Al = getRegionalData(GLO_OGGI, SysShortData, True)
   Case 3 'Dall ' ultima settimana
-        Dal = getRegionalData(Format(D - 7 - gset + 1, "yyyymmdd"), SysShortData, True)
+        Dal = getRegionalData(Format(d - 7 - gset + 1, "yyyymmdd"), SysShortData, True)
         Al = getRegionalData(GLO_OGGI, SysShortData, True)
   Case 4 'Questo Mese
-        Dal = getRegionalData(Format(D - Giorno + 1, "yyyymmdd"), SysShortData, True)
+        Dal = getRegionalData(Format(d - Giorno + 1, "yyyymmdd"), SysShortData, True)
         
-        Al = getRegionalData(LastDay(month(Date), Format(Date, "YYYY")), SysShortData, True)
+        Al = getRegionalData(Format(LastDayOfMonth(month(Date), year(Date)), "YYYYMMDD"), SysShortData, True)
   Case 5 'Dall ' ultimo mese
-        Dal = getRegionalData(Format("01/" & MesePrec & "/" & year(D), "yyyymmdd"), SysShortData, True)
+        Dal = getRegionalData(Format("01/" & MesePrec & "/" & year(d), "yyyymmdd"), SysShortData, True)
         Al = getRegionalData(GLO_OGGI, SysShortData, True)
   
   Case 6 'Anno corrente  (si intende da inizio anno a oggi)
-        Dal = getRegionalData(year(D) & "0101", SysShortData, True)
+        Dal = getRegionalData(year(d) & "0101", SysShortData, True)
         Al = getRegionalData(GLO_OGGI, SysShortData, True)
   
   Case 7 'Dall ' anno prededente
         Dal = getRegionalData(GLO_OGGI_OLD, SysShortData, True)
         Al = getRegionalData(GLO_OGGI, SysShortData, True)
   Case 8 'Intero Anno
-        Dal = getRegionalData(year(D) & "0101", SysShortData, True)
-        Al = getRegionalData(year(D) & "1231", SysShortData, True)
+        Dal = getRegionalData(year(d) & "0101", SysShortData, True)
+        Al = getRegionalData(year(d) & "1231", SysShortData, True)
   Case 9 'Intero Anno Prec
-        Dal = getRegionalData(year(D) - 1 & "0101", SysShortData, True)
-        Al = getRegionalData(year(D) - 1 & "1231", SysShortData, True)
+        Dal = getRegionalData(year(d) - 1 & "0101", SysShortData, True)
+        Al = getRegionalData(year(d) - 1 & "1231", SysShortData, True)
         
   Case 10
         'Prossimi sette giorni
         Dal = getRegionalData(GLO_OGGI, SysShortData, True)
-        Al = getRegionalData(Format(D + 7, "yyyymmdd"), SysShortData, True)
+        Al = getRegionalData(Format(d + 7, "yyyymmdd"), SysShortData, True)
         
   Case 11
         'prossimi 30 giorni
         Dal = getRegionalData(GLO_OGGI, SysShortData, True)
-        Al = getRegionalData(Format(D + 30, "yyyymmdd"), SysShortData, True)
+        Al = getRegionalData(Format(d + 30, "yyyymmdd"), SysShortData, True)
         
 
      
@@ -102,9 +102,9 @@ End Select
      Al.ForeColor = &H80000008
      Dal.ForeColor = &H80000008
 End Sub
-Public Function getRegionalData(Field As String, formato As String, Optional isValue As Boolean) As String
+Public Function getRegionalData(field As String, formato As String, Optional isValue As Boolean) As String
 If Not isValue Then
-   getRegionalData = " Format( Mid(" & Field & ",1,4) & '-' & Mid(" & Field & ",5,2) & '-' & Mid(" & Field & ",7,2),'" & formato & "') "
+   getRegionalData = " Format( Mid(" & field & ",1,4) & '-' & Mid(" & field & ",5,2) & '-' & Mid(" & field & ",7,2),'" & formato & "') "
 '   Select Case formato
 '    Case "mm/dd/yyyy"
 '     getRegionalData = " Mid(" & field & ",5,2) & '/' & Mid(" & field & ",7,2) & '/' & Mid(" & field & ",1,4) "
@@ -112,9 +112,9 @@ If Not isValue Then
 '     getRegionalData = " Mid(" & field & ",7,2) & '/' & Mid(" & field & ",5,2) & '/' & Mid(" & field & ",1,4) "
 '   End Select
   Else
-   Dim D As Date
-   D = Mid(Field, 1, 4) & "-" & Mid(Field, 5, 2) & "-" & Mid(Field, 7, 2)
-   getRegionalData = Format(D, formato)
+   Dim d As Date
+   d = Mid(field, 1, 4) & "-" & Mid(field, 5, 2) & "-" & Mid(field, 7, 2)
+   getRegionalData = Format(d, formato)
 End If
      
 End Function
@@ -176,7 +176,7 @@ End Function
 Public Function controlloPIvaCodFis(cod As String) As Boolean
     
     Dim err As Boolean
-    Dim D As String
+    Dim d As String
     Dim n As Integer
     Dim k As Integer
     Dim x As Integer
@@ -250,8 +250,8 @@ Public Function controlloPIvaCodFis(cod As String) As Boolean
             n = n + Y(x)
         Next I
         n = n Mod 26
-        D = Chr(n + 65)
-        If Mid(cod, I, 1) = D Then
+        d = Chr(n + 65)
+        If Mid(cod, I, 1) = d Then
             err = False
         End If
     End If
@@ -271,25 +271,25 @@ Public Function FixDouble(v As Double) As String
  FixDouble = Replace(s, ",", ".")
  
 End Function
-Public Sub PopolaTDBCombo(c As TDBCombo, tabella As String, Field As String, Optional Codice As String, Optional Tutti As Boolean, Optional showCode As Boolean, Optional OrderBy As String = "", Optional sql As String = "")
+Public Sub PopolaTDBCombo(c As TDBCombo, Tabella As String, field As String, Optional codice As String, Optional Tutti As Boolean, Optional showCode As Boolean, Optional OrderBy As String = "", Optional SQL As String = "")
 Dim rs As ADODB.Recordset
 Dim campi As String
 Dim I As Integer
 
 
-campi = Field
-If Codice <> "" Then campi = campi & "," & Codice
-If sql = "" Then
-    sql = "SELECT " & campi & " FROM " & tabella
+campi = field
+If codice <> "" Then campi = campi & "," & codice
+If SQL = "" Then
+    SQL = "SELECT " & campi & " FROM " & Tabella
     If OrderBy <> "" Then
-      sql = sql & " ORDER BY " & OrderBy
+      SQL = SQL & " ORDER BY " & OrderBy
     End If
 End If
 If Tutti Then
- sql = "SELECT First('- Mostra Tutto -') as [" & Field & "],'XXALLXX' FROM " & tabella & " UNION ALL " & sql
+ SQL = "SELECT First('- Mostra Tutto -') as [" & field & "],'XXALLXX' FROM " & Tabella & " UNION ALL " & SQL
 End If
 Set rs = newAdoRs
-rs.Open sql, g_Settings.DBConnection
+rs.Open SQL, g_Settings.DBConnection
 c.Clear
 Set c.RowSource = rs
 If Tutti Then
@@ -303,12 +303,12 @@ End If
   
 
 End Sub
-Public Sub PopolaCombo(c As ComboBox, tabella As String, Field As String, Optional Codice As String, Optional ByRef Col As Collection, Optional Tutti As Boolean)
+Public Sub PopolaCombo(c As ComboBox, Tabella As String, field As String, Optional codice As String, Optional ByRef Col As Collection, Optional Tutti As Boolean)
 'Ronchi 12 giugno 2002
 On Error GoTo fine
 Dim rs As ADODB.Recordset
 Set rs = newAdoRs
-rs.Open tabella, g_Settings.DBConnection
+rs.Open Tabella, g_Settings.DBConnection
 c.Clear
 Set Col = New Collection
  If Tutti Then
@@ -316,8 +316,8 @@ Set Col = New Collection
    Col.Add "TUTTO"
  End If
 While Not rs.EOF
-  c.AddItem rs(Field)
-  If Codice <> "" Then Col.Add rs(Codice).value
+  c.AddItem rs(field)
+  If codice <> "" Then Col.Add rs(codice).value
   rs.MoveNext
 Wend
 c.ListIndex = 0
@@ -361,15 +361,15 @@ End Function
 
 Public Sub Ridimensiona(frm As Form, tipo As String)
  With frm
-  .FraTop.Top = 0
+  .fraTop.Top = 0
   Select Case tipo
      Case "small"
-           .Height = .FraTop.Top + .FraTop.Height + .fraComandi.Height + 400
-           .fraComandi.Top = .FraTop.Height + .FraTop.Top
+           .Height = .fraTop.Top + .fraTop.Height + .fraComandi.Height + 400
+           .fraComandi.Top = .fraTop.Height + .fraTop.Top
            .fraMain.Visible = False
      Case "big"
-           .Height = .FraTop.Top + .FraTop.Height + .fraComandi.Height + .fraMain.Height + 400
-           .fraMain.Top = .FraTop.Height + .FraTop.Top
+           .Height = .fraTop.Top + .fraTop.Height + .fraComandi.Height + .fraMain.Height + 400
+           .fraMain.Top = .fraTop.Height + .fraTop.Top
            .fraComandi.Top = .fraMain.Height + .fraMain.Top
            .fraMain.Visible = True
   End Select

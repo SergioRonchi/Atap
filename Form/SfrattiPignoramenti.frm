@@ -1463,7 +1463,7 @@ On Error GoTo ErroreSalvataggio
   Else
         'LockTable ("SFRATTI")
         SaveSetting "ATAP", "Config", "Sigla", txtSigla.Text
-        saved = SalvaTutto(Me, getCurrentTable(), sWhere)
+        saved = SalvaTutto(Me, getCurrentTable(), sWhere, True)
         
         If Not moFrmRicerca Is Nothing Then
             moFrmRicerca.AggiornaGriglia

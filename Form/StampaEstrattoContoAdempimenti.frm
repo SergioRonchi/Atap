@@ -305,8 +305,19 @@ Private Sub CmdAnnulla_Click()
     nome = TxtCodiceAvvocato.Text
     If nome = "" Then nome = "COMPLETO"
     res = MsgBox("Vuoi cancellare gli Adempimenti stampati, " & vbCrLf & "trasferendoli in un archivio storico?", vbYesNo, "Attenzione")
+    Dim avvocatoScelto As String
+
+avvocatoScelto = Trim(TxtCodiceAvvocato.Text)
+    Dim avvocatiEstratti As New AvvocatiPerEstratto
+
+If avvocatoScelto = "" Then
+  avvocatiEstratti.Tutti = True
+ Else
+ avvocatiEstratti.Lista.Add avvocatoScelto
+End If
+    
     If (res = vbYes) Then
-     OK = Trasferisci(g_Settings.StoricoECAdempiPath & "\EC_ADEMPI_" & Format(Now, "yyyymmddhhmm") & "_" & nome & ".mdb", Format(TxtRicDataIn.Text, "yyyymmdd"), Format(TxtRicDataFin.Text, "yyyymmdd"), False, Trim(TxtCodiceAvvocato.Text), "A")
+     OK = Trasferisci(g_Settings.StoricoECAdempiPath & "\EC_ADEMPI_" & Format(Now, "yyyymmddhhmm") & "_" & nome & ".mdb", Format(TxtRicDataIn.Text, "yyyymmdd"), Format(TxtRicDataFin.Text, "yyyymmdd"), False, avvocatiEstratti, "A")
      
     End If
 End Sub

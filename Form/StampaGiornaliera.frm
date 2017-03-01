@@ -40,26 +40,28 @@ Private m_destination As DestinationConstants
 
 Public Sub gestioneReport(TabellaStampa As String, qryFormula As String, tappo As Long, cDestination As DestinationConstants, sRptFile As String, Copie As Integer, Optional Formula0 As String)
 Dim subRpt
-On Error GoTo FINE
+On Error GoTo fine
   Form_Resize
    Screen.MousePointer = vbHourglass
-   crpt.WindowParentHandle = Me.hWnd
+   crpt.WindowParentHandle = Me.hwnd
    m_destination = cDestination
    
     With crpt
         
         .DataFiles(0) = g_Settings.CurrentDbFile
+        '.DataFiles(1) = g_Settings.CurrentDbFile
         If sRptFile = "Fattura.rpt" Then
           .DataFiles(1) = g_Settings.CurrentDbFile
           .DataFiles(2) = g_Settings.CurrentDbFile
         End If
+        
         If sRptFile = "AnagraficaDettagliata.rpt" Then
           
         End If
         .ReportFileName = g_Settings.ReportPath & "\" & sRptFile
         .SelectionFormula = Trim(qryFormula)
         .FetchSelectionFormula
-        .WindowParentHandle = Me.hWnd
+        .WindowParentHandle = Me.hwnd
         If m_destination = crptToPrinter Then
            .CopiesToPrinter = Copie
         End If
@@ -70,7 +72,17 @@ On Error GoTo FINE
           Else
            .Formulas(0) = ""
         End If
-
+        If sRptFile = "EstrattoContoUNEP.rpt" Then
+          Dim n As Integer
+          Dim sSubreportName As String
+          n = .GetNSubreports
+          If n = 1 Then
+            sSubreportName = .GetNthSubreportName(0)
+            .SubreportToChange = sSubreportName
+            .DataFiles(0) = g_Settings.CurrentDbFile
+            .SubreportToChange = ""
+          End If
+        End If
         .Action = 1
         RaiseEvent StampaEseguita(TabellaStampa)
        '.PrintReport
@@ -78,7 +90,7 @@ On Error GoTo FINE
     Screen.MousePointer = vbDefault
     Me.Show
     Exit Sub
-FINE:
+fine:
  MsgBox err.Description & vbCrLf & g_Settings.dbFile & vbCrLf & sRptFile & vbCrLf & qryFormula, vbCritical
     Screen.MousePointer = vbDefault
 End Sub
@@ -89,9 +101,9 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Resize()
-On Error GoTo FINE
+On Error GoTo fine
  Me.Move 100, 500, Atap.ScaleWidth - 200, Atap.ScaleHeight - 500
-FINE:
+fine:
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)

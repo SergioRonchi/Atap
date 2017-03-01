@@ -217,7 +217,7 @@ End Sub
 
 Private Sub updateAnagraficaAvvocati(ByVal oldCod As String, ByVal newCod As String)
     Dim qry As String
-    On Error GoTo FINE
+    On Error GoTo fine
     g_Settings.DBConnection.BeginTrans
     ' Query di aggiornamento tabella AnagraficaAvvocati
     qry = ""
@@ -226,6 +226,7 @@ Private Sub updateAnagraficaAvvocati(ByVal oldCod As String, ByVal newCod As Str
     qry = qry + " AnagraficaAvvocati.LOCALI = [AnagraficaAvvocati_Old].[LOCALI], AnagraficaAvvocati.PROV = [AnagraficaAvvocati_Old].[PROV], AnagraficaAvvocati.CAP = [AnagraficaAvvocati_Old].[CAP], "
     qry = qry + " AnagraficaAvvocati.TELEFCELL = [AnagraficaAvvocati_Old].[TELEFCELL], AnagraficaAvvocati.TELEF = [AnagraficaAvvocati_Old].[TELEF], AnagraficaAvvocati.EMAIL = [AnagraficaAvvocati_Old].[EMAIL], "
     qry = qry + " AnagraficaAvvocati.FAX = [AnagraficaAvvocati_Old].[FAX], AnagraficaAvvocati.PIVA = [AnagraficaAvvocati_Old].[PIVA], AnagraficaAvvocati.CFISC = [AnagraficaAvvocati_Old].[CFISC], "
+    qry = qry + " AnagraficaAvvocati.PEC = [AnagraficaAvvocati_Old].[PEC], AnagraficaAvvocati.MAIL2 = [AnagraficaAvvocati_Old].[MAIL2], "
     qry = qry + " AnagraficaAvvocati.NOTE1 = [AnagraficaAvvocati_Old].[NOTE1], AnagraficaAvvocati.NOTE2 = [AnagraficaAvvocati_Old].[NOTE2], AnagraficaAvvocati.NOTE3 = [AnagraficaAvvocati_Old].[NOTE3], AnagraficaAvvocati.STAT = 'V', "
     qry = qry + " AnagraficaAvvocati.CassettaRotta = [AnagraficaAvvocati_Old].[CassettaRotta], AnagraficaAvvocati.AFAT = [AnagraficaAvvocati_Old].[AFAT], AnagraficaAvvocati.SALDO = [AnagraficaAvvocati_Old].[SALDO]"
     qry = qry + " WHERE (([AnagraficaAvvocati].[CODAVV]='" + newCod + "' And [AnagraficaAvvocati_Old].[CODAVV]='" + oldCod + "'))"
@@ -238,6 +239,7 @@ Private Sub updateAnagraficaAvvocati(ByVal oldCod As String, ByVal newCod As Str
     qry = qry + " AnagraficaAvvocati.LOCALI = '', AnagraficaAvvocati.PROV = '', AnagraficaAvvocati.CAP = '', "
     qry = qry + " AnagraficaAvvocati.TELEFCELL = '', AnagraficaAvvocati.TELEF = '', AnagraficaAvvocati.EMAIL = '', "
     qry = qry + " AnagraficaAvvocati.FAX = '', AnagraficaAvvocati.PIVA = '', AnagraficaAvvocati.CFISC = '', "
+    qry = qry + " AnagraficaAvvocati.PEC = '', AnagraficaAvvocati.MAIL2 = '', "
     qry = qry + " AnagraficaAvvocati.NOTE1 = '', AnagraficaAvvocati.NOTE2 = '', AnagraficaAvvocati.NOTE3 = '', AnagraficaAvvocati.STAT = 'A', "
     qry = qry + " AnagraficaAvvocati.CassettaRotta = 'S'"
     ', AnagraficaAvvocati.AFAT = '', AnagraficaAvvocati.SALDO = ''"
@@ -325,7 +327,7 @@ g_Settings.DBConnection.Execute (qry)
 
     g_Settings.DBConnection.CommitTrans
     Exit Sub
-FINE:
+fine:
     MsgBox "Cambio cassetta non riuscito!!", vbCritical + vbOKOnly
     g_Settings.DBConnection.RollbackTrans
 End Sub

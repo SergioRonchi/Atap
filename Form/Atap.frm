@@ -33,7 +33,7 @@ Begin VB.MDIForm Atap
             Style           =   6
             Alignment       =   1
             AutoSize        =   2
-            TextSave        =   "23/06/2016"
+            TextSave        =   "18/01/2017"
          EndProperty
          BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             AutoSize        =   1
@@ -53,7 +53,7 @@ Begin VB.MDIForm Atap
             Style           =   5
             Alignment       =   2
             AutoSize        =   2
-            TextSave        =   "10.35"
+            TextSave        =   "17.53"
          EndProperty
       EndProperty
    End
@@ -68,7 +68,7 @@ Begin VB.MDIForm Atap
       MaskColor       =   12632256
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   12
+         NumListImages   =   13
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
             Picture         =   "Atap.frx":030A
             Key             =   "Adempimenti"
@@ -117,6 +117,10 @@ Begin VB.MDIForm Atap
             Picture         =   "Atap.frx":91B8
             Key             =   "SfrattiUNEP"
          EndProperty
+         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Atap.frx":960A
+            Key             =   "DeduzioniUNEP"
+         EndProperty
       EndProperty
    End
    Begin MSComctlLib.ImageList ImageList1 
@@ -130,54 +134,58 @@ Begin VB.MDIForm Atap
       MaskColor       =   12632256
       _Version        =   393216
       BeginProperty Images {2C247F25-8591-11D1-B16A-00C0F0283628} 
-         NumListImages   =   12
+         NumListImages   =   13
          BeginProperty ListImage1 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":960A
+            Picture         =   "Atap.frx":B314
             Key             =   "Adempimenti"
          EndProperty
          BeginProperty ListImage2 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":9A5C
+            Picture         =   "Atap.frx":B766
             Key             =   "Anagrafica"
          EndProperty
          BeginProperty ListImage3 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":A0A6
+            Picture         =   "Atap.frx":BDB0
             Key             =   "Uscita"
          EndProperty
          BeginProperty ListImage4 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":A4F8
+            Picture         =   "Atap.frx":C202
             Key             =   "Notifiche"
          EndProperty
          BeginProperty ListImage5 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":A94A
+            Picture         =   "Atap.frx":C654
             Key             =   "Stampa"
          EndProperty
          BeginProperty ListImage6 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":AC64
+            Picture         =   "Atap.frx":C96E
             Key             =   "Sfratti"
          EndProperty
          BeginProperty ListImage7 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":AF96
+            Picture         =   "Atap.frx":CCA0
             Key             =   "Decreti"
          EndProperty
          BeginProperty ListImage8 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":B3E8
+            Picture         =   "Atap.frx":D0F2
             Key             =   "Lock"
          EndProperty
          BeginProperty ListImage9 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":DDE2
+            Picture         =   "Atap.frx":FAEC
             Key             =   "Storico"
          EndProperty
          BeginProperty ListImage10 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":107DC
+            Picture         =   "Atap.frx":124E6
             Key             =   "Corrente"
          EndProperty
          BeginProperty ListImage11 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":131D6
+            Picture         =   "Atap.frx":14EE0
             Key             =   "NotificheUNEP"
          EndProperty
          BeginProperty ListImage12 {2C247F27-8591-11D1-B16A-00C0F0283628} 
-            Picture         =   "Atap.frx":13628
+            Picture         =   "Atap.frx":15332
             Key             =   "SfrattiUNEP"
+         EndProperty
+         BeginProperty ListImage13 {2C247F27-8591-11D1-B16A-00C0F0283628} 
+            Picture         =   "Atap.frx":15784
+            Key             =   "DeduzioniUNEP"
          EndProperty
       EndProperty
    End
@@ -196,7 +204,7 @@ Begin VB.MDIForm Atap
       Style           =   1
       _Version        =   393216
       BeginProperty Buttons {66833FE8-8583-11D1-B16A-00C0F0283628} 
-         NumButtons      =   16
+         NumButtons      =   17
          BeginProperty Button1 {66833FEA-8583-11D1-B16A-00C0F0283628} 
             Description     =   "Anagrafica"
             Object.ToolTipText     =   "Anagrafica Avvocati"
@@ -257,6 +265,10 @@ Begin VB.MDIForm Atap
             Description     =   "SfrattiUNEP"
             Object.ToolTipText     =   "Pignoramenti Unep"
          EndProperty
+         BeginProperty Button17 {66833FEA-8583-11D1-B16A-00C0F0283628} 
+            Description     =   "DeduzioniUNEP"
+            Object.ToolTipText     =   "Deduzioni UNEP"
+         EndProperty
       EndProperty
       Begin VB.PictureBox pctStorico 
          BackColor       =   &H000000C0&
@@ -307,7 +319,6 @@ Begin VB.MDIForm Atap
       End
       Begin VB.Menu mnuEsporta 
          Caption         =   "Esporta Contabilità ..."
-         Visible         =   0   'False
       End
       Begin VB.Menu mnuBackup 
          Caption         =   "Esegui backup"
@@ -344,6 +355,9 @@ Begin VB.MDIForm Atap
       End
       Begin VB.Menu mnu_PignoramentiUNEP 
          Caption         =   "Pignoramenti UNEP"
+      End
+      Begin VB.Menu mnu_DeduzioniUNEP 
+         Caption         =   "DeduzioniUNEP"
       End
    End
    Begin VB.Menu mnuGestioneTabelle 
@@ -511,6 +525,11 @@ Private Sub mnu_DecretiIngiuntivi_Click()
     frmDecretiIngiuntivi.Show
 End Sub
 
+Private Sub mnu_DeduzioniUNEP_Click()
+ 
+ Deduzioni.Show
+End Sub
+
 Private Sub mnu_NotificheUNEP_Click()
 Notifiche.isUnep = True
 Notifiche.Show
@@ -649,26 +668,26 @@ Select Case Index
  End Select
 End Sub
 Private Sub CaricaIcone(IconeGrandi As Boolean)
-Dim i As Integer
+Dim I As Integer
   If IconeGrandi Then
      Me.Toolbar1.ImageList = ImageList1
      Toolbar1.ButtonWidth = 464
      Toolbar1.ButtonHeight = 464
-     For i = 1 To Toolbar1.Buttons.count
-       If Toolbar1.Buttons(i).Description <> "" Then
-           Toolbar1.Buttons(i).Image = ImageList1.ListImages(Toolbar1.Buttons(i).Description).Index
+     For I = 1 To Toolbar1.Buttons.count
+       If Toolbar1.Buttons(I).Description <> "" Then
+           Toolbar1.Buttons(I).Image = ImageList1.ListImages(Toolbar1.Buttons(I).Description).Index
        End If
-     Next i
+     Next I
      
     Else
      Me.Toolbar1.ImageList = ImageListSmall
      Toolbar1.ButtonWidth = 300
      Toolbar1.ButtonHeight = 300
-    For i = 1 To Toolbar1.Buttons.count
-     If Toolbar1.Buttons(i).Description <> "" Then
-      Toolbar1.Buttons(i).Image = ImageListSmall.ListImages(Toolbar1.Buttons(i).Description).Index
+    For I = 1 To Toolbar1.Buttons.count
+     If Toolbar1.Buttons(I).Description <> "" Then
+      Toolbar1.Buttons(I).Image = ImageListSmall.ListImages(Toolbar1.Buttons(I).Description).Index
      End If
-    Next i
+    Next I
 
     End If
     
@@ -806,6 +825,8 @@ End Sub
 
 Private Sub Toolbar1_ButtonClick(ByVal Button As MSComctlLib.Button)
 Select Case Button.Description
+ Case "DeduzioniUNEP"
+  mnu_DeduzioniUNEP_Click
 Case "NotificheUNEP"
   mnu_NotificheUNEP_Click
 Case "SfrattiUNEP"

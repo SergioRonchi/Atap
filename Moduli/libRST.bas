@@ -30,21 +30,21 @@ End Function
 Public Function GetFileNameWithoutExtension(s As String) As String
  Dim sFile As String
  sFile = GetFile(s)
- Dim L As Integer, i As Integer
+ Dim L As Integer, I As Integer
  L = Len(sFile)
- For i = L To 1 Step -1
-  If Mid(sFile, i, 1) = "." Then Exit For
- Next i
- GetFileNameWithoutExtension = Left(sFile, i - 1)
+ For I = L To 1 Step -1
+  If Mid(sFile, I, 1) = "." Then Exit For
+ Next I
+ GetFileNameWithoutExtension = Left(sFile, I - 1)
  
 End Function
 Public Function GetFile(s As String) As String
- Dim L As Integer, i As Integer
+ Dim L As Integer, I As Integer
  L = Len(s)
- For i = L To 1 Step -1
-  If Mid(s, i, 1) = "\" Then Exit For
- Next i
- GetFile = Mid(s, i + 1)
+ For I = L To 1 Step -1
+  If Mid(s, I, 1) = "\" Then Exit For
+ Next I
+ GetFile = Mid(s, I + 1)
  
 
 End Function
@@ -79,7 +79,7 @@ End Sub
 Public Sub Caricacampi(frm As Form, rs As ADODB.Recordset, Optional noLabel As Boolean)
 
 Dim c As Control
-Dim i As Integer
+Dim I As Integer
 Dim r
 Dim x
   For Each c In frm.Controls
@@ -144,23 +144,23 @@ Select Case D
  End Select
 End Sub
 Public Sub CloseAllForms()
-Dim i As Integer
+Dim I As Integer
 
-For i = 0 To Forms.count - 1
-  If Forms(i).name <> "Atap" And Forms(i).name <> "frmback" Then Unload Forms(i)
-Next i
+For I = 0 To Forms.count - 1
+  If Forms(I).name <> "Atap" And Forms(I).name <> "frmback" Then Unload Forms(I)
+Next I
 End Sub
 Public Function FindForm(ByVal form_name As String) As Boolean
-    Dim i As Integer
+    Dim I As Integer
    
     ' Search the loaded forms.
-    For i = 0 To Forms.count - 1
-        If Forms(i).name = form_name Then
+    For I = 0 To Forms.count - 1
+        If Forms(I).name = form_name Then
          
             FindForm = True
             Exit For
         End If
-    Next i
+    Next I
 End Function
 Public Function ExistADORecord(SQL As String, Conn As ADODB.Connection) As Boolean
  Dim rs As ADODB.Recordset
@@ -369,7 +369,7 @@ End Select
 
 
 End Sub
-Public Function SalvaTutto(frm As Form, Tabella As String, sWhere As String, Optional isUnep As Boolean) As Boolean
+Public Function SalvaTutto(frm As Form, Tabella As String, sWhere As String, Progressivo As Boolean, Optional isUnep As Boolean) As Boolean
 Dim e As String
 Dim XXX As Boolean
 Dim Response
@@ -379,14 +379,14 @@ If e = "" Then
               'voce nuova
                 Response = MsgBox("Vuoi salvare i dati inseriti?", vbYesNo + vbInformation + vbDefaultButton2, "Attenzione")
                 If Response = vbYes Then    ' User chose Yes.
-                  XXX = SalvaRecord(frm, frm.Azione, Tabella, True)
+                  XXX = SalvaRecord(frm, frm.Azione, Tabella, Progressivo)
                   
                 End If
              Else
               'modifica
                 Response = MsgBox("Vuoi salvare le modifiche effettuate?", vbYesNo + vbInformation + vbDefaultButton2, "Attenzione")
                 If Response = vbYes Then    ' User chose Yes.
-                  XXX = SalvaRecord(frm, frm.Azione, Tabella, True, sWhere)
+                  XXX = SalvaRecord(frm, frm.Azione, Tabella, Progressivo, sWhere)
                   
                 End If
             End If
@@ -494,7 +494,7 @@ fN = FreeFile
 End Sub
 Function CheckCodFiscPIva(Code As String) As Boolean
     Dim A, b, c, DECODE, valori, nro, trasfrom, trasto
-    Dim i As Integer
+    Dim I As Integer
     valori = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     DECODE = "010005070913151719210204182011030608121416102225242301000507091315171921"
     trasfrom = "0123456789"
@@ -507,23 +507,23 @@ Function CheckCodFiscPIva(Code As String) As Boolean
     End If
     'controllo codice fiscale
     If Len(Trim(Code)) = 16 Then
-      i = 1
-      Do While i < 16
-        A = Mid(Code, i, 1)
+      I = 1
+      Do While I < 16
+        A = Mid(Code, I, 1)
         c = InStr(valori, A)
         If c = 0 Then
           'MsgBox ("Codice Fiscale contiene caratteri non corretti!" + vbCrLf), vbQuestion
           'MsgBox ("Caratteri non corretti")
           Exit Function
         End If
-        b = Int(i / 2)
+        b = Int(I / 2)
         b = b * 2
-        If b = i Then
+        If b = I Then
           nro = nro + c - 1
         Else
           nro = nro + val(Mid(DECODE, c * 2 - 1, 2))
         End If
-        i = i + 1
+        I = I + 1
       Loop
       nro = nro - Int(nro / 26) * 26 + 1
       If Mid(Code, 16, 1) = Mid(valori, nro, 1) Then
@@ -538,23 +538,23 @@ Function CheckCodFiscPIva(Code As String) As Boolean
     '
     ' controllo partita iva
     '
-    i = 1
-    Do While i < 12
-        A = Mid(Code, i, 1)
+    I = 1
+    Do While I < 12
+        A = Mid(Code, I, 1)
         c = InStr(trasfrom, A)
         If c = 0 Then
             'MsgBox ("Partita IVA contiene caratteri non corretti!" + vbCrLf), vbQuestion
             'MsgBox ("Caratteri non corretti")
             Exit Function
         End If
-        b = Int(i / 2)
+        b = Int(I / 2)
         b = b * 2
-        If b = i Then
+        If b = I Then
             nro = nro + val(Mid(trasto, c, 1))
         Else
-            nro = nro + val(Mid(Code, i, 1))
+            nro = nro + val(Mid(Code, I, 1))
         End If
-        i = i + 1
+        I = I + 1
     Loop
     nro = nro - Int(nro / 10) * 10
     If nro = 0 Then

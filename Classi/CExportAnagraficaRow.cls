@@ -11,7 +11,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Public Codice As String
+Public codice As String
 Public CodiceFiscale As String
 Public FLCliente As String
 Public FLCAF As String
@@ -78,7 +78,7 @@ Public Function CreateRow() As String
 
 Dim s   As String
 
-    s = s & Codice & ";"
+    s = s & codice & ";"
  
     s = s & CodiceFiscale & ";"
     s = s & FLCliente & ";"
@@ -235,7 +235,7 @@ On Error GoTo fine
   Else
     SX = "M"
  End If
- DN = day & month & year
+ DN = day & "/" & month & "/" & year
  Code = Mid(cfisc, 12, 4)
  Dim o As ComuneRecord
  Set o = g_Settings.GetComune(Code)

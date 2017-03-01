@@ -1919,7 +1919,7 @@ On Error GoTo ErroreSalvataggio
   Else
         'LockTable ("DecretiIngiuntivi")
         SaveSetting "ATAP", "Config", "Sigla", txtSigla.Text
-        saved = SalvaTutto(Me, "DecretiIngiuntivi", sWhere)
+        saved = SalvaTutto(Me, "DecretiIngiuntivi", sWhere, True)
         
         If Not moFrmRicerca Is Nothing Then
             moFrmRicerca.AggiornaGriglia
@@ -2115,12 +2115,12 @@ End Sub
 
 
 Public Sub CalcolaSaldo()
-On Error GoTo FINE
+On Error GoTo fine
 Dim saldo As Double
 Dim spese As Double
-Dim i As Integer
-For i = 1 To 3
-  spese = spese + txtSpese(i).value * TxtQta(i).value
+Dim I As Integer
+For I = 1 To 3
+  spese = spese + txtSpese(I).value * TxtQta(I).value
 Next
 spese = spese + txtSpese(4).value
 
@@ -2134,7 +2134,7 @@ saldo = saldo - spese
 
 formattaSaldo LblValSaldo, saldo
 Exit Sub
-FINE:
+fine:
 
 End Sub
 

@@ -34,6 +34,7 @@ SQL = "UPDATE AnagraficaAvvocati SET AnagraficaAvvocati.NOME = '', " & _
       "AnagraficaAvvocati.PROV = '', AnagraficaAvvocati.CAP = '', " & _
       "AnagraficaAvvocati.TELEFCELL = '', AnagraficaAvvocati.TELEF = '', " & _
       "AnagraficaAvvocati.EMAIL = '', AnagraficaAvvocati.FAX = '', " & _
+      "AnagraficaAvvocati.PEC = '', AnagraficaAvvocati.MAIL2 = '', " & _
       "AnagraficaAvvocati.PIVA = '', AnagraficaAvvocati.CFISC = '', " & _
       "AnagraficaAvvocati.NOTE1 = '', AnagraficaAvvocati.NOTE2 = '', " & _
       "AnagraficaAvvocati.NOTE3 = '', AnagraficaAvvocati.STAT = 'A', " & _

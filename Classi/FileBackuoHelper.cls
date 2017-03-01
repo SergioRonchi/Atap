@@ -51,7 +51,7 @@ g_Settings.ConnettiDB g_Settings.dbFile
 
 End Sub
 
-Public Sub zipFile(zipPath As String, zipName As String, originalPath As String, originalFile As String)
+Public Sub zipFile(zipPath As String, zipName As String, originalPath As String, originalFile As String, Optional msg)
 Dim sEXE As String, sPath1 As String, sPath2 As String, sDir As String, r As Integer
 sEXE = """" & app.Path & "\zip.exe"""
 sPath1 = """" & zipPath & "\" & zipName & ".zip"""
@@ -71,7 +71,12 @@ If Dir(Replace(zipPath & "\" & zipName & ".zip", "\\", "\")) <> "" Then
                      Else
                       Call ShellAndWait(sEXE & " -j " & sPath1 & " " & sPath2, vbHide)
                       Screen.MousePointer = vbDefault
-                      MsgBox "Eseguito  backup in " & " " & zipPath, vbOKOnly + vbInformation
+                      If msg <> "" Then
+                          MsgBox msg & " " & zipPath, vbOKOnly + vbInformation
+                        Else
+                         MsgBox "Eseguito  backup in " & " " & zipPath, vbOKOnly + vbInformation
+                      End If
+                     
 End If
 End Sub
 

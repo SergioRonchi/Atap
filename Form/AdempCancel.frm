@@ -1411,7 +1411,7 @@ On Error GoTo ErroreSalvataggio
   Else
         'LockTable ("ADEMPI")
         
-            saved = SalvaTutto(Me, "ADEMPI", sWhere)
+            saved = SalvaTutto(Me, "ADEMPI", sWhere, True)
             SaveSetting "ATAP", "Config", "Sigla", txtSigla.Text
             If Not moFrmRicerca Is Nothing Then
                 moFrmRicerca.AggiornaGriglia
@@ -1552,13 +1552,13 @@ Public Sub CalcolaSaldo()
 
 Dim saldo As Double
 Dim spese As Double
-Dim i As Integer
+Dim I As Integer
 
     saldo = 0
     spese = 0
     
-    For i = 1 To txtSpese.Count
-      spese = spese + txtSpese(i).value
+    For I = 1 To txtSpese.count
+      spese = spese + txtSpese(I).value
     Next
     saldo = txtDeposito.value
 

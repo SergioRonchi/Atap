@@ -278,10 +278,15 @@ On Error GoTo fine
 Select Case Index
   Case 18 'OK
    If txtPath.Text <> "" Then
-     If Esporta() Then
-       
-       MsgBox "File esportati", vbOKOnly + vbInformation
-       Unload Me
+     Dim d As String
+     d = Format(Now, "YYYYMMDDHHmm")
+     If Esporta(d) Then
+      Dim zipUtils As New FileBackuoHelper
+        Dim exportFile As String
+        exportFile = "Atap_Export_" & d & ".zip"
+        zipUtils.zipFile txtPath.Text, "Atap_Export_" & d, txtPath.Text, "*" & d & ".csv", "Esportato file " & exportFile & " in "
+        Shell "explorer.exe /e, " & txtPath.Text, vbNormalFocus
+        Unload Me
      End If
      
      
@@ -294,14 +299,14 @@ Exit Sub
 fine:
   MsgBox err.Description, vbOKOnly + vbCritical
 End Sub
-Private Function Esporta() As Boolean
+Private Function Esporta(datePostFix As String) As Boolean
 On Error GoTo fine
 
 
 ProgressBar1.Visible = True
 ProgressBar2.Visible = True
 
-If m_exporter.Esporta(txtPath.Text, mskDal.value, mskAl.value) Then
+If m_exporter.Esporta(txtPath.Text, mskDal.value, mskAl.value, datePostFix) Then
   Esporta = True
  Else
   Esporta = False
@@ -324,7 +329,7 @@ Private Sub Form_Load()
 Set m_exporter = New CExporter
 CaricaDayNav cmbDayNav
 cmbDayNav.ListIndex = 3
-mskDal.value = "2000-01-01"
+
 txtPath.Text = g_Settings.ExportPath
 
 

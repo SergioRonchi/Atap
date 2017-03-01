@@ -382,6 +382,7 @@ Dim MSG_Avviso, Response As Variant
     LockPrtTable ("PrtSaldiUNEP")
     
     Riempi_PRT_EstrattoConto
+    
     AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(1).value, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)
      
 
@@ -478,25 +479,25 @@ On Error GoTo fine
 
 Dim qry As String
     
-    qrySQL = "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, AnagraficaAvvocati.NumOrdinamento,( Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA)  + PrtEstrattoContoUNEP.Saldo_Precedente ) AS totaleSaldo, " & _
+    qrySQL = "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, AnagraficaAvvocati.NumOrdinamento,( Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA+ PrtEstrattoContoUNEP.Deduzione)  + PrtEstrattoContoUNEP.Saldo_Precedente ) AS totaleSaldo, " & _
               "'" & TxtRicDataIn.Text & "','" & TxtRicDataFin.Text & "','E' "
     qrySQL = qrySQL & " FROM PrtEstrattoContoUNEP INNER JOIN AnagraficaAvvocati ON PrtEstrattoContoUNEP.CODAVV = AnagraficaAvvocati.CODAVV "
     qrySQL = qrySQL & " GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, AnagraficaAvvocati.NumOrdinamento"
     
     If OptTipoStampa(1).value = True Then
        
-            qrySQL = qrySQL & " HAVING   (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA)+ PrtEstrattoContoUNEP.Saldo_Precedente)<=-" & Str(g_Settings.LimiteSaldo) & " "
+            qrySQL = qrySQL & " HAVING   (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA + PrtEstrattoContoUNEP.Deduzione)+ PrtEstrattoContoUNEP.Saldo_Precedente)<=-" & Str(g_Settings.LimiteSaldo) & " "
        
     End If
     
     If OptTipoStampa(2).value = True Then
-            qrySQL = qrySQL & " HAVING   (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA)+ PrtEstrattoContoUNEP.Saldo_Precedente)>=" & Str(g_Settings.LimiteSaldo) & ""
+            qrySQL = qrySQL & " HAVING   (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA+ PrtEstrattoContoUNEP.Deduzione)+ PrtEstrattoContoUNEP.Saldo_Precedente)>=" & Str(g_Settings.LimiteSaldo) & ""
 
     End If
     
     If OptTipoStampa(3).value = True Then
         
-            qrySQL = qrySQL & " HAVING  (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA)+ PrtEstrattoContoUNEP.Saldo_Precedente)>=-" & Str(g_Settings.LimiteSaldo) & " AND (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA)+ PrtEstrattoContoUNEP.Saldo_Precedente) <=" & Str(g_Settings.LimiteSaldo) & " "
+            qrySQL = qrySQL & " HAVING  (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA+ PrtEstrattoContoUNEP.Deduzione)+ PrtEstrattoContoUNEP.Saldo_Precedente)>=-" & Str(g_Settings.LimiteSaldo) & " AND (Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA+ PrtEstrattoContoUNEP.Deduzione)+ PrtEstrattoContoUNEP.Saldo_Precedente) <=" & Str(g_Settings.LimiteSaldo) & " "
         
     End If
 

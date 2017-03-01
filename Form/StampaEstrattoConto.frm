@@ -375,7 +375,7 @@ Private Sub RisolviOrdinamentoErrato()
  Dim rs As ADODB.Recordset, rs1 As ADODB.Recordset, rs2 As ADODB.Recordset
  Dim numOrd As Long
  Dim n As Long
- Dim i As Long
+ Dim I As Long
  Set rs = newAdoRs
  
  rs.Open "SELECT NumOrdinamento,Count(*) AS N FROM AnagraficaAvvocati  Group By NumOrdinamento HAVING Count(*)>1", g_Settings.DBConnection
@@ -394,10 +394,10 @@ Private Sub RisolviOrdinamentoErrato()
     rs1.Close
     Set rs2 = newAdoRs
     rs2.Open "SELECT CodAvv FROM AnagraficaAvvocati  Where NumOrdinamento=" & numOrd, g_Settings.DBConnection
-    i = 0
+    I = 0
     While Not rs2.EOF
-      g_Settings.DBConnection.Execute "UPDATE AnagraficaAvvocati SET NumOrdinamento=NumOrdinamento + " & i & " WHERE CodAvv='" & rs2(0) & "'"
-      i = i + 1
+      g_Settings.DBConnection.Execute "UPDATE AnagraficaAvvocati SET NumOrdinamento=NumOrdinamento + " & I & " WHERE CodAvv='" & rs2(0) & "'"
+      I = I + 1
       rs2.MoveNext
     Wend
     rs2.Close
@@ -499,18 +499,37 @@ End Sub
 
 Public Sub TrasferimentoDatiAlDbStorico()
 On Error GoTo ErroreTrasferimento
-Dim i As Integer
+Dim I As Integer
 Dim schema As String
 Dim nome As String
 
-For i = 0 To 3
-  If Chk(i).value = 1 Then schema = schema + Left(Chk(i).Caption, 1)
-Next i
+For I = 0 To 3
+  If Chk(I).value = 1 Then schema = schema + Left(Chk(I).Caption, 1)
+Next I
 
 nome = TxtCodiceAvvocato.Text
 If nome = "" Then nome = "COMPLETO"
+Dim NomeFile As String
+Dim sDa As String
+Dim sA As String
+Dim avvocatoScelto As String
 
-TrasferimentoOK = Trasferisci(g_Settings.StoricoECPath & "\EC_" & Format(Date, "yyyymmdd") & "_" & nome & ".mdb", Format(TxtRicDataIn.Text, "yyyymmdd"), Format(TxtRicDataFin.Text, "yyyymmdd"), False, Trim(TxtCodiceAvvocato.Text), schema)
+avvocatoScelto = Trim(TxtCodiceAvvocato.Text)
+
+
+Dim avvocatiEstratti As New AvvocatiPerEstratto
+
+If avvocatoScelto = "" Then
+  avvocatiEstratti.Tutti = True
+ Else
+ avvocatiEstratti.Lista.Add avvocatoScelto
+End If
+
+NomeFile = g_Settings.StoricoECPath & "\EC_" & Format(Date, "yyyymmdd") & "_" & nome & ".mdb"
+sDa = Format(TxtRicDataIn.Text, "yyyymmdd")
+sA = Format(TxtRicDataFin.Text, "yyyymmdd")
+
+TrasferimentoOK = Trasferisci(NomeFile, sDa, sA, False, avvocatiEstratti, schema)
  
 Exit Sub
 

@@ -2,15 +2,15 @@ Attribute VB_Name = "mdlLockManagement"
 Option Explicit
 
 Public Function IsRecordLocked(Where As String, table As String) As Boolean
-  Dim owner As String
-  owner = GetADOValue(table, "Locked", Where, g_Settings.DBConnection)
-  IsRecordLocked = (owner <> "NONE" And owner <> g_Settings.UserLock)
+  Dim Owner As String
+  Owner = GetADOValue(table, "Locked", Where, g_Settings.DBConnection)
+  IsRecordLocked = (Owner <> "NONE" And Owner <> g_Settings.UserLock)
 End Function
-Public Sub LockRecord(ID As Long, table As String)
-  g_Settings.DBConnection.Execute "UPDATE " & table & " SET Locked='" & g_Settings.UserLock & "' WHERE IDCod=" & ID
+Public Sub LockRecord(id As Long, table As String)
+  g_Settings.DBConnection.Execute "UPDATE " & table & " SET Locked='" & g_Settings.UserLock & "' WHERE IDCod=" & id
 End Sub
-Public Sub DeLockRecord(ID As Long, table As String)
- g_Settings.DBConnection.Execute "UPDATE " & table & " SET Locked='NONE' WHERE IDCod=" & ID
+Public Sub DeLockRecord(id As Long, table As String)
+ g_Settings.DBConnection.Execute "UPDATE " & table & " SET Locked='NONE' WHERE IDCod=" & id
 End Sub
 Public Sub DeLockAllRecord(table As String)
  g_Settings.DBConnection.Execute "UPDATE " & table & " SET Locked='NONE' WHERE Locked='" & g_Settings.UserLock & "'"
@@ -23,9 +23,9 @@ Public Sub DelockTable(table As String)
   g_Settings.DBConnection.Execute "UPDATE LockTable SET Locked='NONE' WHERE UCase(TabID)='" & UCase(table) & "'"
 End Sub
 Public Function IsTableLocked(table As String) As Boolean
-  Dim owner As String
-  owner = GetADOValue("LockTable", "Locked", "UCase(TabID)='" & UCase(table) & "'", g_Settings.DBConnection)
-  IsTableLocked = (owner <> "" And owner <> "NONE" And owner <> g_Settings.UserLock)
+  Dim Owner As String
+  Owner = GetADOValue("LockTable", "Locked", "UCase(TabID)='" & UCase(table) & "'", g_Settings.DBConnection)
+  IsTableLocked = (Owner <> "" And Owner <> "NONE" And Owner <> g_Settings.UserLock)
 End Function
 Public Sub DeLockAllTables(Optional onlyUser As Boolean)
 Dim sWhere As String
@@ -51,6 +51,9 @@ g_Settings.DBConnection.Execute "UPDATE Sfratti_UNEP SET " & _
                  "Locked='NONE' " & sWhere
 
 g_Settings.DBConnection.Execute "UPDATE Notifiche_UNEP SET " & _
+                 "Locked='NONE' " & sWhere
+                 
+g_Settings.DBConnection.Execute "UPDATE Deduzioni_UNEP SET " & _
                  "Locked='NONE' " & sWhere
 
 If Not onlyUser Then MsgBox "Tabelle sbloccate.", vbInformation

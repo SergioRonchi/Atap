@@ -121,79 +121,6 @@ Begin VB.Form frmRicerca
       AccessibleValue =   ""
       AccessibleRole  =   24
    End
-   Begin VB.Frame fraAna 
-      Height          =   1455
-      Left            =   120
-      TabIndex        =   11
-      Top             =   0
-      Width           =   12795
-      Begin VB.CommandButton cmdAdd 
-         Caption         =   "Nuova Cassetta"
-         Height          =   375
-         Left            =   11280
-         TabIndex        =   21
-         Top             =   960
-         Width           =   1335
-      End
-      Begin VB.CommandButton cmdFiltraAna 
-         Caption         =   "Filtra"
-         Height          =   615
-         Left            =   11280
-         Picture         =   "frmRicerca.frx":0000
-         Style           =   1  'Graphical
-         TabIndex        =   18
-         Top             =   120
-         Width           =   1335
-      End
-      Begin VB.TextBox TxtUsufruente 
-         Height          =   330
-         Left            =   1785
-         MaxLength       =   40
-         TabIndex        =   14
-         Top             =   1005
-         Width           =   3870
-      End
-      Begin VB.TextBox TxtRicNome 
-         Height          =   330
-         Left            =   1785
-         MaxLength       =   40
-         TabIndex        =   13
-         Top             =   525
-         Width           =   3870
-      End
-      Begin VB.TextBox TxtRicCodAvvInt 
-         Height          =   330
-         Left            =   1785
-         MaxLength       =   10
-         TabIndex        =   12
-         Top             =   120
-         Width           =   1155
-      End
-      Begin VB.Label LblUsufruente 
-         Caption         =   "Usufruente :"
-         Height          =   285
-         Left            =   120
-         TabIndex        =   17
-         Top             =   1005
-         Width           =   1365
-      End
-      Begin VB.Label LblRicNome 
-         Caption         =   "Cognome e Nome :"
-         Height          =   285
-         Left            =   120
-         TabIndex        =   16
-         Top             =   600
-         Width           =   1365
-      End
-      Begin VB.Label LblRicCodAvvInt 
-         Caption         =   "Cod. Cassetta :"
-         Height          =   240
-         Left            =   120
-         TabIndex        =   15
-         Top             =   165
-         Width           =   1500
-      End
-   End
    Begin VB.Frame fraTop 
       Height          =   1455
       Left            =   120
@@ -233,8 +160,8 @@ Begin VB.Form frmRicerca
          _Version        =   65536
          _ExtentX        =   3201
          _ExtentY        =   450
-         Calendar        =   "frmRicerca.frx":014A
-         Caption         =   "frmRicerca.frx":0262
+         Calendar        =   "frmRicerca.frx":0000
+         Caption         =   "frmRicerca.frx":0118
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -244,9 +171,9 @@ Begin VB.Form frmRicerca
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         DropDown        =   "frmRicerca.frx":02CE
-         Keys            =   "frmRicerca.frx":02EC
-         Spin            =   "frmRicerca.frx":034A
+         DropDown        =   "frmRicerca.frx":0184
+         Keys            =   "frmRicerca.frx":01A2
+         Spin            =   "frmRicerca.frx":0200
          AlignHorizontal =   0
          AlignVertical   =   0
          Appearance      =   1
@@ -318,7 +245,7 @@ Begin VB.Form frmRicerca
          Caption         =   "Filtra"
          Height          =   735
          Left            =   11280
-         Picture         =   "frmRicerca.frx":0372
+         Picture         =   "frmRicerca.frx":0228
          Style           =   1  'Graphical
          TabIndex        =   5
          Top             =   120
@@ -341,8 +268,8 @@ Begin VB.Form frmRicerca
          _Version        =   65536
          _ExtentX        =   3201
          _ExtentY        =   450
-         Calendar        =   "frmRicerca.frx":04BC
-         Caption         =   "frmRicerca.frx":05D4
+         Calendar        =   "frmRicerca.frx":0372
+         Caption         =   "frmRicerca.frx":048A
          BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -352,9 +279,9 @@ Begin VB.Form frmRicerca
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         DropDown        =   "frmRicerca.frx":0640
-         Keys            =   "frmRicerca.frx":065E
-         Spin            =   "frmRicerca.frx":06BC
+         DropDown        =   "frmRicerca.frx":04F6
+         Keys            =   "frmRicerca.frx":0514
+         Spin            =   "frmRicerca.frx":0572
          AlignHorizontal =   0
          AlignVertical   =   0
          Appearance      =   1
@@ -433,6 +360,79 @@ Begin VB.Form frmRicerca
          TabIndex        =   2
          Top             =   405
          Width           =   1410
+      End
+   End
+   Begin VB.Frame fraAna 
+      Height          =   1455
+      Left            =   120
+      TabIndex        =   11
+      Top             =   0
+      Width           =   12795
+      Begin VB.CommandButton cmdAdd 
+         Caption         =   "Nuova Cassetta"
+         Height          =   375
+         Left            =   11280
+         TabIndex        =   21
+         Top             =   960
+         Width           =   1335
+      End
+      Begin VB.CommandButton cmdFiltraAna 
+         Caption         =   "Filtra"
+         Height          =   615
+         Left            =   11280
+         Picture         =   "frmRicerca.frx":059A
+         Style           =   1  'Graphical
+         TabIndex        =   18
+         Top             =   120
+         Width           =   1335
+      End
+      Begin VB.TextBox TxtUsufruente 
+         Height          =   330
+         Left            =   1785
+         MaxLength       =   40
+         TabIndex        =   14
+         Top             =   1005
+         Width           =   3870
+      End
+      Begin VB.TextBox TxtRicNome 
+         Height          =   330
+         Left            =   1785
+         MaxLength       =   40
+         TabIndex        =   13
+         Top             =   525
+         Width           =   3870
+      End
+      Begin VB.TextBox TxtRicCodAvvInt 
+         Height          =   330
+         Left            =   1785
+         MaxLength       =   10
+         TabIndex        =   12
+         Top             =   120
+         Width           =   1155
+      End
+      Begin VB.Label LblUsufruente 
+         Caption         =   "Usufruente :"
+         Height          =   285
+         Left            =   120
+         TabIndex        =   17
+         Top             =   1005
+         Width           =   1365
+      End
+      Begin VB.Label LblRicNome 
+         Caption         =   "Cognome e Nome :"
+         Height          =   285
+         Left            =   120
+         TabIndex        =   16
+         Top             =   600
+         Width           =   1365
+      End
+      Begin VB.Label LblRicCodAvvInt 
+         Caption         =   "Cod. Cassetta :"
+         Height          =   240
+         Left            =   120
+         TabIndex        =   15
+         Top             =   165
+         Width           =   1500
       End
    End
    Begin VB.Menu mnuContext 
@@ -531,16 +531,20 @@ Unload Me
 End Sub
 
 Private Sub cmdFiltra_Click()
+Dim field As String
+field = "DataRegistrazione"
 qryExe = Query
 qryExe = qryExe & " WHERE 1=1 " & Filtro
     If TxtRicCodAvv.Text <> "" Then
         qryExe = qryExe & " AND (CODAVV = '" & TxtRicCodAvv.Text & "')"
      End If
+     If Tabella = "DEDUZIONI_UNEP" Then field = "DataEvasionePratica"
+     
     If IsDate(Da) Then
-        qryExe = qryExe & " AND ( DataRegistrazione >= '" & Format(Da, "yyyymmdd") & "')"
+        qryExe = qryExe & " AND ( " & field & " >= '" & Format(Da, "yyyymmdd") & "')"
     End If
     If IsDate(A) Then
-        qryExe = qryExe & " AND ( DataRegistrazione <= '" & Format(A, "yyyymmdd") & "')"
+        qryExe = qryExe & " AND ( " & field & " <= '" & Format(A, "yyyymmdd") & "')"
     End If
     If opt(1) Then
        qryExe = qryExe & " AND ( CheckVisual = 'X')"
@@ -549,10 +553,10 @@ qryExe = qryExe & " WHERE 1=1 " & Filtro
        qryExe = qryExe & " AND ( CheckVisual <> 'X')"
     End If
     If cmbSigla.ListIndex > 0 Then
-       qryExe = qryExe & " AND ( SIGLA ='" & cmbSigla.List(cmbSigla.ListIndex) & "')"
+       qryExe = qryExe & " AND ( SIGLA ='" & cmbSigla.list(cmbSigla.ListIndex) & "')"
     End If
     If cmbSiglaCh.ListIndex > 0 Then
-       qryExe = qryExe & " AND ( SIGLACH ='" & cmbSiglaCh.List(cmbSiglaCh.ListIndex) & "')"
+       qryExe = qryExe & " AND ( SIGLACH ='" & cmbSiglaCh.list(cmbSiglaCh.ListIndex) & "')"
     End If
     AggiornaGriglia
 End Sub
@@ -628,7 +632,7 @@ End If
 'Unload Me
 End Sub
 
-Private Sub flex_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub flex_MouseDown(Button As Integer, Shift As Integer, x As Single, Y As Single)
 If flex.ColIndex("Nome") <> -1 Then
     If tipo = "Anagrafica" And Button = 2 And flex.TextMatrix(flex.row, flex.ColIndex("Nome")) = "" Then
       PopupMenu mnuContext
@@ -640,11 +644,11 @@ Private Sub Form_Load()
 Screen.MousePointer = vbHourglass
 Caption = Titolo
 If tipo = "Anagrafica" Then
-  Query = "SELECT CODAVV as Codice, NOME as Nome,Telef as Telefono, TelefCell as Cellulare,NumOrdinamento FROM AnagraficaAvvocati "
+  Query = "SELECT CODAVV as Codice, NOME as Nome,Telef as Telefono, TelefCell as Cellulare,EMAIL as Mail,PEC, Mail2, NumOrdinamento FROM AnagraficaAvvocati "
   DefaultOrder = "order by AnagraficaAvvocati.NumOrdinamento"
   fraAna.Visible = True
   fraTop.Visible = False
-  NCol = 4  'Numero di colonne da visualizzare
+  NCol = 7  'Numero di colonne da visualizzare
  Else
   fraAna.Visible = False
   fraTop.Visible = True
@@ -657,6 +661,11 @@ If tipo = "Anagrafica" Then
   cmbDate.AddItem "Anno " & year(Date)
   cmbDate.AddItem "Tutto"
   cmbDate.ListIndex = 5
+  opt(0).Visible = Tabella <> "DEDUZIONI_UNEP"
+  opt(1).Visible = Tabella <> "DEDUZIONI_UNEP"
+  opt(2).Visible = Tabella <> "DEDUZIONI_UNEP"
+  cmbSiglaCh.Visible = Tabella <> "DEDUZIONI_UNEP"
+  Label2.Visible = Tabella <> "DEDUZIONI_UNEP"
 End If
  qryExe = Query & " WHERE 1=1" & Filtro
  AggiornaGriglia
@@ -675,23 +684,26 @@ If Me.Height - flex.Top - 600 > 0 Then flex.Height = Me.ScaleHeight - flex.Top -
 cmdEsci.Top = flex.Top + flex.Height + 80
 End Sub
 Public Sub AggiornaGriglia()
-Dim i As Integer
+Dim I As Integer
 Dim rs As ADODB.Recordset
 Set rs = newAdoRs
 rs.Open qryExe & " " & DefaultOrder, g_Settings.DBConnection
 Set flex.DataSource = rs
-For i = NCol + 1 To flex.Cols - 1
- flex.ColHidden(i) = True
-Next i
+For I = NCol + 1 To flex.Cols - 1
+ flex.ColHidden(I) = True
+Next I
 
-For i = 1 To flex.Cols - 1
- flex.ColWidth(i) = 20
-Next i
+For I = 1 To flex.Cols - 1
+ flex.ColWidth(I) = 20
+Next I
 flex.ColWidth(flex.ColIndex("Codice")) = 900
 If tipo = "Anagrafica" Then
-    flex.ColWidth(flex.ColIndex("Nome")) = 3200
-    flex.ColWidth(flex.ColIndex("Telefono")) = 1900
-    flex.ColWidth(flex.ColIndex("Cellulare")) = 1700
+    flex.ColWidth(flex.ColIndex("Nome")) = 3800
+    flex.ColWidth(flex.ColIndex("Telefono")) = 1500
+    flex.ColWidth(flex.ColIndex("Cellulare")) = 1500
+    flex.ColWidth(flex.ColIndex("Mail")) = 3200
+    flex.ColWidth(flex.ColIndex("Pec")) = 3200
+    flex.ColWidth(flex.ColIndex("Mail2")) = 3200
  Else
  
      flex.ColWidth(flex.ColIndex("Ev")) = 200
@@ -723,12 +735,19 @@ If tipo = "Anagrafica" Then
         flex.ColWidth(flex.ColIndex("Ricorrente")) = 3400
         flex.ColWidth(flex.ColIndex("Debitore")) = 3400
       Case "NOTIFICHE_UNEP"
-      flex.ColWidth(flex.ColIndex("Data Registrazione")) = 1500
+        flex.ColWidth(flex.ColIndex("Data Registrazione")) = 1500
         flex.ColWidth(flex.ColIndex("Parte1")) = 2800
         flex.ColWidth(flex.ColIndex("Parte2")) = 2800
         flex.ColWidth(flex.ColIndex("Crono")) = 2200
         flex.ColWidth(flex.ColIndex("Sigla Inserimento")) = 1200
         flex.ColWidth(flex.ColIndex("Sigla chiusura")) = 1200
+     Case "DEDUZIONI_UNEP"
+        flex.ColWidth(flex.ColIndex("Data Registrazione")) = 1500
+        flex.ColWidth(flex.ColIndex("Nota")) = 3000
+        flex.ColAlignment(flex.ColIndex("Nota")) = flexAlignLeftCenter
+        flex.ColFormat(flex.ColIndex("Importo")) = "0.00"
+        flex.ColWidth(flex.ColIndex("Importo")) = 1500
+        flex.ColWidth(flex.ColIndex("Ev")) = 300
     End Select
    
     
@@ -745,42 +764,42 @@ End If
 End Sub
 
 Private Sub ColoraAnnullati()
-Dim i As Long
+Dim I As Long
 ColoraLiberi
 ColoraEvasi
 If flex.ColIndex("Annullo") = -1 Then Exit Sub
-  For i = 1 To flex.Rows - 1
+  For I = 1 To flex.Rows - 1
     
-    If flex.TextMatrix(i, flex.ColIndex("Annullo")) = "A" Then
-      flex.Cell(flexcpForeColor, i, 1, i, flex.Cols - 1) = &HC0C0C0
-      flex.Cell(flexcpFontStrikethru, i, 1, i, flex.Cols - 1) = True
+    If flex.TextMatrix(I, flex.ColIndex("Annullo")) = "A" Then
+      flex.Cell(flexcpForeColor, I, 1, I, flex.Cols - 1) = &HC0C0C0
+      flex.Cell(flexcpFontStrikethru, I, 1, I, flex.Cols - 1) = True
     End If
-  Next i
+  Next I
  
 End Sub
 
 Private Sub ColoraEvasi()
-Dim i As Long
+Dim I As Long
 If flex.ColIndex("Ev") = -1 Then Exit Sub
-  For i = 1 To flex.Rows - 1
+  For I = 1 To flex.Rows - 1
     
-    If flex.TextMatrix(i, flex.ColIndex("Ev")) = "X" Then
-      flex.Cell(flexcpForeColor, i, 1, i, flex.Cols - 1) = &HFF0000
+    If flex.TextMatrix(I, flex.ColIndex("Ev")) = "X" Then
+      flex.Cell(flexcpForeColor, I, 1, I, flex.Cols - 1) = &HFF0000
       
     End If
-  Next i
+  Next I
  
 End Sub
 Private Sub ColoraLiberi()
-Dim i As Long
+Dim I As Long
 If flex.ColIndex("Telefono") = -1 Then Exit Sub
-  For i = 1 To flex.Rows - 1
+  For I = 1 To flex.Rows - 1
     
-    If flex.TextMatrix(i, flex.ColIndex("Nome")) = "" Then
-      flex.Cell(flexcpBackColor, i, 1, i, flex.Cols - 1) = &H80FF80
+    If flex.TextMatrix(I, flex.ColIndex("Nome")) = "" Then
+      flex.Cell(flexcpBackColor, I, 1, I, flex.Cols - 1) = &H80FF80
       
     End If
-  Next i
+  Next I
  
 End Sub
 
