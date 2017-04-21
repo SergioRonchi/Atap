@@ -621,6 +621,16 @@ End If
 CN.Execute "UPDATE STORICOFATTURE SET CodIVA='022' WHERE LEFT(DataFattura,4)='2016' AND CODIVA =''"
 CN.Execute "UPDATE Parametri SET CodIVA='022' WHERE CODIVA =''"
 
+If Not ExistMDBField(CN, "Parametri", "Sede") Then
+     CN.Execute "ALTER TABLE Parametri ADD Sede Text(255)"
+      
+     CN.Execute "UPDATE Parametri SET Sede='Milano'"
+End If
+
+If Not ExistMDBField(CN, "PrtSospesiUNEP", "Deduzione") Then
+   CN.Execute "ALTER TABLE  PrtSospesiUNEP ADD COLUMN Deduzione Double"
+   
+End If
 End Sub
 
 

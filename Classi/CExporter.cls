@@ -21,6 +21,12 @@ Public Function Esporta(Path As String, Da As Date, A As Date, datePostFix As St
   Dim fattureMsg As String
   Dim iFileNo
   Dim fileName As String
+  Dim I As Long
+  Dim s As String
+  Dim Num As String
+  Dim listaFatture As Collection
+  Dim listaFattureUnep As Collection
+  
     fileName = Path & "\FATTURE_" & datePostFix & ".csv"
      m_da = Da
      m_a = A
@@ -31,18 +37,39 @@ Public Function Esporta(Path As String, Da As Date, A As Date, datePostFix As St
          EsportaAnagrafica Path, datePostFix
          
          m_prog1 = 25: m_prog2 = 0: RaiseProgress
-         fattureMsg = EsportaFatture(Path, Da, A, True, False)
+         Set listaFatture = EsportaFatture(Path, Da, A, True, False)
          m_prog1 = 60: m_prog2 = 0: RaiseProgress
-         fattureMsg = fattureMsg & EsportaFatture(Path, Da, A, False, True)
+         Set listaFattureUnep = EsportaFatture(Path, Da, A, True, True)
          m_prog1 = 100: m_prog2 = 0: RaiseProgress
 
         iFileNo = FreeFile
-        Open fileName For Output As #iFileNo
-        fattureMsg = Left(fattureMsg, Len(fattureMsg) - 2)
-        Print #iFileNo, fattureMsg
         
-        Close iFileNo
-         Esporta = True
+        For I = 1 To listaFatture.count
+           Num = I
+           s = listaFatture.item(I)
+           fileName = Path & "\FATTURE_" & datePostFix & "_" & String(3 - Len(Num), "0") & Num & ".csv"
+           Open fileName For Output As #iFileNo
+           s = Left(s, Len(s) - 2)
+           Print #iFileNo, s
+           Close iFileNo
+        Next
+        
+          For I = 1 To listaFattureUnep.count
+           Num = I
+           s = listaFattureUnep.item(I)
+           fileName = Path & "\FATTURE_UNEP_" & datePostFix & "_" & String(3 - Len(Num), "0") & Num & ".csv"
+           Open fileName For Output As #iFileNo
+           s = Left(s, Len(s) - 2)
+           Print #iFileNo, s
+           Close iFileNo
+        Next
+        
+'        Open fileName For Output As #iFileNo
+'        fattureMsg = Left(fattureMsg, Len(fattureMsg) - 2)
+'        Print #iFileNo, fattureMsg
+'
+'        Close iFileNo
+        Esporta = True
          Exit Function
          
 fine:
@@ -90,7 +117,7 @@ Print #iFileNo, msg
 Close iFileNo
 
 End Sub
-Private Function EsportaFatture(Path As String, Da As Date, A As Date, addHeader As Boolean, isUnep As Boolean) As String
+Private Function EsportaFatture(Path As String, Da As Date, A As Date, addHeader As Boolean, isUnep As Boolean) As Collection
 Dim rs As ADODB.Recordset
 Dim msg As String
 Dim row As CExportFatturaRow
@@ -102,7 +129,7 @@ Dim fileName As String
 Dim codCE As String
 Dim codAliquotaIVA As String
 Dim codArticoloIVA As String
-
+Dim oListaStringhe As New Collection
 Tabella = IIf(isUnep, "StoricoFattureUnep", "STORICOFATTURE")
 
 codCE = g_Settings.CodCompetenze
@@ -120,10 +147,13 @@ SQL = SQL & " FROM AnagraficaAvvocati INNER JOIN " & Tabella & " ON AnagraficaAv
       "ORDER BY DataFattura, Format(NumeroFattura, '00000000')"
 rs.Open SQL, g_Settings.DBConnection
 
-If addHeader Then msg = msg & CreateIntestazioneFatture & vbCrLf
+If addHeader Then msg = CreateIntestazioneFatture & vbCrLf
 Dim codPartita As String
 Dim numeroRegistrazione As Long
 Dim totSenzaIVA As Double
+Dim contaFatture As Long
+Dim errPIVA As String
+Dim scadenza As String
 While Not rs.EOF
   If isUnep Then
     codAliquotaIVA = "EC"
@@ -132,7 +162,9 @@ While Not rs.EOF
     codAliquotaIVA = rs("CodIVA")
     codArticoloIVA = "005"
   End If
-
+  If Trim(rs("PIVA")) = "" Then
+    errPIVA = errPIVA & "Fattura senza partita IVA n. " & rs("NumeroFattura") & " CodAvv: " & rs("CodAvV") & vbCrLf
+  End If
   Set row = New CExportFatturaRow
   Tot = rs("CompAdempEuro") + rs("CompSfpgEuro") + rs("CompNotifEuro") + rs("CompDecrIngEuro")
   totSenzaIVA = Tot
@@ -146,12 +178,14 @@ While Not rs.EOF
   'TESTATA
   row.Init True, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), Tot, 0, codAliquotaIVA, codArticoloIVA, "", g_Settings.CodTestata
   msg = msg & row.CreateRow & vbCrLf
+  scadenza = row.Scadenze
   codPartita = row.codPartita
   nRiga = nRiga + 1
   
   'UNICA RIGA PER FATTURA TOTALE
     Set row = New CExportFatturaRow
-    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Importo", codCE
+    'row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Importo Competenze " & g_Settings.Sede, codCE
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "", codCE
     msg = msg & row.CreateRow & vbCrLf
     nRiga = nRiga + 1
     
@@ -187,7 +221,7 @@ While Not rs.EOF
    If isUnep Then
     If rs("QUOTA") > 0 Then
         Set row = New CExportFatturaRow
-        row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("QUOTA"), rs("QUOTA") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Quota", g_Settings.CodQuataFissa
+        row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("QUOTA"), rs("QUOTA") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Quota associativa", g_Settings.CodQuataFissa
         msg = msg & row.CreateRow & vbCrLf
         nRiga = nRiga + 1
     End If
@@ -199,6 +233,9 @@ While Not rs.EOF
     Set row = New CExportFatturaRow
     row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", "", Tot, 0, "", "", "Incasso da clienti", g_Settings.CodTestataIncasso
     row.Causale = "B25"
+    row.Valenza = "0"
+    row.Fiscale = "0"
+    row.ImportoIVA = ""
     row.DataDocumento = row.DataRegistrazione
     msg = msg & row.CreateRow & vbCrLf
     nRiga = nRiga + 1
@@ -208,16 +245,32 @@ While Not rs.EOF
     row.Causale = "B25"
     row.codPartita = codPartita
     row.CFnominativo = Trim(rs("PIVA"))
+    row.TipoRiga = "0"
+     row.ImportoIVA = ""
+    row.Scadenze = scadenza
     msg = msg & row.CreateRow & vbCrLf
- 
+    contaFatture = contaFatture + 1
+    If contaFatture > 100 Then
+      oListaStringhe.Add msg
+      contaFatture = 0
+      If addHeader Then msg = CreateIntestazioneFatture & vbCrLf
+    End If
   rs.MoveNext
+  
   I = I + 1
   m_prog2 = I * 100 / rs.RecordCount: RaiseProgress
    DoEvents
 Wend
 
+If contaFatture > 0 Then
+   oListaStringhe.Add msg
+   
+End If
 
-EsportaFatture = msg
+If errPIVA <> "" Then
+  MsgBox "Alcune fatture non hanno la Partita IVA" & vbCrLf & errPIVA
+End If
+Set EsportaFatture = oListaStringhe
 End Function
 Private Function CreateIntestazioneAnagrafica() As String
 Dim s As String

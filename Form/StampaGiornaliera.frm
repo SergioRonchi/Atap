@@ -54,10 +54,7 @@ On Error GoTo fine
           .DataFiles(1) = g_Settings.CurrentDbFile
           .DataFiles(2) = g_Settings.CurrentDbFile
         End If
-        
-        If sRptFile = "AnagraficaDettagliata.rpt" Then
-          
-        End If
+
         .ReportFileName = g_Settings.ReportPath & "\" & sRptFile
         .SelectionFormula = Trim(qryFormula)
         .FetchSelectionFormula
@@ -72,7 +69,7 @@ On Error GoTo fine
           Else
            .Formulas(0) = ""
         End If
-        If sRptFile = "EstrattoContoUNEP.rpt" Then
+        If sRptFile = "EstrattoContoUNEP.rpt" Or sRptFile = "AnagraficaDettagliata.rpt" Then
           Dim n As Integer
           Dim sSubreportName As String
           n = .GetNSubreports

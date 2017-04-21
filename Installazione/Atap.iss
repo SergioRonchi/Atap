@@ -33,6 +33,7 @@ Source: ..\..\..\DeployFiles\Runtime\MSBIND.DLL; DestDir: {sys}; Flags: promptif
 Source: ..\..\..\DeployFiles\Runtime\MSSTDFMT.DLL; DestDir: {sys}; Flags: promptifolder regserver sharedfile
 ; END VISUAL BASIC
 
+Source: ..\..\..\DeployFiles\vbAccellerator\MsgBoxEx.ocx; DestDir: {sys}; Flags: regserver sharedfile uninsnosharedfileprompt
 
 ; CRYSTAL REPORT
 Source: ..\..\..\DeployFiles\Crystal\Crystl32.OCX; DestDir: {sys}\Crystal; Flags: regserver sharedfile

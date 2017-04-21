@@ -7,31 +7,31 @@ Begin VB.Form frmRicerca
    ClientHeight    =   10230
    ClientLeft      =   45
    ClientTop       =   315
-   ClientWidth     =   13080
+   ClientWidth     =   14115
    FillColor       =   &H0080FF80&
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MDIChild        =   -1  'True
    MinButton       =   0   'False
    ScaleHeight     =   10230
-   ScaleWidth      =   13080
+   ScaleWidth      =   14115
    ShowInTaskbar   =   0   'False
    Begin VB.CommandButton cmdEsci 
       Caption         =   "Esci"
       Height          =   495
-      Left            =   11760
+      Left            =   12720
       TabIndex        =   7
       Top             =   9720
       Width           =   1215
    End
    Begin VSFlex8Ctl.VSFlexGrid flex 
-      Height          =   8055
+      Height          =   7935
       Left            =   0
       TabIndex        =   6
-      Top             =   1560
-      Width           =   12975
-      _cx             =   22886
-      _cy             =   14208
+      Top             =   1680
+      Width           =   13935
+      _cx             =   24580
+      _cy             =   13996
       Appearance      =   1
       BorderStyle     =   1
       Enabled         =   -1  'True
@@ -122,40 +122,80 @@ Begin VB.Form frmRicerca
       AccessibleRole  =   24
    End
    Begin VB.Frame fraTop 
-      Height          =   1455
+      Height          =   1695
       Left            =   120
       TabIndex        =   0
       Top             =   0
-      Width           =   12795
+      Width           =   13755
+      Begin VB.ComboBox cmbTribunale 
+         Height          =   315
+         Left            =   4920
+         TabIndex        =   31
+         Text            =   "Combo1"
+         Top             =   360
+         Width           =   2325
+      End
+      Begin VB.Frame fraAdempi 
+         BorderStyle     =   0  'None
+         Caption         =   "Frame1"
+         Height          =   495
+         Left            =   5760
+         TabIndex        =   30
+         Top             =   1080
+         Width           =   6375
+      End
+      Begin VB.Frame fraUNEP 
+         BorderStyle     =   0  'None
+         Height          =   615
+         Left            =   7440
+         TabIndex        =   27
+         Top             =   120
+         Width           =   4695
+         Begin VB.TextBox txtCrono 
+            Height          =   285
+            Left            =   0
+            TabIndex        =   29
+            Top             =   240
+            Width           =   2295
+         End
+         Begin VB.Label Label3 
+            Caption         =   "Cronologico"
+            Height          =   255
+            Left            =   0
+            TabIndex        =   28
+            Top             =   0
+            Width           =   975
+         End
+      End
       Begin VB.ComboBox cmbDate 
          Height          =   315
-         Left            =   6000
+         Left            =   3960
          TabIndex        =   26
          Text            =   "Combo1"
-         Top             =   960
-         Width           =   3495
+         Top             =   1200
+         Width           =   1695
       End
       Begin VB.ComboBox cmbSiglaCh 
          Height          =   315
-         Left            =   6000
+         Left            =   3120
          TabIndex        =   25
          Text            =   "Combo1"
-         Top             =   550
+         Top             =   360
          Width           =   1725
       End
       Begin VB.ComboBox cmbSigla 
          Height          =   315
-         Left            =   6000
+         Left            =   1320
          TabIndex        =   24
          Text            =   "Combo1"
-         Top             =   170
+         Top             =   360
          Width           =   1725
       End
       Begin TDBDate6Ctl.TDBDate Da 
          Height          =   255
-         Left            =   1080
+         Left            =   120
          TabIndex        =   19
-         Top             =   960
+         Top             =   1200
          Width           =   1815
          _Version        =   65536
          _ExtentX        =   3201
@@ -217,34 +257,34 @@ Begin VB.Form frmRicerca
          Caption         =   "Inevasi"
          Height          =   255
          Index           =   2
-         Left            =   3240
+         Left            =   1680
          TabIndex        =   10
-         Top             =   600
+         Top             =   700
          Width           =   1095
       End
       Begin VB.OptionButton opt 
          Caption         =   "Evasi"
          Height          =   255
          Index           =   1
-         Left            =   3240
+         Left            =   840
          TabIndex        =   9
-         Top             =   360
+         Top             =   700
          Width           =   1095
       End
       Begin VB.OptionButton opt 
          Caption         =   "Tutto"
          Height          =   255
          Index           =   0
-         Left            =   3240
+         Left            =   120
          TabIndex        =   8
-         Top             =   120
+         Top             =   700
          Value           =   -1  'True
          Width           =   975
       End
       Begin VB.CommandButton cmdFiltra 
          Caption         =   "Filtra"
          Height          =   735
-         Left            =   11280
+         Left            =   12240
          Picture         =   "frmRicerca.frx":0228
          Style           =   1  'Graphical
          TabIndex        =   5
@@ -253,7 +293,7 @@ Begin VB.Form frmRicerca
       End
       Begin VB.TextBox TxtRicCodAvv 
          Height          =   285
-         Left            =   1605
+         Left            =   120
          MaxLength       =   10
          TabIndex        =   1
          Top             =   360
@@ -261,9 +301,9 @@ Begin VB.Form frmRicerca
       End
       Begin TDBDate6Ctl.TDBDate A 
          Height          =   255
-         Left            =   3960
+         Left            =   2040
          TabIndex        =   20
-         Top             =   960
+         Top             =   1200
          Width           =   1815
          _Version        =   65536
          _ExtentX        =   3201
@@ -321,28 +361,36 @@ Begin VB.Form frmRicerca
          Value           =   2.12482833205922E-314
          CenturyMode     =   0
       End
+      Begin VB.Label Label4 
+         Caption         =   "Tribunale"
+         Height          =   255
+         Left            =   4920
+         TabIndex        =   32
+         Top             =   120
+         Width           =   975
+      End
       Begin VB.Label Label2 
          Caption         =   "Chiusura"
          Height          =   255
-         Left            =   5040
+         Left            =   3120
          TabIndex        =   23
-         Top             =   600
+         Top             =   120
          Width           =   975
       End
       Begin VB.Label Label1 
          Caption         =   "Inserimento"
          Height          =   255
-         Left            =   5040
+         Left            =   1440
          TabIndex        =   22
-         Top             =   240
+         Top             =   120
          Width           =   1095
       End
       Begin VB.Label LblRicDataFin 
          Caption         =   "Data Fine :"
          Height          =   285
-         Left            =   3120
+         Left            =   2040
          TabIndex        =   4
-         Top             =   1020
+         Top             =   960
          Width           =   1005
       End
       Begin VB.Label LblRicDataIn 
@@ -350,7 +398,7 @@ Begin VB.Form frmRicerca
          Height          =   285
          Left            =   120
          TabIndex        =   3
-         Top             =   1020
+         Top             =   960
          Width           =   1185
       End
       Begin VB.Label LblRicCodAvv 
@@ -358,7 +406,7 @@ Begin VB.Form frmRicerca
          Height          =   240
          Left            =   120
          TabIndex        =   2
-         Top             =   405
+         Top             =   120
          Width           =   1410
       End
    End
@@ -460,6 +508,7 @@ Public tipo As String
 Public Filtro As String
 Public Location As Long
 Dim qryExe As String
+Private m_tribunali As Collection
 Private mFoundCode As String
 Public isUnep As Boolean
 Public Event AvvocatoSelezionato(codice As String)
@@ -531,20 +580,23 @@ Unload Me
 End Sub
 
 Private Sub cmdFiltra_Click()
-Dim field As String
-field = "DataRegistrazione"
+Dim Field As String
+Field = "DataRegistrazione"
 qryExe = Query
 qryExe = qryExe & " WHERE 1=1 " & Filtro
+    If txtCrono.Text <> "" Then
+        qryExe = qryExe & " AND (Crono LIKE '%" & txtCrono.Text & "%')"
+    End If
     If TxtRicCodAvv.Text <> "" Then
         qryExe = qryExe & " AND (CODAVV = '" & TxtRicCodAvv.Text & "')"
      End If
-     If Tabella = "DEDUZIONI_UNEP" Then field = "DataEvasionePratica"
+     If Tabella = "DEDUZIONI_UNEP" Then Field = "DataEvasionePratica"
      
     If IsDate(Da) Then
-        qryExe = qryExe & " AND ( " & field & " >= '" & Format(Da, "yyyymmdd") & "')"
+        qryExe = qryExe & " AND ( " & Field & " >= '" & Format(Da, "yyyymmdd") & "')"
     End If
     If IsDate(A) Then
-        qryExe = qryExe & " AND ( " & field & " <= '" & Format(A, "yyyymmdd") & "')"
+        qryExe = qryExe & " AND ( " & Field & " <= '" & Format(A, "yyyymmdd") & "')"
     End If
     If opt(1) Then
        qryExe = qryExe & " AND ( CheckVisual = 'X')"
@@ -558,6 +610,11 @@ qryExe = qryExe & " WHERE 1=1 " & Filtro
     If cmbSiglaCh.ListIndex > 0 Then
        qryExe = qryExe & " AND ( SIGLACH ='" & cmbSiglaCh.list(cmbSiglaCh.ListIndex) & "')"
     End If
+    
+     If cmbTribunale.ListIndex > 0 Then
+       qryExe = qryExe & " AND ( CodTribunaleApp ='" & cmbTribunale.ItemData(cmbTribunale.ListIndex) & "')"
+    End If
+    
     AggiornaGriglia
 End Sub
 
@@ -643,6 +700,7 @@ End Sub
 Private Sub Form_Load()
 Screen.MousePointer = vbHourglass
 Caption = Titolo
+txtCrono.Text = ""
 If tipo = "Anagrafica" Then
   Query = "SELECT CODAVV as Codice, NOME as Nome,Telef as Telefono, TelefCell as Cellulare,EMAIL as Mail,PEC, Mail2, NumOrdinamento FROM AnagraficaAvvocati "
   DefaultOrder = "order by AnagraficaAvvocati.NumOrdinamento"
@@ -654,6 +712,10 @@ If tipo = "Anagrafica" Then
   fraTop.Visible = True
   PopolaCombo cmbSigla, "SELECT DISTINCT SIGLA as s FROM " & Tabella, "s", , , True
   PopolaCombo cmbSiglaCh, "SELECT DISTINCT SIGLACH as s FROM " & Tabella, "s", , , True
+  Set m_tribunali = New Collection
+  PopolaCombo cmbTribunale, "SELECT DISTINCT " & Tabella & ".CodTribunaleApp as C, TribunaliAppartenenza.DescrizioneTribunale as T " & _
+                            "FROM " & Tabella & " INNER JOIN TribunaliAppartenenza ON " & Tabella & ".CodTribunaleApp = TribunaliAppartenenza.CodiceTribunale", "T", "C", m_tribunali, True
+  
   cmbDate.AddItem "Mese"
   cmbDate.AddItem "Trimestre"
   cmbDate.AddItem "Semestre"
@@ -661,6 +723,8 @@ If tipo = "Anagrafica" Then
   cmbDate.AddItem "Anno " & year(Date)
   cmbDate.AddItem "Tutto"
   cmbDate.ListIndex = 5
+  fraUNEP.Visible = Tabella = "NOTIFICHE_UNEP" Or Tabella = "SFRATTI_UNEP"
+  
   opt(0).Visible = Tabella <> "DEDUZIONI_UNEP"
   opt(1).Visible = Tabella <> "DEDUZIONI_UNEP"
   opt(2).Visible = Tabella <> "DEDUZIONI_UNEP"

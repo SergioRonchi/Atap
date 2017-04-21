@@ -33,7 +33,7 @@ Begin VB.MDIForm Atap
             Style           =   6
             Alignment       =   1
             AutoSize        =   2
-            TextSave        =   "18/01/2017"
+            TextSave        =   "07/04/2017"
          EndProperty
          BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             AutoSize        =   1
@@ -53,7 +53,7 @@ Begin VB.MDIForm Atap
             Style           =   5
             Alignment       =   2
             AutoSize        =   2
-            TextSave        =   "17.53"
+            TextSave        =   "15.51"
          EndProperty
       EndProperty
    End
@@ -270,21 +270,52 @@ Begin VB.MDIForm Atap
             Object.ToolTipText     =   "Deduzioni UNEP"
          EndProperty
       EndProperty
+      Begin VB.PictureBox pctSede 
+         BackColor       =   &H00FFFFC0&
+         BorderStyle     =   0  'None
+         Height          =   375
+         Left            =   8640
+         ScaleHeight     =   375
+         ScaleWidth      =   1995
+         TabIndex        =   4
+         Top             =   0
+         Width           =   2000
+         Begin VB.Label lblSede 
+            Alignment       =   2  'Center
+            BackColor       =   &H00FFFFC0&
+            Caption         =   "Storico"
+            BeginProperty Font 
+               Name            =   "Verdana"
+               Size            =   15.75
+               Charset         =   0
+               Weight          =   400
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            ForeColor       =   &H00800000&
+            Height          =   315
+            Left            =   0
+            TabIndex        =   5
+            Top             =   0
+            Width           =   2000
+         End
+      End
       Begin VB.PictureBox pctStorico 
          BackColor       =   &H000000C0&
          BorderStyle     =   0  'None
          Height          =   375
          Left            =   8640
          ScaleHeight     =   375
-         ScaleWidth      =   3855
+         ScaleWidth      =   1995
          TabIndex        =   2
          Top             =   0
          Visible         =   0   'False
-         Width           =   3855
+         Width           =   2000
          Begin VB.Label lblStorico 
             Alignment       =   2  'Center
             BackColor       =   &H000000C0&
-            Caption         =   "Storico"
+            Caption         =   "DB Storico"
             BeginProperty Font 
                Name            =   "Verdana"
                Size            =   15.75
@@ -299,7 +330,7 @@ Begin VB.MDIForm Atap
             Left            =   0
             TabIndex        =   3
             Top             =   0
-            Width           =   3855
+            Width           =   2000
          End
       End
    End
@@ -511,9 +542,11 @@ On Error Resume Next
  mnuOpt(2).Checked = GetSetting("ATAP", "Configura", "IconBig", 1)
  CaricaIcone mnuOpt(2).Checked
  If Me.ScaleWidth - pctStorico.Width > 0 Then pctStorico.Move (Me.ScaleWidth - pctStorico.Width) / 2
+ If Me.ScaleWidth - pctSede.Width > 0 Then pctSede.Move (Me.ScaleWidth - pctSede.Width) / 2
  Toolbar1.Visible = mnuOpt(1).Checked
  statusBar.Panels(2).Text = g_Settings.dbFile
  Caption = "Atap Service v." & app.Major & "." & app.Minor & "." & app.Revision
+ lblSede.Caption = g_Settings.Sede
 End Sub
 
 Private Sub MDIForm_Unload(Cancel As Integer)
@@ -574,6 +607,7 @@ End Sub
 Private Sub mnuApriCorrente_Click()
 On Error GoTo fine
 pctStorico.Visible = False
+pctSede.Visible = True
 tmrStorico.Enabled = False
 g_Settings.ConnettiDB (g_Settings.dbFile)
 
@@ -591,6 +625,7 @@ If frmApriStorico.aperto Then
     CloseAllForms
     lblStorico.Caption = "Liquidazione " & frmApriStorico.codice
     pctStorico.Visible = True
+    pctSede.Visible = False
     tmrStorico.Enabled = True
 End If
 
@@ -604,6 +639,7 @@ If frmApriStorico.aperto Then
     CloseAllForms
     lblStorico.Caption = "E.C. Storico"
     pctStorico.Visible = True
+    pctSede.Visible = False
     tmrStorico.Enabled = True
 End If
 End Sub
@@ -611,6 +647,7 @@ End Sub
 Private Sub mnuBackup_Click()
  Dim fb As New FileBackuoHelper
  pctStorico.Visible = False
+ pctSede.Visible = True
  tmrStorico.Enabled = False
  fb.BackUp g_Settings.AtapUserBackupFolder
 End Sub

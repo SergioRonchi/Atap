@@ -749,14 +749,22 @@ Private Sub Form_Load()
    'TxtRicDataIn = getPrecChiusura()
 
     PopolaTDBCombo cmbTribunale, "TribunaliAppartenenza", "DescrizioneTribunale", "CodiceTribunale"
-    PopolaTDBCombo cmbAttività, "Attività", "Descrizione", "CodiceAttivita"
+    PopolaTDBCombo cmbAttività, "Attività", "Descrizione", "CodiceAttivita", , , , "SELECT Descrizione,CodiceAttivita FROM Attività WHERE CodiceAttivita IN ('N','S')"
+    
+       
+       Dim r
+       r = cmbTribunale.Columns(1).Find("UNEP", dblSeekEQ, True)
+       If Not IsNull(r) Then cmbTribunale.Bookmark = r
+       cmbTribunale.BoundText = cmbTribunale.Columns(0).value
+       cmbTribunale.Enabled = False
+
 End Sub
 Private Sub moFilterManager_Validate(IsValid As Boolean)
    CmdOK.Enabled = IsValid
 End Sub
 Private Sub OptTipoStampa_Click(Index As Integer)
     If Index = 2 Then
-        cmbTribunale.Enabled = True
+      
         cmbAttività.Enabled = True
         
     ElseIf Index = 1 Then

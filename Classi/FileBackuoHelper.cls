@@ -47,7 +47,7 @@ g_Settings.ConnettiDB g_Settings.dbFile
 errback:
 Screen.MousePointer = vbDefault
 g_Settings.ConnettiDB g_Settings.dbFile
- MsgBox err.Description, vbOKOnly + vbExclamation
+ MsgBox "Creazione fallita del backup in " & vbCrLf & Path & vbCrLf & err.Description, vbOKOnly + vbExclamation, "Atap"
 
 End Sub
 

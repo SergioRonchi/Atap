@@ -87,7 +87,7 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
       While Not rsTable.EOF
         
           Tabella = rsTable!TABLE_NAME
-          isUnepTable = UCase(Tabella) = "SFRATTI_UNEP" Or UCase(Tabella) = "NOTIFICHE_UNEP"
+          isUnepTable = UCase(Tabella) = "SFRATTI_UNEP" Or UCase(Tabella) = "NOTIFICHE_UNEP" Or UCase(Tabella) = "DEDUZIONI_UNEP"
           If UCase(Left(Tabella, 3)) <> "QRY" Then
                     Data = False
                     isCodAvv = False

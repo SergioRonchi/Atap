@@ -1727,7 +1727,7 @@ If Not rs.EOF Then
     MsgBox "Il caricamento non è andato a buon fine:" & vbCrLf & "potrebbe non essere presente la Cassetta o il Tribunale corrispondente", vbCritical, "Attenzione"
 End If
 PassaLoad = False
-LocalLoad = True
+LocalLoad = False
 
 End Sub
 

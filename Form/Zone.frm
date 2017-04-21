@@ -223,7 +223,7 @@ Public Ordinamento As String
 
 
 
-Private Sub CmdElimina_Click()
+Private Sub cmdElimina_Click()
 Dim app As String
 Dim err As String
 Dim Response As Long
@@ -263,7 +263,7 @@ End If
 End Sub
 
 Private Sub cmdNew_Click()
-On Error GoTo FINE
+On Error GoTo fine
  
  If TxtCodice <> "" And TxtDescrizione <> "" Then
    If ExistADORecord("SELECT * From " & Tabella & " Where " & Campo1 & "='" & Replace(TxtCodice, "'", "''") & "'", g_Settings.DBConnection) Then
@@ -288,7 +288,7 @@ On Error GoTo FINE
    
  End If
  Exit Sub
-FINE:
+fine:
  MsgBox err.Description
 
 End Sub
@@ -319,7 +319,7 @@ If r = 0 Then Exit Sub
 TxtCodice = flex.TextMatrix(r, 1)
 TxtDescrizione = flex.TextMatrix(r, 2)
 
-CmdElimina.Enabled = TxtCodice <> "UNEP"
+cmdElimina.Enabled = TxtCodice <> "UNEP"
 cmdNew.Enabled = TxtCodice <> "UNEP"
 TxtCodice.Enabled = TxtCodice <> "UNEP"
 TxtDescrizione.Enabled = TxtCodice <> "UNEP"
@@ -333,7 +333,7 @@ Private Sub Form_Load()
   Aggiorna
 End Sub
 Public Sub Aggiorna()
- AggiornaGriglia flex, qry, CmdElimina
+ AggiornaGriglia flex, qry, cmdElimina
  flex.ColWidth(2) = 3000
  flex_DblClick
 End Sub

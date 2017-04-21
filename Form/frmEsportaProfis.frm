@@ -278,13 +278,16 @@ On Error GoTo fine
 Select Case Index
   Case 18 'OK
    If txtPath.Text <> "" Then
-     Dim d As String
-     d = Format(Now, "YYYYMMDDHHmm")
-     If Esporta(d) Then
+     Dim D As String
+     D = Format(Now, "YYYYMMDDHHmm")
+     If Esporta(D) Then
       Dim zipUtils As New FileBackuoHelper
         Dim exportFile As String
-        exportFile = "Atap_Export_" & d & ".zip"
-        zipUtils.zipFile txtPath.Text, "Atap_Export_" & d, txtPath.Text, "*" & d & ".csv", "Esportato file " & exportFile & " in "
+        exportFile = "Atap_Export_" & D & ".zip"
+        zipUtils.zipFile txtPath.Text, "Atap_Export_" & D & "_" & g_Settings.Sede, txtPath.Text, "*" & D & "*.csv", "Esportato file " & exportFile & " in "
+        
+        SafeKill txtPath.Text & "\*" & D & "*.csv"
+        
         Shell "explorer.exe /e, " & txtPath.Text, vbNormalFocus
         Unload Me
      End If

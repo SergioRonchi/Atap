@@ -140,8 +140,8 @@ Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Integer
    NumDocumento = numFattura
    DescrizioneMov = "Fattura emessa"
    RegistroIVA = "V1"
-   RegIVAVendite = "V1"
-   ProtocolloIVA = numFattura
+   RegIVAVendite = "" ' "V1"
+   ProtocolloIVA = "" 'numFattura
    Valenza = "0"
    Fiscale = "0"
    codPartita = numFattura & "|" & year(dataFattura)
@@ -149,6 +149,7 @@ Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Integer
    CodConto = g_Settings.CodTestata
    CFnominativo = IIf(PIVA <> "", PIVA, CF)
    ImportoIVA = ""
+   Scadenze = dataFattura & "|" & ImportoRiga
  Else
    TipoRiga = "2"
    CodConto = codCE

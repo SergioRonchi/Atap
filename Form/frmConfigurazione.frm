@@ -14,12 +14,19 @@ Begin VB.Form frmConfigurazione
    ScaleWidth      =   8415
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.TextBox txtSede 
+      Height          =   285
+      Left            =   1200
+      TabIndex        =   28
+      Top             =   120
+      Width           =   2055
+   End
    Begin VB.Frame Frame1 
       Caption         =   "Codici del Piano dei Conti"
       Height          =   2895
       Left            =   120
       TabIndex        =   16
-      Top             =   1320
+      Top             =   1440
       Width           =   8175
       Begin VB.TextBox txtCodTestataIncasso 
          Height          =   375
@@ -106,10 +113,10 @@ Begin VB.Form frmConfigurazione
       Width           =   6615
    End
    Begin VB.TextBox txtCodIva 
-      Height          =   375
-      Left            =   2880
+      Height          =   285
+      Left            =   1200
       TabIndex        =   12
-      Top             =   240
+      Top             =   600
       Width           =   1455
    End
    Begin VB.TextBox txtIBAN 
@@ -144,9 +151,9 @@ Begin VB.Form frmConfigurazione
    End
    Begin TDBNumber6Ctl.TDBNumber tdbIVA 
       Height          =   255
-      Left            =   120
+      Left            =   6120
       TabIndex        =   1
-      Top             =   240
+      Top             =   120
       Width           =   1935
       _Version        =   65536
       _ExtentX        =   3413
@@ -195,16 +202,16 @@ Begin VB.Form frmConfigurazione
       ReadOnly        =   0
       Separator       =   "."
       ShowContextMenu =   -1
-      ValueVT         =   142409729
+      ValueVT         =   145424385
       Value           =   0
       MaxValueVT      =   5
       MinValueVT      =   5
    End
    Begin TDBNumber6Ctl.TDBNumber tdbSoci 
       Height          =   255
-      Left            =   2880
+      Left            =   6120
       TabIndex        =   4
-      Top             =   960
+      Top             =   480
       Width           =   1935
       _Version        =   65536
       _ExtentX        =   3413
@@ -253,16 +260,16 @@ Begin VB.Form frmConfigurazione
       ReadOnly        =   0
       Separator       =   "."
       ShowContextMenu =   -1
-      ValueVT         =   75366401
+      ValueVT         =   145424385
       Value           =   0
       MaxValueVT      =   5
       MinValueVT      =   5
    End
    Begin TDBNumber6Ctl.TDBNumber numLimitesaldo 
       Height          =   255
-      Left            =   120
+      Left            =   6120
       TabIndex        =   6
-      Top             =   960
+      Top             =   840
       Width           =   1935
       _Version        =   65536
       _ExtentX        =   3413
@@ -311,10 +318,18 @@ Begin VB.Form frmConfigurazione
       ReadOnly        =   0
       Separator       =   "."
       ShowContextMenu =   -1
-      ValueVT         =   142409729
+      ValueVT         =   145424385
       Value           =   0
       MaxValueVT      =   5
       MinValueVT      =   5
+   End
+   Begin VB.Label Label13 
+      Caption         =   "Sede"
+      Height          =   255
+      Left            =   120
+      TabIndex        =   27
+      Top             =   120
+      Width           =   975
    End
    Begin VB.Label Label7 
       Caption         =   "Path per il backup automatico"
@@ -327,9 +342,9 @@ Begin VB.Form frmConfigurazione
    Begin VB.Label Label6 
       Caption         =   "Codice IVA"
       Height          =   255
-      Left            =   2880
+      Left            =   120
       TabIndex        =   13
-      Top             =   0
+      Top             =   600
       Width           =   975
    End
    Begin VB.Label Label5 
@@ -349,27 +364,29 @@ Begin VB.Form frmConfigurazione
       Width           =   2655
    End
    Begin VB.Label Label3 
+      Alignment       =   1  'Right Justify
       Caption         =   "Limite Saldo"
       Height          =   255
-      Left            =   120
+      Left            =   3840
       TabIndex        =   7
-      Top             =   720
-      Width           =   2655
+      Top             =   840
+      Width           =   2175
    End
    Begin VB.Label Label2 
+      Alignment       =   1  'Right Justify
       Caption         =   "Contributo bimestrale soci"
       Height          =   255
-      Left            =   2880
+      Left            =   3720
       TabIndex        =   5
-      Top             =   720
-      Width           =   2655
+      Top             =   480
+      Width           =   2295
    End
    Begin VB.Label Label1 
       Caption         =   "Aliquota IVA:"
       Height          =   255
-      Left            =   120
+      Left            =   5040
       TabIndex        =   0
-      Top             =   0
+      Top             =   120
       Width           =   975
    End
 End
@@ -396,6 +413,7 @@ Private Sub CmdOK_Click()
   g_Settings.CodQuotaVariabile = txtCodVar.Text
   g_Settings.CodQuataFissa = txtCodFix.Text
   g_Settings.CodTestataIncasso = txtCodTestataIncasso.Text
+  g_Settings.Sede = txtSede.Text
  Unload Me
 End Sub
 
@@ -412,5 +430,6 @@ Private Sub Form_Load()
     txtCodFix = g_Settings.CodQuataFissa
     txtCodVar = g_Settings.CodQuotaVariabile
     txtCodComp = g_Settings.CodCompetenze
+    txtSede = g_Settings.Sede
 End Sub
 

@@ -35,6 +35,7 @@ Private m_CodIVA As String
 Private m_AtapUserFolder As String
 Private m_AtapUserFolderTemp As String
 Private m_AtapUserFolderBackup As String
+Private m_Sede As String
 
 Private m_CodTestata As String
 Private m_CodTestataIncasso As String
@@ -102,6 +103,8 @@ Private Sub Class_Initialize()
       m_CodQVar = rs("CECodQVar")
       m_CodQFissa = rs("CECodQFixed")
       m_CodCompetenze = rs("CECodCompetenze")
+      m_CodIVA = rs("CodIVA")
+      m_Sede = rs("Sede")
     End If
     
     
@@ -183,6 +186,14 @@ Public Property Let CodIVA(x As String)
 End Property
 Public Property Get CodIVA() As String
  CodIVA = m_CodIVA
+End Property
+
+Public Property Let Sede(x As String)
+  m_Sede = x
+  Me.DBConnection.Execute "UPDATE Parametri SET Sede='" & Replace(m_Sede, "'", "''") & "'"
+End Property
+Public Property Get Sede() As String
+ Sede = m_Sede
 End Property
 
 Public Property Let CodTestata(x As String)

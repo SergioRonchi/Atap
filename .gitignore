@@ -8,3 +8,7 @@
 *.dca
 *.dll
 *.exe
+*.mdb
+/DBX/Storico
+/DBX
+/Temp
