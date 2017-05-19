@@ -127,7 +127,7 @@ Dim s As String
 
     CreateRow = s
 End Function
-Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Integer, dataFattura As String, numFattura As String, CF As String, PIVA As String, dImp As Double, dImpIVA As Double, sCodAliquota As String, sCodArticolo As String, desc As String, codCE As String)
+Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Long, dataFattura As String, numFattura As String, CF As String, PIVA As String, dImp As Double, dImpIVA As Double, sCodAliquota As String, sCodArticolo As String, desc As String, codCE As String)
 
  
   N_mov = numMovimento

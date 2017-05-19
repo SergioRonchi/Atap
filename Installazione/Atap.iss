@@ -188,6 +188,7 @@ Source: ..\Report\SospesiNewUNEP.rpt; DestDir: {app}\Report; Flags: ignoreversio
 Source: ..\Report\SospesiAttivit‡NewUNEP.rpt; DestDir: {app}\Report; Flags: ignoreversion overwritereadonly replacesameversion
 
 Source: ..\Dati\listacomuni.txt; DestDir: {app}\Dati; Flags: ignoreversion overwritereadonly replacesameversion
+Source: ..\Doc\EsportazioneAtap.pdf; DestDir: {app}\Doc
 
 
 
@@ -195,6 +196,7 @@ Source: ..\Dati\listacomuni.txt; DestDir: {app}\Dati; Flags: ignoreversion overw
 
 [Icons]
 Name: {group}\Atap; Filename: {app}\Atap.exe; WorkingDir: {app}; IconFilename: {app}\Atap.exe; IconIndex: 0
+Name: {group}\EsportazioneAtap; Filename: {app}\Doc\EsportazioneAtap.pdf; IconFilename: \Doc\EsportazioneAtap.pdf
 Name: {commondesktop}\Atap; Filename: {app}\Atap.exe; WorkingDir: {app}; IconFilename: {app}\Atap.exe; IconIndex: 0
 
 

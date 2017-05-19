@@ -16,11 +16,14 @@ Private m_prog1 As Long
 Private m_prog2 As Long
 Private m_da As Date
 Private m_a As Date
-Public Function Esporta(Path As String, Da As Date, A As Date, datePostFix As String) As Boolean
+Public Function Esporta(ByRef oMinmax As minmax, Path As String, isNumeroFatture As Boolean, _
+                        Anno As Integer, daNum As Long, aNum As Long, _
+                        Da As Date, A As Date, datePostFix As String, fatturePerFile As Long) As Boolean
   On Error GoTo fine
   Dim fattureMsg As String
   Dim iFileNo
   Dim fileName As String
+   Dim fileLog As String
   Dim I As Long
   Dim s As String
   Dim Num As String
@@ -28,18 +31,20 @@ Public Function Esporta(Path As String, Da As Date, A As Date, datePostFix As St
   Dim listaFattureUnep As Collection
   
     fileName = Path & "\FATTURE_" & datePostFix & ".csv"
+    fileLog = Path & "\EXPORT_LOG_" & datePostFix & ".txt"
      m_da = Da
      m_a = A
-  
+         oMinmax.IntMin = 1000000
+         oMinmax.IntMax = 0
          m_prog1 = 0: m_prog2 = 0: RaiseProgress
          
           m_prog1 = 5: m_prog2 = 0: RaiseProgress
-         EsportaAnagrafica Path, datePostFix
+         EsportaAnagrafica oMinmax, Path, datePostFix
          
          m_prog1 = 25: m_prog2 = 0: RaiseProgress
-         Set listaFatture = EsportaFatture(Path, Da, A, True, False)
+         Set listaFatture = EsportaFatture(oMinmax, Path, isNumeroFatture, Anno, daNum, aNum, Da, A, True, False, fatturePerFile)
          m_prog1 = 60: m_prog2 = 0: RaiseProgress
-         Set listaFattureUnep = EsportaFatture(Path, Da, A, True, True)
+         Set listaFattureUnep = EsportaFatture(oMinmax, Path, isNumeroFatture, Anno, daNum, aNum, Da, A, True, True, fatturePerFile)
          m_prog1 = 100: m_prog2 = 0: RaiseProgress
 
         iFileNo = FreeFile
@@ -64,13 +69,21 @@ Public Function Esporta(Path As String, Da As Date, A As Date, datePostFix As St
            Close iFileNo
         Next
         
+        If oMinmax.ErrMsg <> "" Then
+          Open fileLog For Output As #iFileNo
+          Print #iFileNo, oMinmax.ErrMsg
+          Close iFileNo
+          
+          Shell "Notepad " & fileLog, vbMaximizedFocus
+        End If
+        
 '        Open fileName For Output As #iFileNo
 '        fattureMsg = Left(fattureMsg, Len(fattureMsg) - 2)
 '        Print #iFileNo, fattureMsg
 '
 '        Close iFileNo
         Esporta = True
-         Exit Function
+        Exit Function
          
 fine:
    MsgBox err.Description, vbOKOnly + vbExclamation
@@ -80,7 +93,7 @@ Private Sub RaiseProgress()
  RaiseEvent OnDoubleProgress(m_prog1, m_prog2)
 End Sub
 
-Private Sub EsportaAnagrafica(Path As String, datePostFix As String)
+Private Sub EsportaAnagrafica(ByRef oMinmax As minmax, Path As String, datePostFix As String)
 Dim rs As ADODB.Recordset
 Dim msg As String
 Dim row As CExportAnagraficaRow
@@ -98,7 +111,8 @@ While Not rs.EOF
   If row.DataNascita = "" Or IsDate(row.DataNascita) Then
      msg = msg & row.CreateRow & vbCrLf
     Else
-     MsgBox "La cassetta " & rs("CodAvv") & " (" & rs("NOME") & ") ha un codice fiscale errato! Non verrà esportata!" & vbCrLf & "Si prega di correggere prima di esportare di nuovo!", vbOKOnly + vbCritical
+     oMinmax.ErrMsg = oMinmax.ErrMsg & "La cassetta " & rs("CodAvv") & " (" & rs("NOME") & ") ha un codice fiscale errato! Non è stata esportata!" & vbCrLf & "Si prega di correggere prima di esportare di nuovo!" & vbCrLf
+    
    End If
   rs.MoveNext
   I = I + 1
@@ -117,12 +131,14 @@ Print #iFileNo, msg
 Close iFileNo
 
 End Sub
-Private Function EsportaFatture(Path As String, Da As Date, A As Date, addHeader As Boolean, isUnep As Boolean) As Collection
+Private Function EsportaFatture(ByRef oMinmax As minmax, Path As String, isNumeroFatture As Boolean, _
+                        Anno As Integer, daNum As Long, aNum As Long, _
+                        Da As Date, A As Date, addHeader As Boolean, isUnep As Boolean, fatturePerFile As Long) As Collection
 Dim rs As ADODB.Recordset
 Dim msg As String
 Dim row As CExportFatturaRow
 Dim Tot As Double
-Dim nRiga As Integer
+Dim nRiga As Long
 Set rs = newAdoRs
 Dim Tabella As String
 Dim fileName As String
@@ -142,9 +158,16 @@ If isUnep Then
   codCE = g_Settings.CodQuotaVariabile
 End If
 
-SQL = SQL & " FROM AnagraficaAvvocati INNER JOIN " & Tabella & " ON AnagraficaAvvocati.CODAVV = " & Tabella & ".CODAVV  " & _
-      "WHERE AnagraficaAvvocati.STAT='V' AND DataFattura>='" & Format(Da, "YYYYMMDD") & "' AND DataFattura<='" & Format(A, "YYYYMMDD") & "' " & _
-      "ORDER BY DataFattura, Format(NumeroFattura, '00000000')"
+SQL = SQL & " FROM AnagraficaAvvocati INNER JOIN " & Tabella & " ON AnagraficaAvvocati.CODAVV = " & Tabella & ".CODAVV  "
+
+If isNumeroFatture Then
+   SQL = SQL & "WHERE AnagraficaAvvocati.STAT='V' AND LEFT(DataFattura,4)='" & Anno & "' AND CInt(NumeroFattura)>=" & daNum & " AND CInt(NumeroFattura)<=" & aNum & " " & _
+                "ORDER BY Format(NumeroFattura, '00000000')"
+Else
+   SQL = SQL & "WHERE AnagraficaAvvocati.STAT='V' AND DataFattura>='" & Format(Da, "YYYYMMDD") & "' AND DataFattura<='" & Format(A, "YYYYMMDD") & "' " & _
+                "ORDER BY DataFattura, Format(NumeroFattura, '00000000')"
+End If
+
 rs.Open SQL, g_Settings.DBConnection
 
 If addHeader Then msg = CreateIntestazioneFatture & vbCrLf
@@ -154,7 +177,17 @@ Dim totSenzaIVA As Double
 Dim contaFatture As Long
 Dim errPIVA As String
 Dim scadenza As String
+Dim maxNumeroFattura As Long
+Dim minNumeroFattura As Long
+maxNumeroFattura = oMinmax.IntMax
+minNumeroFattura = oMinmax.IntMin
 While Not rs.EOF
+  If CInt(rs("NumeroFattura")) > maxNumeroFattura Then
+     maxNumeroFattura = CInt(rs("NumeroFattura"))
+  End If
+    If CInt(rs("NumeroFattura")) < minNumeroFattura Then
+     minNumeroFattura = CInt(rs("NumeroFattura"))
+  End If
   If isUnep Then
     codAliquotaIVA = "EC"
     codArticoloIVA = "160"
@@ -250,7 +283,7 @@ While Not rs.EOF
     row.Scadenze = scadenza
     msg = msg & row.CreateRow & vbCrLf
     contaFatture = contaFatture + 1
-    If contaFatture > 100 Then
+    If contaFatture > fatturePerFile Then
       oListaStringhe.Add msg
       contaFatture = 0
       If addHeader Then msg = CreateIntestazioneFatture & vbCrLf
@@ -266,9 +299,12 @@ If contaFatture > 0 Then
    oListaStringhe.Add msg
    
 End If
+oMinmax.IntMax = maxNumeroFattura
+oMinmax.IntMin = minNumeroFattura
 
 If errPIVA <> "" Then
-  MsgBox "Alcune fatture non hanno la Partita IVA" & vbCrLf & errPIVA
+  
+  oMinmax.ErrMsg = oMinmax.ErrMsg & vbCrLf & "Alcune fatture non hanno la Partita IVA" & vbCrLf & errPIVA
 End If
 Set EsportaFatture = oListaStringhe
 End Function
