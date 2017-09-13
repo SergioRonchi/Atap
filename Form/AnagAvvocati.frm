@@ -671,7 +671,7 @@ If Not PassaLoad Then
             
             'procedura estratto conto NON UNEP
             '--------------------------------------------------------------------------------------------
-            Riempi_PRT_EstrattoContoX "01/01/1900", Date, avvocatiEstratti, 1, 1, 1, 1, "N", False, 0
+            Riempi_PRT_EstrattoContoX "01/01/1900", Date, avvocatiEstratti, 1, 1, 1, 1, "N", False, 0, ""
             If GetADORecordset("PrtEstrattoConto", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                MsgBox "Nessun dato! Nessun Estratto conto per la cassetta " + TxtCodiceAvvocatoInt.Text, vbInformation, "Attenzione"
               
@@ -705,7 +705,7 @@ If Not PassaLoad Then
             '--------------------------------------------------------------------------------------------
               'procedura estratto conto  UNEP
             '--------------------------------------------------------------------------------------------
-            Riempi_PRT_EstrattoContoX "01/01/1900", Date, avvocatiEstratti, 1, 1, 1, 1, "N", True, 1
+            Riempi_PRT_EstrattoContoX "01/01/1900", Date, avvocatiEstratti, 1, 1, 1, 1, "N", True, 1, ""
             If GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
                MsgBox "Nessun dato! Nessun Estratto UNEP conto per la cassetta " + TxtCodiceAvvocatoInt.Text, vbInformation, "Attenzione"
               

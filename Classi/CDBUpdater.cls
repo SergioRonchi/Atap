@@ -631,6 +631,17 @@ If Not ExistMDBField(CN, "PrtSospesiUNEP", "Deduzione") Then
    CN.Execute "ALTER TABLE  PrtSospesiUNEP ADD COLUMN Deduzione Double"
    
 End If
+
+If Not ExistMDBTable(CN, "Versione") Then
+   CN.Execute "CREATE TABLE Versione (NumeroVersione Integer) "
+   CN.Execute "INSERT INTO Versione (NumeroVersione) VALUES(1)"
+   
+   CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  Nome TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  INDIRI TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  LOCALI TEXT(100)"
+   
+   
+End If
 End Sub
 
 

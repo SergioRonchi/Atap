@@ -202,7 +202,7 @@ Begin VB.Form Saldi
          Height          =   255
          Left            =   5640
          TabIndex        =   16
-         Top             =   240
+         Top             =   360
          Width           =   1695
          _Version        =   65536
          _ExtentX        =   2990
@@ -299,14 +299,14 @@ Begin VB.Form Saldi
          Enabled         =   -1
          ErrorBeep       =   1
          ForeColor       =   -2147483640
-         Format          =   "#,##0.00"
+         Format          =   "###,##0.00"
          HighlightText   =   1
          MarginBottom    =   1
          MarginLeft      =   1
          MarginRight     =   1
          MarginTop       =   1
-         MaxValue        =   99999
-         MinValue        =   -99999
+         MaxValue        =   99999999
+         MinValue        =   -999999999
          MousePointer    =   0
          MoveOnLRKey     =   0
          NegativeColor   =   255
@@ -359,14 +359,14 @@ Begin VB.Form Saldi
          Enabled         =   -1
          ErrorBeep       =   1
          ForeColor       =   -2147483640
-         Format          =   "#,##0.00"
+         Format          =   "###,##0.00"
          HighlightText   =   1
          MarginBottom    =   1
          MarginLeft      =   1
          MarginRight     =   1
          MarginTop       =   1
-         MaxValue        =   99999
-         MinValue        =   -99999
+         MaxValue        =   999999999
+         MinValue        =   -999999999
          MousePointer    =   0
          MoveOnLRKey     =   0
          NegativeColor   =   255
@@ -414,19 +414,19 @@ Begin VB.Form Saldi
          ClipMode        =   0
          ClearAction     =   0
          DecimalPoint    =   ","
-         DisplayFormat   =   "#,##0.00;;Null"
+         DisplayFormat   =   "###,##0.00;;Null"
          EditMode        =   0
          Enabled         =   -1
          ErrorBeep       =   1
          ForeColor       =   -2147483640
-         Format          =   "#,##0.00"
+         Format          =   "###,##0.00"
          HighlightText   =   1
          MarginBottom    =   1
          MarginLeft      =   1
          MarginRight     =   1
          MarginTop       =   1
-         MaxValue        =   99999
-         MinValue        =   -99999
+         MaxValue        =   999999.99
+         MinValue        =   -999999.99
          MousePointer    =   0
          MoveOnLRKey     =   0
          NegativeColor   =   255
@@ -435,7 +435,7 @@ Begin VB.Form Saldi
          ReadOnly        =   0
          Separator       =   ""
          ShowContextMenu =   1
-         ValueVT         =   2011496453
+         ValueVT         =   2088828933
          Value           =   0
          MaxValueVT      =   5
          MinValueVT      =   5
@@ -479,14 +479,14 @@ Begin VB.Form Saldi
          Enabled         =   -1
          ErrorBeep       =   1
          ForeColor       =   -2147483640
-         Format          =   "#,##0.00"
+         Format          =   "###,##0.00"
          HighlightText   =   1
          MarginBottom    =   1
          MarginLeft      =   1
          MarginRight     =   1
          MarginTop       =   1
-         MaxValue        =   99999
-         MinValue        =   -99999
+         MaxValue        =   999999999
+         MinValue        =   -999999999
          MousePointer    =   0
          MoveOnLRKey     =   0
          NegativeColor   =   255
@@ -495,7 +495,7 @@ Begin VB.Form Saldi
          ReadOnly        =   0
          Separator       =   ""
          ShowContextMenu =   1
-         ValueVT         =   2011496453
+         ValueVT         =   2088828933
          Value           =   0
          MaxValueVT      =   5
          MinValueVT      =   5
@@ -539,14 +539,14 @@ Begin VB.Form Saldi
          Enabled         =   -1
          ErrorBeep       =   1
          ForeColor       =   -2147483640
-         Format          =   "#,##0.00"
+         Format          =   "###,##0.00"
          HighlightText   =   1
          MarginBottom    =   1
          MarginLeft      =   1
          MarginRight     =   1
          MarginTop       =   1
-         MaxValue        =   99999
-         MinValue        =   -99999
+         MaxValue        =   999999999
+         MinValue        =   -999999999
          MousePointer    =   0
          MoveOnLRKey     =   0
          NegativeColor   =   255
@@ -555,7 +555,7 @@ Begin VB.Form Saldi
          ReadOnly        =   0
          Separator       =   ""
          ShowContextMenu =   1
-         ValueVT         =   2011496453
+         ValueVT         =   2088828933
          Value           =   0
          MaxValueVT      =   5
          MinValueVT      =   5
@@ -574,7 +574,7 @@ Begin VB.Form Saldi
          Height          =   285
          Left            =   450
          TabIndex        =   14
-         Top             =   1920
+         Top             =   1800
          Width           =   1635
       End
       Begin VB.Label LblDescrizioneAvvocato 
@@ -583,7 +583,7 @@ Begin VB.Form Saldi
          Left            =   2040
          TabIndex        =   13
          Top             =   705
-         Width           =   3930
+         Width           =   7410
       End
       Begin VB.Label LblData 
          Caption         =   "Data chiusura mensile"
@@ -630,7 +630,7 @@ Begin VB.Form Saldi
          Height          =   285
          Left            =   450
          TabIndex        =   6
-         Top             =   1560
+         Top             =   1440
          Width           =   1635
       End
       Begin VB.Label LblValutaCor 
@@ -666,13 +666,13 @@ Public Tabella As String
 Public Campo1 As String
 Public Campo2 As String
 
-Public IsUnep As Boolean
+Public isUnep As Boolean
 Dim TabellaSaldi As String
-Dim data As String
+Dim Data As String
 
 
 
-Private Sub CmdElimina_Click()
+Private Sub cmdElimina_Click()
 Dim Response As Long
 Response = MsgBox("Vuoi eliminare il record  " & TxtCodice & " ?", vbYesNo + vbInformation + vbDefaultButton2, "Attenzione")
 If Response = vbYes Then    ' User chose Yes.
@@ -753,6 +753,7 @@ Private Sub flex_DblClick()
 Dim SQL As String
 Dim txt As TDBNumber
 Dim rs As ADODB.Recordset
+Dim d As Double
 Dim r As Long
 r = flex.row
 If r = 0 Then Exit Sub
@@ -761,7 +762,10 @@ LblDescrizioneAvvocato = flex.TextMatrix(r, 2)
 Set rs = GetADORecordset(TabellaSaldi, "*", "Codice='" & TxtCodice & "' ", g_Settings.DBConnection)
                                
 For Each txt In Me.txtSaldo
-  txt.value = rs(txt.DataField)
+   d = Round(rs(txt.DataField), 2)
+  
+  txt.value = d
+  
 Next
 txtDataChiusura.Text = RitornaData(rs!Chiusura)
 SaldiNegativi.Caption = ControlloNULL(rs!Commento)
@@ -769,7 +773,7 @@ End Sub
 
 Private Sub Form_Load()
 
-    If IsUnep Then
+    If isUnep Then
      Caption = "Saldi UNEP"
      TabellaSaldi = "SaldiUNEP"
     Else
@@ -785,14 +789,14 @@ Private Sub Form_Load()
     Aggiorna
 End Sub
 Public Sub Aggiorna()
- AggiornaGriglia flex, qry & qryWhere & qryOrder, CmdElimina
+ AggiornaGriglia flex, qry & qryWhere & qryOrder, cmdElimina
  flex.ColWidth(2) = 3000
  flex.ColWidth(9) = 1000
  flex.ColWidth(10) = 1800
- Dim i As Integer
- For i = 5 To 9
-   flex.ColFormat(i) = "#,##0.00"
- Next i
+ Dim I As Integer
+ For I = 5 To 9
+   flex.ColFormat(I) = "#,##0.00"
+ Next I
  flex.ColHidden(4) = True
  flex.ColHidden(11) = True
  
@@ -804,17 +808,17 @@ End Sub
 
 
 Public Sub CalcolaSaldoTotale()
-Dim i As Integer, p As Integer
+Dim I As Integer, p As Integer
 
 Dim saldo As Double
     saldo = 0
-    For i = 0 To txtSaldo.Count - 1
-  If txtSaldo(i).DataField <> "SaldoTotaleEuro" Then
-    saldo = saldo + txtSaldo(i).value
+    For I = 0 To txtSaldo.count - 1
+  If txtSaldo(I).DataField <> "SaldoTotaleEuro" Then
+    saldo = saldo + txtSaldo(I).value
    Else
-    p = i
+    p = I
   End If
-Next i
+Next I
     
     txtSaldo(p).value = saldo
 

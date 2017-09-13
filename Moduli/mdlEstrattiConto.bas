@@ -44,7 +44,7 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
   Dim rsTable As ADODB.Recordset
   Dim SQL As String, Tabella As String
   Dim sqlDEL As String
-  Dim anno As String
+  Dim Anno As String
   Dim Data As Boolean
   Dim isUnepTable As Boolean
   Dim sWhere As String
@@ -678,7 +678,7 @@ Resume Next
 End Sub
 Public Sub Riempi_PRT_EstrattoContoX(data1 As String, data2 As String, oCodAvv As AvvocatiPerEstratto, _
                                      adempimenti As Integer, Notifiche As Integer, decreti As Integer, sfratti As Integer, _
-                                     provvisorio As String, isUnep As Boolean, tipoBimestre As Integer)
+                                     provvisorio As String, isUnep As Boolean, tipoBimestre As Integer, codTribunale As String)
 
 Dim qrySQL As String
 Dim qryApp As String
@@ -732,6 +732,10 @@ On Error GoTo Riempi_PRT_EstrattoConto
 
     
     qryApp = qry1 & qry2 & qry3
+    
+    If codTribunale <> "" Then
+      qryApp = qryApp & " AND CodTribunaleApp='" & codTribunale & "'"
+    End If
     
     OpenProgress ("Attendere... Preparazione Stampa!")
     

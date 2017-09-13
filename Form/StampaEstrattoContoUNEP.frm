@@ -508,7 +508,7 @@ Private Sub CmdOK_Click()
     
     g_Settings.DBConnection.Execute "INSERT INTO PrtData(Tipo, Bimestre, BimestreAnno) VALUES(" & IIf(optMese(0).value, 1, 2) & "," & cmbBimestre.ListIndex + 1 & "," & cmbBinestreAnno.list(cmbBinestreAnno.ListIndex) & ")"
     
-    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, 0, Chk(2), 0, Chk(3), prov, True, IIf(optMese(0).value, 1, 2)
+    Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, 0, Chk(2), 0, Chk(3), prov, True, IIf(optMese(0).value, 1, 2), ""
    
     AggiungiDeduzioni TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti
     
@@ -860,56 +860,56 @@ quotaBimestrale = GetADOValue("Parametri", "QuotaSoci", "1=1", g_Settings.DBConn
 
 Dim strBimestre As String
 Dim bimestre As Integer
-Dim anno As Integer
+Dim Anno As Integer
 
 Dim T As Integer
 
 T = GetADOValue("PrtData", "Tipo", "1=1", g_Settings.DBConnection, True)
 bimestre = GetADOValue("PrtData", "Bimestre", "1=1", g_Settings.DBConnection, True)
-anno = GetADOValue("PrtData", "BimestreAnno", "1=1", g_Settings.DBConnection, True)
+Anno = GetADOValue("PrtData", "BimestreAnno", "1=1", g_Settings.DBConnection, True)
 
 If T = 1 Then
       quotaBimestrale = quotaBimestrale / 2
       Select Case bimestre
       Case 1
-        strBimestre = "GENNAIO " & anno
+        strBimestre = "GENNAIO " & Anno
       Case 2
-        strBimestre = "FEBBRAIO " & anno
+        strBimestre = "FEBBRAIO " & Anno
       Case 3
-        strBimestre = "MARZO " & anno
+        strBimestre = "MARZO " & Anno
       Case 4
-        strBimestre = "APRILE " & anno
+        strBimestre = "APRILE " & Anno
       Case 5
-        strBimestre = "MAGGIO " & anno
+        strBimestre = "MAGGIO " & Anno
       Case 6
-        strBimestre = "GIUGNO " & anno
+        strBimestre = "GIUGNO " & Anno
               Case 7
-        strBimestre = "LUGLIO " & anno
+        strBimestre = "LUGLIO " & Anno
               Case 8
-        strBimestre = "AGOSTO " & anno
+        strBimestre = "AGOSTO " & Anno
               Case 9
-        strBimestre = "SETTEMBRE " & anno
+        strBimestre = "SETTEMBRE " & Anno
               Case 10
-        strBimestre = "OTTOBRE " & anno
+        strBimestre = "OTTOBRE " & Anno
               Case 11
-        strBimestre = "NOVEMBRE " & anno
+        strBimestre = "NOVEMBRE " & Anno
               Case 12
-        strBimestre = "DICEMBRE " & anno
+        strBimestre = "DICEMBRE " & Anno
     End Select
   Else
     Select Case bimestre
       Case 1
-        strBimestre = "GENNAIO-FEBBRAIO " & anno
+        strBimestre = "GENNAIO-FEBBRAIO " & Anno
       Case 2
-        strBimestre = "MARZO-APRILE " & anno
+        strBimestre = "MARZO-APRILE " & Anno
       Case 3
-        strBimestre = "MAGGIO-GIUGNO " & anno
+        strBimestre = "MAGGIO-GIUGNO " & Anno
       Case 4
-        strBimestre = "LUGLIO-AGOSTO " & anno
+        strBimestre = "LUGLIO-AGOSTO " & Anno
       Case 5
-        strBimestre = "SETTEMBRE-OTTOBRE " & anno
+        strBimestre = "SETTEMBRE-OTTOBRE " & Anno
       Case 6
-        strBimestre = "NOVEMBRE-DICEMBRE " & anno
+        strBimestre = "NOVEMBRE-DICEMBRE " & Anno
     End Select
   End If
 

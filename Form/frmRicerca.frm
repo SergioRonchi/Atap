@@ -1,6 +1,7 @@
 VERSION 5.00
 Object = "{BEEECC20-4D5F-4F8B-BFDC-5D9B6FBDE09D}#1.0#0"; "vsflex8.ocx"
 Object = "{A49CE0E0-C0F9-11D2-B0EA-00A024695830}#1.0#0"; "tidate8.ocx"
+Object = "{60CCE6A8-5C61-4F30-8513-F57EED62E86A}#8.0#0"; "todl8.ocx"
 Begin VB.Form frmRicerca 
    BorderStyle     =   4  'Fixed ToolWindow
    Caption         =   "Ricerca"
@@ -127,14 +128,6 @@ Begin VB.Form frmRicerca
       TabIndex        =   0
       Top             =   0
       Width           =   13755
-      Begin VB.ComboBox cmbTribunale 
-         Height          =   315
-         Left            =   4920
-         TabIndex        =   31
-         Text            =   "Combo1"
-         Top             =   360
-         Width           =   2325
-      End
       Begin VB.Frame fraAdempi 
          BorderStyle     =   0  'None
          Caption         =   "Frame1"
@@ -147,13 +140,13 @@ Begin VB.Form frmRicerca
       Begin VB.Frame fraUNEP 
          BorderStyle     =   0  'None
          Height          =   615
-         Left            =   7440
+         Left            =   8280
          TabIndex        =   27
          Top             =   120
-         Width           =   4695
+         Width           =   3855
          Begin VB.TextBox txtCrono 
             Height          =   285
-            Left            =   0
+            Left            =   120
             TabIndex        =   29
             Top             =   240
             Width           =   2295
@@ -161,7 +154,7 @@ Begin VB.Form frmRicerca
          Begin VB.Label Label3 
             Caption         =   "Cronologico"
             Height          =   255
-            Left            =   0
+            Left            =   120
             TabIndex        =   28
             Top             =   0
             Width           =   975
@@ -361,11 +354,161 @@ Begin VB.Form frmRicerca
          Value           =   2.12482833205922E-314
          CenturyMode     =   0
       End
+      Begin TrueOleDBList80.TDBCombo cmbTribunale 
+         DataField       =   "CodTribunaleApp"
+         Height          =   315
+         Left            =   4920
+         TabIndex        =   32
+         Tag             =   "necessario Tribunale"
+         Top             =   360
+         Width           =   3315
+         _ExtentX        =   5847
+         _ExtentY        =   556
+         _LayoutType     =   0
+         _RowHeight      =   -2147483647
+         _WasPersistedAsPixels=   0
+         _DropdownWidth  =   0
+         Columns(0)._VlistStyle=   0
+         Columns(0)._MaxComboItems=   5
+         Columns(0).DataField=   ""
+         Columns(0)._PropDict=   "_MaxComboItems,516,2;_VlistStyle,514,3"
+         Columns(1)._VlistStyle=   0
+         Columns(1)._MaxComboItems=   5
+         Columns(1).DataField=   ""
+         Columns(1)._PropDict=   "_MaxComboItems,516,2;_VlistStyle,514,3"
+         Columns.Count   =   2
+         Splits(0)._UserFlags=   0
+         Splits(0).ExtendRightColumn=   -1  'True
+         Splits(0).AllowRowSizing=   0   'False
+         Splits(0)._PropDict=   "_ColumnProps,515,0;_UserFlags,518,3"
+         Splits(0)._ColumnProps(0)=   "Columns.Count=2"
+         Splits(0)._ColumnProps(1)=   "Column(0).Width=2725"
+         Splits(0)._ColumnProps(2)=   "Column(0).DividerColor=0"
+         Splits(0)._ColumnProps(3)=   "Column(0)._WidthInPix=2646"
+         Splits(0)._ColumnProps(4)=   "Column(0)._EditAlways=0"
+         Splits(0)._ColumnProps(5)=   "Column(0).Order=1"
+         Splits(0)._ColumnProps(6)=   "Column(1).Width=2725"
+         Splits(0)._ColumnProps(7)=   "Column(1).DividerColor=0"
+         Splits(0)._ColumnProps(8)=   "Column(1)._WidthInPix=2646"
+         Splits(0)._ColumnProps(9)=   "Column(1)._EditAlways=0"
+         Splits(0)._ColumnProps(10)=   "Column(1).Order=2"
+         Splits.Count    =   1
+         Appearance      =   1
+         BorderStyle     =   1
+         ComboStyle      =   0
+         AutoCompletion  =   0   'False
+         LimitToList     =   0   'False
+         ColumnHeaders   =   -1  'True
+         ColumnFooters   =   0   'False
+         DataMode        =   0
+         DefColWidth     =   0
+         Enabled         =   -1  'True
+         HeadLines       =   1
+         FootLines       =   1
+         RowDividerStyle =   0
+         Caption         =   ""
+         EditFont        =   "Size=8.25,Charset=0,Weight=400,Underline=0,Italic=0,Strikethrough=0,Name=MS Sans Serif"
+         LayoutName      =   ""
+         LayoutFileName  =   ""
+         MultipleLines   =   0
+         EmptyRows       =   -1  'True
+         CellTips        =   0
+         EditHeight      =   315,213
+         AutoSize        =   -1  'True
+         GapHeight       =   30,047
+         ListField       =   ""
+         BoundColumn     =   ""
+         IntegralHeight  =   0   'False
+         CellTipsWidth   =   0
+         CellTipsDelay   =   1000
+         AutoDropdown    =   0   'False
+         RowTracking     =   -1  'True
+         RightToLeft     =   0   'False
+         RowMember       =   ""
+         MouseIcon       =   0
+         MouseIcon.vt    =   3
+         MousePointer    =   0
+         MatchEntryTimeout=   2000
+         OLEDragMode     =   0
+         OLEDropMode     =   0
+         AnimateWindow   =   1
+         AnimateWindowDirection=   0
+         AnimateWindowTime=   200
+         AnimateWindowClose=   0
+         DropdownPosition=   0
+         Locked          =   0   'False
+         ScrollTrack     =   0   'False
+         RowDividerColor =   14215660
+         RowSubDividerColor=   14215660
+         AddItemSeparator=   ";"
+         _PropDict       =   $"frmRicerca.frx":059A
+         _StyleDefs(0)   =   "_StyleRoot:id=0,.parent=-1,.alignment=3,.valignment=0,.bgcolor=&H80000005&"
+         _StyleDefs(1)   =   ":id=0,.fgcolor=&H80000008&,.wraptext=0,.locked=0,.transparentBmp=0"
+         _StyleDefs(2)   =   ":id=0,.fgpicPosition=0,.bgpicMode=0,.appearance=0,.borderSize=0,.ellipsis=0"
+         _StyleDefs(3)   =   ":id=0,.borderColor=&H80000005&,.borderType=0,.bold=0,.fontsize=825,.italic=0"
+         _StyleDefs(4)   =   ":id=0,.underline=0,.strikethrough=0,.charset=0"
+         _StyleDefs(5)   =   ":id=0,.fontname=MS Sans Serif"
+         _StyleDefs(6)   =   "Style:id=1,.parent=0,.namedParent=33,.bold=0,.fontsize=825,.italic=0"
+         _StyleDefs(7)   =   ":id=1,.underline=0,.strikethrough=0,.charset=0"
+         _StyleDefs(8)   =   ":id=1,.fontname=MS Sans Serif"
+         _StyleDefs(9)   =   "CaptionStyle:id=4,.parent=2,.namedParent=37"
+         _StyleDefs(10)  =   "HeadingStyle:id=2,.parent=1,.namedParent=34"
+         _StyleDefs(11)  =   "FooterStyle:id=3,.parent=1,.namedParent=35"
+         _StyleDefs(12)  =   "InactiveStyle:id=5,.parent=2,.bgcolor=&H8000000F&,.fgcolor=&H80000012&"
+         _StyleDefs(13)  =   "SelectedStyle:id=6,.parent=1,.namedParent=36"
+         _StyleDefs(14)  =   "EditorStyle:id=7,.parent=1"
+         _StyleDefs(15)  =   "HighlightRowStyle:id=8,.parent=1,.namedParent=38"
+         _StyleDefs(16)  =   "EvenRowStyle:id=9,.parent=1,.namedParent=39"
+         _StyleDefs(17)  =   "OddRowStyle:id=10,.parent=1,.namedParent=40"
+         _StyleDefs(18)  =   "RecordSelectorStyle:id=11,.parent=2,.namedParent=41"
+         _StyleDefs(19)  =   "FilterBarStyle:id=12,.parent=1,.namedParent=42"
+         _StyleDefs(20)  =   "Splits(0).Style:id=13,.parent=1"
+         _StyleDefs(21)  =   "Splits(0).CaptionStyle:id=22,.parent=4"
+         _StyleDefs(22)  =   "Splits(0).HeadingStyle:id=14,.parent=2"
+         _StyleDefs(23)  =   "Splits(0).FooterStyle:id=15,.parent=3"
+         _StyleDefs(24)  =   "Splits(0).InactiveStyle:id=16,.parent=5"
+         _StyleDefs(25)  =   "Splits(0).SelectedStyle:id=18,.parent=6"
+         _StyleDefs(26)  =   "Splits(0).EditorStyle:id=17,.parent=7"
+         _StyleDefs(27)  =   "Splits(0).HighlightRowStyle:id=19,.parent=8"
+         _StyleDefs(28)  =   "Splits(0).EvenRowStyle:id=20,.parent=9"
+         _StyleDefs(29)  =   "Splits(0).OddRowStyle:id=21,.parent=10"
+         _StyleDefs(30)  =   "Splits(0).RecordSelectorStyle:id=23,.parent=11"
+         _StyleDefs(31)  =   "Splits(0).FilterBarStyle:id=24,.parent=12"
+         _StyleDefs(32)  =   "Splits(0).Columns(0).Style:id=28,.parent=13"
+         _StyleDefs(33)  =   "Splits(0).Columns(0).HeadingStyle:id=25,.parent=14"
+         _StyleDefs(34)  =   "Splits(0).Columns(0).FooterStyle:id=26,.parent=15"
+         _StyleDefs(35)  =   "Splits(0).Columns(0).EditorStyle:id=27,.parent=17"
+         _StyleDefs(36)  =   "Splits(0).Columns(1).Style:id=32,.parent=13"
+         _StyleDefs(37)  =   "Splits(0).Columns(1).HeadingStyle:id=29,.parent=14"
+         _StyleDefs(38)  =   "Splits(0).Columns(1).FooterStyle:id=30,.parent=15"
+         _StyleDefs(39)  =   "Splits(0).Columns(1).EditorStyle:id=31,.parent=17"
+         _StyleDefs(40)  =   "Named:id=33:Normal"
+         _StyleDefs(41)  =   ":id=33,.parent=0"
+         _StyleDefs(42)  =   "Named:id=34:Heading"
+         _StyleDefs(43)  =   ":id=34,.parent=33,.valignment=2,.bgcolor=&H8000000F&,.fgcolor=&H80000012&"
+         _StyleDefs(44)  =   ":id=34,.wraptext=-1"
+         _StyleDefs(45)  =   "Named:id=35:Footing"
+         _StyleDefs(46)  =   ":id=35,.parent=33,.valignment=2,.bgcolor=&H8000000F&,.fgcolor=&H80000012&"
+         _StyleDefs(47)  =   "Named:id=36:Selected"
+         _StyleDefs(48)  =   ":id=36,.parent=33,.bgcolor=&H8000000D&,.fgcolor=&H8000000E&"
+         _StyleDefs(49)  =   "Named:id=37:Caption"
+         _StyleDefs(50)  =   ":id=37,.parent=34,.alignment=2"
+         _StyleDefs(51)  =   "Named:id=38:HighlightRow"
+         _StyleDefs(52)  =   ":id=38,.parent=33,.bgcolor=&H8000000D&,.fgcolor=&H8000000E&"
+         _StyleDefs(53)  =   "Named:id=39:EvenRow"
+         _StyleDefs(54)  =   ":id=39,.parent=33,.bgcolor=&HFFFF00&"
+         _StyleDefs(55)  =   "Named:id=40:OddRow"
+         _StyleDefs(56)  =   ":id=40,.parent=33"
+         _StyleDefs(57)  =   "Named:id=41:RecordSelector"
+         _StyleDefs(58)  =   ":id=41,.parent=34"
+         _StyleDefs(59)  =   "Named:id=42:FilterBar"
+         _StyleDefs(60)  =   ":id=42,.parent=33"
+      End
       Begin VB.Label Label4 
          Caption         =   "Tribunale"
          Height          =   255
          Left            =   4920
-         TabIndex        =   32
+         TabIndex        =   31
          Top             =   120
          Width           =   975
       End
@@ -428,7 +571,7 @@ Begin VB.Form frmRicerca
          Caption         =   "Filtra"
          Height          =   615
          Left            =   11280
-         Picture         =   "frmRicerca.frx":059A
+         Picture         =   "frmRicerca.frx":0621
          Style           =   1  'Graphical
          TabIndex        =   18
          Top             =   120
@@ -508,7 +651,7 @@ Public tipo As String
 Public Filtro As String
 Public Location As Long
 Dim qryExe As String
-Private m_tribunali As Collection
+
 Private mFoundCode As String
 Public isUnep As Boolean
 Public Event AvvocatoSelezionato(codice As String)
@@ -610,10 +753,12 @@ qryExe = qryExe & " WHERE 1=1 " & Filtro
     If cmbSiglaCh.ListIndex > 0 Then
        qryExe = qryExe & " AND ( SIGLACH ='" & cmbSiglaCh.list(cmbSiglaCh.ListIndex) & "')"
     End If
-    
-     If cmbTribunale.ListIndex > 0 Then
-       qryExe = qryExe & " AND ( CodTribunaleApp ='" & cmbTribunale.ItemData(cmbTribunale.ListIndex) & "')"
+    Dim codTribunale
+    If Not IsNull(cmbTribunale.SelectedItem) Then
+        codTribunale = cmbTribunale.Columns(1).value
+        If codTribunale <> "XXALLXX" Then qryExe = qryExe & " AND ( CodTribunaleApp ='" & codTribunale & "')"
     End If
+  
     
     AggiornaGriglia
 End Sub
@@ -712,10 +857,10 @@ If tipo = "Anagrafica" Then
   fraTop.Visible = True
   PopolaCombo cmbSigla, "SELECT DISTINCT SIGLA as s FROM " & Tabella, "s", , , True
   PopolaCombo cmbSiglaCh, "SELECT DISTINCT SIGLACH as s FROM " & Tabella, "s", , , True
-  Set m_tribunali = New Collection
-  PopolaCombo cmbTribunale, "SELECT DISTINCT " & Tabella & ".CodTribunaleApp as C, TribunaliAppartenenza.DescrizioneTribunale as T " & _
-                            "FROM " & Tabella & " INNER JOIN TribunaliAppartenenza ON " & Tabella & ".CodTribunaleApp = TribunaliAppartenenza.CodiceTribunale", "T", "C", m_tribunali, True
+ 
+  PopolaTDBCombo cmbTribunale, "TribunaliAppartenenza", "DescrizioneTribunale", "CodiceTribunale", True
   
+ 
   cmbDate.AddItem "Mese"
   cmbDate.AddItem "Trimestre"
   cmbDate.AddItem "Semestre"
