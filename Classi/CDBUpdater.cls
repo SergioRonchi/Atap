@@ -639,7 +639,8 @@ If Not ExistMDBTable(CN, "Versione") Then
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  Nome TEXT(100)"
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  INDIRI TEXT(100)"
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  LOCALI TEXT(100)"
-   
+   CN.Execute "ALTER TABLE  PrtSaldi ALTER COLUMN  Commento TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSaldi ALTER COLUMN  Nome TEXT(100)"
    
 End If
 End Sub

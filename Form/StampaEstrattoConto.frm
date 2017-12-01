@@ -723,8 +723,10 @@ Dim SQL As String
 Dim Commento As String
 Dim prog As String
 Dim rs As ADODB.Recordset
+Dim dataChiusura As String
 
  dataEC = TxtRicDataFin.Text
+ dataChiusura = Format(TxtRicDataFin.value, "YYYYMMDD")
  saldo = rsAssegni!saldo + rsAssegni!SALDO_PRECEDENTE
  codice = rsAssegni!codAvv
  If saldo >= g_Settings.LimiteSaldo Then
@@ -741,9 +743,9 @@ Dim rs As ADODB.Recordset
    'Record inesistente
    SQL = "INSERT INTO SALDI(codice,Stato,PROG_Saldi,Commento,SaldoAdemp,SaldoSfpg, " & _
          "SaldoNotif,SaldoDecrIng,SaldoAdempEuro,SaldoSfpgEuro,SaldoNotifEuro,SaldoDecrIngEuro," & _
-         "SaldoTotale,SaldoTotaleEuro) " & _
+         "SaldoTotale,SaldoTotaleEuro, Chiusura) " & _
          "VALUES ('" & codice & "','N'," & 1 & ",'" & Commento & "'," & _
-         "0,0,0,0,0,0,0,0," & Str(saldo * 1936.27) & "," & Str(saldo) & ");"
+         "0,0,0,0,0,0,0,0," & Str(saldo * 1936.27) & "," & Str(saldo) & ",'" & dataChiusura & "');"
  Else
    'record già prersente
    If Format(RitornaData(rs!Chiusura), "yyyy") = Format(dataEC, "yyyy") Then
@@ -757,6 +759,7 @@ Dim rs As ADODB.Recordset
          "Stato='N',PROG_Saldi=" & prog & ",Commento='" & Commento & "',SaldoAdemp=0,SaldoSfpg=0, " & _
          "SaldoNotif=0,SaldoDecrIng=0,SaldoAdempEuro=0,SaldoSfpgEuro=0,SaldoNotifEuro=0,SaldoDecrIngEuro=0," & _
          "SaldoTotale=" & Str(saldo * 1936.27) & ",SaldoTotaleEuro=" & Str(saldo) & _
+         ",Chiusura='" & dataChiusura & "'" & _
          " WHERE codice='" & codice & "';"
  End If
  g_Settings.DBConnection.Execute SQL
