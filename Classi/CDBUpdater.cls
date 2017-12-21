@@ -19,6 +19,10 @@ Dim SQL As String
 Dim Descr As String
 Dim Code As String
  Dim codAvv As String, Nota As String, mail As String, pos As Integer, leftPart As String, rightPart As String
+ 
+ Dim rs As ADODB.Recordset
+Dim nv As Integer
+ 
 If Not ExistMDBTable(CN, "LockTable") Then
      CN.Execute "CREATE TABLE LockTable (TabID TEXT(50) PRIMARY KEY, Locked TEXT(50) DEFAULT 'NONE')"
      CN.Execute "INSERT INTO LockTable (TabID, Locked) VALUES ('ADEMPI','NONE')"
@@ -35,7 +39,7 @@ If Not ExistMDBField(CN, "Anticipi", "Locked") Then
      CN.Execute "ALTER TABLE Anticipi ADD COLUMN Locked  TEXT(50) DEFAULT 'NONE'"
      CN.Execute "UPDATE Anticipi SET Locked='NONE'"
  End If
- 
+
 If Not ExistMDBField(CN, "ADEMPI", "Locked") Then
      CN.Execute "ALTER TABLE ADEMPI ADD COLUMN Locked  TEXT(50) DEFAULT 'NONE'"
      CN.Execute "UPDATE ADEMPI SET Locked='NONE'"
@@ -90,8 +94,8 @@ If Not ExistMDBField(CN, "Parametri", "XXX") Then
    rsAv.MoveNext
   Wend
   CloseProgress
-  
-  
+
+
 End If
 CN.Execute "UPDATE ANAGRAFICAAVVOCATI SET CASSETTAROTTA='N' WHERE CASSETTAROTTA Is Null"
 CN.Execute "UPDATE ANAGRAFICAAVVOCATI SET STAT='V' WHERE STAT Is Null"
@@ -129,7 +133,7 @@ If Not ExistMDBField(CN, "ADEMPI", "SIGLA") Then
   CN.Execute "ALTER TABLE Sfratti ADD COLUMN SIGLACH VARCHAR(15)"
   CN.Execute "ALTER TABLE Notifiche ADD COLUMN SIGLACH VARCHAR(15)"
   CN.Execute "ALTER TABLE DecretiIngiuntivi ADD COLUMN SIGLACH VARCHAR(15)"
-  
+
   CN.Execute "UPDATE DecretiIngiuntivi SET SIGLACH='OLD'"
   CN.Execute "UPDATE ADEMPI SET SIGLACH='OLD'"
   CN.Execute "UPDATE Sfratti SET SIGLACH='OLD'"
@@ -148,23 +152,23 @@ If Not ExistMDBField(CN, "Notifiche", "IDCod") Then
   CN.Execute "ALTER TABLE Notifiche ALTER COLUMN Parte2 Text(35)"
   CN.Execute "ALTER TABLE Notifiche ALTER COLUMN DesrSpese Text(35)"
   CN.Execute "ALTER TABLE Sfratti ALTER COLUMN Localita1 Text(40)"
-  
+
 End If
 If Not ExistMDBField(CN, "PrtSospesi", "DATA_EVASIONE") Then
   CN.Execute "ALTER TABLE PrtSospesi ADD DATA_EVASIONE Date"
-  
+
   CN.Execute "ALTER TABLE PrtSospesi ADD SALDO_PRECEDENTE Double"
   CN.Execute "ALTER TABLE PrtSospesi ADD NUM_EST_CONTO Long"
   CN.Execute "ALTER TABLE PrtSospesi ADD DATA_EST_CONTO DAte"
   CN.Execute "ALTER TABLE PrtSospesi ADD PROVVISORIO Text(1)"
   CN.Execute "ALTER TABLE PrtSospesi ADD DATA_INIZIO Text(10)"
   CN.Execute "ALTER TABLE PrtSospesi ADD DATA_FINE Text(10)"
-    
+
   CN.Execute "ALTER TABLE PrtSospesi ADD QtaMarche Long"
   CN.Execute "ALTER TABLE PrtSospesi ADD QtaFotocopie Long"
   CN.Execute "ALTER TABLE PrtSospesi ADD QtaCopie Text(5)"
   CN.Execute "ALTER TABLE PrtSospesi ADD QtaDirittiCancelleria Long"
-     
+
   End If
 
 If Not ExistMDBField(CN, "Sfratti", "IDCod") Then
@@ -182,10 +186,10 @@ If Not ExistMDBField(CN, "ADEMPI", "IDCod") Then
   CN.Execute "ALTER TABLE ADEMPI ALTER COLUMN DesrSpese4 Text(35)"
   CN.Execute "ALTER TABLE ADEMPI ALTER COLUMN DesrSpese5 Text(35)"
   CN.Execute "ALTER TABLE ADEMPI ALTER COLUMN DesrSpese6 Text(35)"
-  
+
   CN.Execute "ALTER TABLE PrtAssegniCircolari ALTER COLUMN LOCALI Text(40)"
   CN.Execute "ALTER TABLE PrtAssegniCircolari ALTER COLUMN Nome Text(50)"
-  
+
   CN.Execute "ALTER TABLE PrtEstrattoConto ALTER COLUMN LOCALI Text(40)"
   CN.Execute "ALTER TABLE PrtEstrattoConto ALTER COLUMN Nome Text(50)"
   CN.Execute "ALTER TABLE PrtEstrattoConto ALTER COLUMN Parte1 Text(35)"
@@ -196,26 +200,26 @@ If Not ExistMDBField(CN, "ADEMPI", "IDCod") Then
   CN.Execute "ALTER TABLE PrtEstrattoConto ALTER COLUMN DESCR_SPESE4 Text(35)"
   CN.Execute "ALTER TABLE PrtEstrattoConto ALTER COLUMN DESCR_SPESE5 Text(35)"
   CN.Execute "ALTER TABLE PrtEstrattoConto ALTER COLUMN DESCR_SPESE6 Text(35)"
-  
+
   CN.Execute "ALTER TABLE PrtFattProv ALTER COLUMN LOCALI Text(40)"
   CN.Execute "ALTER TABLE PrtFattProv ALTER COLUMN Nome Text(50)"
-   
+
   CN.Execute "ALTER TABLE PrtGiornalieraDecretiIngiuntivi ALTER COLUMN Ricorrente Text(35)"
   CN.Execute "ALTER TABLE PrtGiornalieraDecretiIngiuntivi ALTER COLUMN Debitore Text(35)"
-  
+
   CN.Execute "ALTER TABLE PrtGiornalieraNotifiche ALTER COLUMN parte1 Text(35)"
   CN.Execute "ALTER TABLE PrtGiornalieraNotifiche ALTER COLUMN parte2 Text(35)"
   CN.Execute "ALTER TABLE PrtGiornalieraNotifiche ALTER COLUMN Localita1 Text(40)"
-  
+
   CN.Execute "ALTER TABLE PrtGiornalieraSfrattiPig ALTER COLUMN parte1 Text(35)"
   CN.Execute "ALTER TABLE PrtGiornalieraSfrattiPig ALTER COLUMN parte2 Text(35)"
   CN.Execute "ALTER TABLE PrtGiornalieraSfrattiPig ALTER COLUMN Localita1 Text(40)"
-  
+
   CN.Execute "ALTER TABLE PrtSaldi ALTER COLUMN Nome Text(50)"
-  
+
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN Nome Text(50)"
-  
-  
+
+
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN LOCALI Text(40)"
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN PARTE1 Text(35)"
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN PARTE2 Text(35)"
@@ -226,7 +230,7 @@ If Not ExistMDBField(CN, "ADEMPI", "IDCod") Then
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN DESCR_SPESE5 Text(35)"
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN DESCR_SPESE6 Text(35)"
   CN.Execute "ALTER TABLE PrtSospesi ALTER COLUMN Localita1 Text(35)"
-  
+
 'Non rimuovo per il momento le tabelle
 '  cn.Execute "DROP TABLE Filter"
 '  cn.Execute "DROP TABLE LockAdempimenti"
@@ -275,14 +279,14 @@ If Not ExistMDBField(CN, "Parametri", "CECodTestata") Then
      CN.Execute "ALTER TABLE Parametri ADD CECodQVar Text(12)"
      CN.Execute "ALTER TABLE Parametri ADD CECodQFixed Text(12)"
      CN.Execute "ALTER TABLE Parametri ADD CECodCompetenze  Text(12)"
-     
+
      CN.Execute "UPDATE Parametri SET CECodTestata='100301050', CECodQVar='600151051', CECodQFixed='600151050', CECodCompetenze='600151052'"
 End If
 
 'Elimina duplicati nei saldi
 Dim eliminati As String
 Dim key As String
-Dim rs As ADODB.Recordset
+
 Set rs = New ADODB.Recordset
 rs.Open "SELECT Saldi.Codice, Saldi.Chiusura, Saldi.SaldoAdemp, Saldi.SaldoAdempEuro, Saldi.SaldoSfpg, Saldi.SaldoSfpgEuro, Saldi.SaldoNotif, Saldi.SaldoNotifEuro, Saldi.SaldoDecrIng, Saldi.SaldoDecrIngEuro, Saldi.Stato, Saldi.SaldoTotale, Saldi.SaldoTotaleEuro, Saldi.PROG_Saldi, Saldi.Commento, Saldi.NumOrdinamento " & _
         " FROM Saldi INNER JOIN Saldi AS Saldi_1 ON Saldi.Codice = Saldi_1.Codice" & _
@@ -293,9 +297,9 @@ While Not rs.EOF
     CN.Execute "DELETE * FROM Saldi WHERE Codice='" & rs!codice & "' AND Chiusura<>'" & rs!Chiusura & "'"
     eliminati = eliminati + key
   End If
-  
+
   rs.MoveNext
-  
+
 Wend
 
 ' UNEP
@@ -303,34 +307,34 @@ Wend
 If Not ExistMDBField(CN, "Sfratti", "Crono") Then
   CN.Execute "ALTER TABLE Sfratti ADD COLUMN IsUNEP Logical"
   CN.Execute "UPDATE Sfratti SET  IsUNEP=false"
-  
+
   CN.Execute "ALTER TABLE Sfratti ADD COLUMN Crono TEXT(50)"
-  
+
 End If
 
 If Not ExistMDBField(CN, "Notifiche", "Crono") Then
   CN.Execute "ALTER TABLE Notifiche ADD COLUMN IsUNEP Logical"
   CN.Execute "UPDATE Notifiche SET  IsUNEP=false"
-  
+
   CN.Execute "ALTER TABLE Notifiche ADD COLUMN Crono TEXT(50)"
-  
+
 End If
 
 If Not ExistMDBField(CN, "Parametri", "QuotaSoci") Then
   CN.Execute "ALTER TABLE Parametri ADD COLUMN QuotaSoci Double"
   CN.Execute "UPDATE Parametri SET  QuotaSoci=55"
-    
+
   CN.Execute "ALTER TABLE Notifiche ALTER COLUMN Parte1 VARCHAR(35) NULL"
   CN.Execute "ALTER TABLE Notifiche ALTER COLUMN Parte2 VARCHAR(35) NULL"
-  
+
   CN.Execute "CREATE TABLE PrtGiornalieraNotificheUNEP (Crono TEXT(50), DescrizioneTribunale TEXT(30), CODAVV TEXT(10), NumeroAtto LONG, DataRegistrazione TEXT(10), " & _
              "parte1 TEXT(35), parte2 TEXT(35), [Note] TEXT(14), Localita1 TEXT(40), Descrizione TEXT(50), ImpSaldo DOUBLE, Valuta TEXT(4), NumOrdinamento LONG, " & _
              "DataPresentazione TEXT(10), DataRestituzione TEXT(10), DataNotifica TEXT(10), DATA_INIZIO TEXT(10), DATA_FINE TEXT(10))"
-             
+
   CN.Execute "CREATE TABLE PrtGiornalieraSfrattiPigUNEP (Crono TEXT(50), DescrizioneTribunale TEXT(30), CODAVV TEXT(10), NumeroAtto LONG, DataRegistrazione TEXT(10), DataPresentazione TEXT(10)," & _
              "parte1 TEXT(35), parte2 TEXT(35), Localita1 TEXT(40), Descrizione TEXT(50), ImpSaldo DOUBLE, Valuta TEXT(4), NumOrdinamento LONG, " & _
               "DataRestituzione TEXT(10),  DATA_INIZIO TEXT(10), DATA_FINE TEXT(10))"
-             
+
   CN.Execute "ALTER TABLE LockPrt ADD PrtGiornalieraNotificheUNEP Logical, PrtGiornalieraSfrattiPigUNEP Logical"
   CN.Execute "UPDATE LockPrt SET PrtGiornalieraNotificheUNEP=false, PrtGiornalieraSfrattiPigUNEP=false"
 End If
@@ -344,17 +348,17 @@ End If
 
 If Not ExistMDBTable(CN, "PrtEstrattoContoUNEP") Then
   CN.Execute "SELECT * INTO PrtEstrattoContoUNEP FROM PrtEstrattoConto"
-  
+
 End If
 
 If Not ExistMDBTable(CN, "TempSaldiUNEP") Then
   CN.Execute "SELECT * INTO TempSaldiUNEP FROM TempSaldi"
-  
+
 End If
 
 If Not ExistMDBTable(CN, "PrtAssegniCircolariUNEP") Then
   CN.Execute "SELECT * INTO PrtAssegniCircolariUNEP FROM PrtAssegniCircolari"
-  
+
 End If
 
 If Not ExistMDBTable(CN, "StoricoFattureUNEP") Then
@@ -364,7 +368,7 @@ End If
 
 
 If Not ExistMDBTable(CN, "SaldiUNEP") Then
- 
+
   CN.Execute "SELECT * INTO SaldiUNEP FROM Saldi"
   CN.Execute "UPDATE SaldiUNEP SET SaldoAdemp=0, SaldoAdempEuro=0,  SaldoSfpg=0, SaldoSfpgEuro=0, SaldoNotif=0, SaldoNotifEuro=0, SaldoDecrIng=0, SaldoDecrIngEuro=0, SaldoTotale=0, SaldoTotaleEuro=0, Commento=''"
 End If
@@ -382,39 +386,39 @@ End If
 
 If Not ExistMDBField(CN, "LockPrt", "PrtAssegniCircolariUNEP") Then
   CN.Execute "ALTER TABLE  LockPrt ADD PrtAssegniCircolariUNEP Logical, PrtEstrattoContoUNEP Logical"
-  
+
   CN.Execute "UPDATE LockPrt SET PrtAssegniCircolariUNEP=false, PrtEstrattoContoUNEP=false "
 End If
 
 If Not ExistMDBField(CN, "PrtEstrattoContoUNEP", "DATA_PRESENTAZIONE") Then
 
   CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ADD Crono Text(50)"
-  
-  
+
+
   CN.Execute "ALTER TABLE  PrtEstrattoConto ADD Crono Text(50)"
-  
-  
+
+
   CN.Execute "ALTER TABLE  prtSospesi ADD Crono Text(50)"
 
   CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ADD DATA_PRESENTAZIONE Text(10), DATA_RESTITUZIONE Text(10)"
-  
-  
+
+
   CN.Execute "ALTER TABLE  PrtEstrattoConto ADD DATA_PRESENTAZIONE Text(10), DATA_RESTITUZIONE Text(10)"
-  
-  
+
+
   CN.Execute "ALTER TABLE  prtSospesi ADD DATA_PRESENTAZIONE Text(10), DATA_RESTITUZIONE Text(10)"
- 
+
 End If
 
 If Not ExistMDBTable(CN, "PrtData") Then
    CN.Execute "CREATE TABLE PrtData (Bimestre Integer, BimestreAnno Integer)"
-  
+
 End If
 
 
 If Not ExistMDBField(CN, "LockPrt", "PrtSaldiUNEP") Then
   CN.Execute "ALTER TABLE  LockPrt ADD PrtSaldiUNEP Logical, PrtSospesiUNEP Logical"
-  
+
   CN.Execute "UPDATE LockPrt SET PrtSaldiUNEP=false, PrtSospesiUNEP=false "
 End If
 
@@ -433,7 +437,7 @@ If Not ExistMDBTable(CN, "SFRATTI_UNEP") Then
   CN.Execute "SELECT * INTO SFRATTI_UNEP FROM SFRATTI"
   CN.Execute "DELETE * FROM SFRATTI_UNEP WHERE IsUNEP=False"
   CN.Execute "DELETE * FROM SFRATTI WHERE IsUNEP=True"
-  
+
   CN.Execute "ALTER TABLE  SFRATTI DROP COLUMN IsUNEP"
   CN.Execute "ALTER TABLE  SFRATTI_UNEP DROP COLUMN IsUNEP"
   CN.Execute "INSERT INTO LockTable(TabId) VALUES('SFRATTI_UNEP')"
@@ -443,11 +447,11 @@ If Not ExistMDBTable(CN, "NOTIFICHE_UNEP") Then
   CN.Execute "SELECT * INTO NOTIFICHE_UNEP FROM NOTIFICHE"
   CN.Execute "DELETE * FROM NOTIFICHE_UNEP WHERE IsUNEP=False"
   CN.Execute "DELETE * FROM NOTIFICHE WHERE IsUNEP=True"
-  
+
   CN.Execute "ALTER TABLE  NOTIFICHE DROP COLUMN IsUNEP"
   CN.Execute "ALTER TABLE  NOTIFICHE_UNEP DROP COLUMN IsUNEP"
   CN.Execute "INSERT INTO LockTable(TabId) VALUES('NOTIFICHE_UNEP')"
-  
+
 End If
 
 If Not ExistMDBField(CN, "PrtData", "Tipo") Then
@@ -474,22 +478,22 @@ If Not ExistMDBField(CN, "Parametri", "Telefono") Then
   CN.Execute "ALTER TABLE Sfratti_Unep ADD CONSTRAINT pk_Sfratti_Unep PRIMARY KEY (CODAVV,DataRegistrazione,NumeroAtto,CodTribunaleApp)"
   CN.Execute "ALTER TABLE StoricoFattureUNEP ADD CONSTRAINT pk_Sfratti_Unep PRIMARY KEY (CODAVV,NumeroFattura,DataFattura)"
   CN.Execute "ALTER TABLE Notifiche_UNEP ADD CONSTRAINT pk_Sfratti_Unep PRIMARY KEY (CODAVV,DataRegistrazione,NumeroAtto,CodTribunaleApp)"
-  
+
 End If
 
 If Not ExistMDBField(CN, "Parametri", "CodIVA") Then
   CN.Execute "ALTER TABLE  Parametri ADD COLUMN CodIVA TEXT(5)"
   CN.Execute "UPDATE Parametri SET  CodIVA='022'"
-  
-  
+
+
   CN.Execute "ALTER TABLE  StoricoFatture ADD COLUMN CodIVA TEXT(5)"
   CN.Execute "UPDATE StoricoFatture SET  CodIVA='022' WHERE DataFattura>='20131001'"
   CN.Execute "UPDATE StoricoFatture SET  CodIVA='020' WHERE DataFattura<'20131001'"
   CN.Execute "UPDATE StoricoFatture SET  ImportoIVA=22 WHERE DataFattura>='20131001'"
-  
+
   CN.Execute "ALTER TABLE  StoricoFattureUNEP ADD COLUMN CodIVA TEXT(5)"
   CN.Execute "UPDATE StoricoFattureUNEP SET  CodIVA='022' WHERE DataFattura>='20131001'"
- 
+
 End If
 
 
@@ -498,12 +502,12 @@ If Not ExistMDBField(CN, "PrtEstrattoContoUNEP", "Quota") Then
    CN.Execute "ALTER TABLE  TempSaldiUNEP ADD COLUMN Quota Double"
    CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD COLUMN Quota Double"
    CN.Execute "ALTER TABLE  PrtSospesiUNEP ADD COLUMN Quota Double"
- 
+
 End If
 
 If Not ExistMDBField(CN, "PrtAssegniCircolariUNEP", "Quota") Then
    CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD COLUMN Quota Double"
- 
+
 End If
 If Not ExistMDBField(CN, "PrtEstrattoContoUNEP", "Deduzione") Then
     CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ADD COLUMN Deduzione Double"
@@ -518,13 +522,13 @@ If Not ExistMDBTable(CN, "DEDUZIONI_UNEP") Then
   CN.Execute "CREATE TABLE DEDUZIONI_UNEP (IdCod COUNTER, CODAVV TEXT(10) NOT NULL, DataEvasionePratica TEXT(8) NOT NULL, NOTA TEXT(255), Importo Double, SIGLA TEXT(15), NumOrdinamento LONG, ANNULLO TEXT(1), Locked TEXT(50), " & _
               "CONSTRAINT pk_DEDUZIONI_UNEP_Unep PRIMARY KEY (CODAVV,DataEvasionePratica))"
   CN.Execute "INSERT INTO LockTable(TabId) VALUES('DEDUZIONI_UNEP')"
-  
+
   CN.Execute "ALTER TABLE ANAGRAFICAAVVOCATI ALTER COLUMN INDIRI TEXT(100)"
   CN.Execute "ALTER TABLE ANAGRAFICAAVVOCATI ALTER COLUMN LOCALI TEXT(100)"
   CN.Execute "ALTER TABLE ANAGRAFICAAVVOCATI ALTER COLUMN NOME TEXT(100)"
   CN.Execute "ALTER TABLE ANAGRAFICAAVVOCATI ALTER COLUMN EMAIL TEXT(100)"
-  
-  
+
+
     Set rs = New ADODB.Recordset
     rs.Open "SELECT CODAVV, NOTE1&NOTE2&NOTE3 as Nota,EMAIL,PEC,MAIL2 FROM AnagraficaAvvocati ", CN
    Dim newMail As String
@@ -555,44 +559,44 @@ If Not ExistMDBTable(CN, "DEDUZIONI_UNEP") Then
           newMail = Mid(newMail, pos + 4)
           specMail = newMail
         End If
-        
+
         pos = InStrRev(newMail, ".")
         rightPart = Mid(newMail, pos + 1)
         corretta = Len(newMail) < 101 And InStr(1, newMail, "'") = 0 And InStr(1, newMail, " ") = 0 And InStr(1, newMail, "/") = 0 And _
                    InStr(1, newMail, "\") = 0 And InStr(1, newMail, ":") = 0 And _
                    (rightPart = "it" Or rightPart = ".com" Or rightPart = ".net" Or rightPart = ".eu")
         If corretta Then
-         
-       
+
+
               If Trim(mail) = "" Then
-                       
-                         
+
+
                          CN.Execute "UPDATE AnagraficaAvvocati SET EMAIL = '" & newMail & "' WHERE CODAVV='" & codAvv & "'"
                          If Trim(pec) = "" And specMail <> "" Then
                            CN.Execute "UPDATE AnagraficaAvvocati SET PEC = '" & specMail & "' WHERE CODAVV='" & codAvv & "'"
                          End If
-                     
-                        
+
+
                       Else
-                         
+
                          If mail <> newMail And Trim(mail2) = "" Then
                            CN.Execute "UPDATE AnagraficaAvvocati SET MAIL2 = '" & newMail & "' WHERE CODAVV='" & codAvv & "'"
                          End If
                          If Trim(pec) = "" And specMail <> "" Then
                            CN.Execute "UPDATE AnagraficaAvvocati SET PEC = '" & specMail & "' WHERE CODAVV='" & codAvv & "'"
                          End If
-                       
+
                       End If
               End If
-      
+
       Else
-      
+
         Debug.Print "!!!!ERRORE: " & newMail
       End If
-        
-      
+
+
       rs.MoveNext
-      
+
     Wend
 End If
 
@@ -603,7 +607,7 @@ End If
 
 If Not ExistMDBField(CN, "Parametri", "CECodTestataIncasso") Then
      CN.Execute "ALTER TABLE Parametri ADD CECodTestataIncasso Text(12)"
-      
+
      CN.Execute "UPDATE Parametri SET CECodTestata='100101003', CECodTestataIncasso='100101050 '"
 End If
 
@@ -611,7 +615,7 @@ If Not ExistMDBField(CN, "TempSaldiUNEP", "Deduzione") Then
 
      CN.Execute "ALTER TABLE  TempSaldiUNEP ADD COLUMN Deduzione Double"
      CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD COLUMN Deduzione Double"
-      
+
      CN.Execute "UPDATE TempSaldiUNEP SET Deduzione=0"
      CN.Execute "UPDATE PrtAssegniCircolariUNEP SET Deduzione=0"
 End If
@@ -623,27 +627,56 @@ CN.Execute "UPDATE Parametri SET CodIVA='022' WHERE CODIVA =''"
 
 If Not ExistMDBField(CN, "Parametri", "Sede") Then
      CN.Execute "ALTER TABLE Parametri ADD Sede Text(255)"
-      
+
      CN.Execute "UPDATE Parametri SET Sede='Milano'"
 End If
 
 If Not ExistMDBField(CN, "PrtSospesiUNEP", "Deduzione") Then
    CN.Execute "ALTER TABLE  PrtSospesiUNEP ADD COLUMN Deduzione Double"
-   
+
 End If
 
 If Not ExistMDBTable(CN, "Versione") Then
    CN.Execute "CREATE TABLE Versione (NumeroVersione Integer) "
    CN.Execute "INSERT INTO Versione (NumeroVersione) VALUES(1)"
-   
+
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  Nome TEXT(100)"
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  INDIRI TEXT(100)"
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  LOCALI TEXT(100)"
    CN.Execute "ALTER TABLE  PrtSaldi ALTER COLUMN  Commento TEXT(100)"
    CN.Execute "ALTER TABLE  PrtSaldi ALTER COLUMN  Nome TEXT(100)"
-   
+
 End If
+
+
+Set rs = New ADODB.Recordset
+Set rs = GetADORecordset("Versione", "NumeroVersione", "1=1", CN)
+
+If Not rs.EOF Then
+  nv = rs(0)
+  
+  If nv < 2 Then
+    GoTo UPD_2
+  End If
+End If
+
+UPD_2:
+ Update2 CN
+
 End Sub
 
+Private Sub Update2(CN As ADODB.Connection)
+ 
+   CN.Execute "ALTER TABLE  TempSaldi ALTER COLUMN  Nome TEXT(100)"
+   CN.Execute "ALTER TABLE  TempSaldi ALTER COLUMN  INDIRI TEXT(100)"
+   CN.Execute "ALTER TABLE  TempSaldi ALTER COLUMN  LOCALI TEXT(100)"
+   
+   CN.Execute "ALTER TABLE  TempSaldiUNEP ALTER COLUMN  Nome TEXT(100)"
+   CN.Execute "ALTER TABLE  TempSaldiUNEP ALTER COLUMN  INDIRI TEXT(100)"
+   CN.Execute "ALTER TABLE  TempSaldiUNEP ALTER COLUMN  LOCALI TEXT(100)"
+
+ 
+ CN.Execute "UPDATE Versione SET NumeroVersione=2"
+End Sub
 
 
