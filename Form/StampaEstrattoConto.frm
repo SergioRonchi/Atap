@@ -637,7 +637,7 @@ Dim c As Control
     m_Avvocato = "ALL"
 End Sub
 Private Sub moFilterManager_Validate(IsValid As Boolean)
-   CmdOK.Enabled = IsValid
+   cmdOk.Enabled = IsValid
 End Sub
 
 Private Sub OptTipoStampa_Click(Index As Integer)
@@ -719,7 +719,7 @@ Dim saldo As Double
 Dim saldoPrec As Double
 Dim dataEC As String
 Dim codice As String
-Dim SQL As String
+Dim sql As String
 Dim Commento As String
 Dim prog As String
 Dim rs As ADODB.Recordset
@@ -741,7 +741,7 @@ Dim dataChiusura As String
  Set rs = GetADORecordset("Saldi", "chiusura", "codice='" & codice & "'", g_Settings.DBConnection)
  If rs Is Nothing Then
    'Record inesistente
-   SQL = "INSERT INTO SALDI(codice,Stato,PROG_Saldi,Commento,SaldoAdemp,SaldoSfpg, " & _
+   sql = "INSERT INTO SALDI(codice,Stato,PROG_Saldi,Commento,SaldoAdemp,SaldoSfpg, " & _
          "SaldoNotif,SaldoDecrIng,SaldoAdempEuro,SaldoSfpgEuro,SaldoNotifEuro,SaldoDecrIngEuro," & _
          "SaldoTotale,SaldoTotaleEuro, Chiusura) " & _
          "VALUES ('" & codice & "','N'," & 1 & ",'" & Commento & "'," & _
@@ -755,17 +755,17 @@ Dim dataChiusura As String
             prog = 1
             
    End If
-   SQL = "UPDATE SALDI SET " & _
+   sql = "UPDATE SALDI SET " & _
          "Stato='N',PROG_Saldi=" & prog & ",Commento='" & Commento & "',SaldoAdemp=0,SaldoSfpg=0, " & _
          "SaldoNotif=0,SaldoDecrIng=0,SaldoAdempEuro=0,SaldoSfpgEuro=0,SaldoNotifEuro=0,SaldoDecrIngEuro=0," & _
          "SaldoTotale=" & Str(saldo * 1936.27) & ",SaldoTotaleEuro=" & Str(saldo) & _
          ",Chiusura='" & dataChiusura & "'" & _
          " WHERE codice='" & codice & "';"
  End If
- g_Settings.DBConnection.Execute SQL
+ g_Settings.DBConnection.Execute sql
  Exit Sub
 fine:
- MsgBox err.Description & vbCrLf & SQL
+ MsgBox err.Description & vbCrLf & sql
  
 End Sub
 
@@ -819,25 +819,32 @@ End If
 
 End Sub
 Public Sub aggiornaFattura(ByRef nFat As Long, codice As String, Data As String, adempi As Double, _
-                            decreti As Double, Notifiche As Double, stratti As Double)
-Dim SQL As String
+                            decreti As Double, Notifiche As Double, stratti As Double, isTemp As Boolean)
+Dim sql As String
 Dim rs As ADODB.Recordset
-If codice = "525/158" Then
- Debug.Print "Errore"
+Dim tabFatture As String
+
+If isTemp Then
+  tabFatture = "FattureTemp"
+ Else
+  tabFatture = "StoricoFatture"
 End If
-If GetADORecordset("StoricoFatture", "*", "codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "'", g_Settings.DBConnection) Is Nothing Then
+
+
+
+If GetADORecordset(tabFatture, "*", "codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "'", g_Settings.DBConnection) Is Nothing Then
      Set rs = GetADORecordset("AnagraficaAvvocati", "*", "codAVV='" & codice & "'", g_Settings.DBConnection)
      
      If rs!AFAT <> "S" Then Exit Sub
      
-     SQL = "INSERT INTO StoricoFatture (numOrdinamento,NOME,INDIRI,LOCALI,PROV,CAP,PIVA,codAvv," & _
+     sql = "INSERT INTO " & tabFatture & " (numOrdinamento,NOME,INDIRI,LOCALI,PROV,CAP,PIVA,codAvv," & _
            "NumeroFattura,DataFattura,DataFatturaNormale,Valuta,ImportoIva,CodIVA, CompAdempEuro,CompDecrIngEuro,CompNotifEuro,CompSfpgEuro) " & _
            "VALUES (" & rs!numOrdinamento & ",'" & Replace(Left(rs!nome, 40), "'", "''") & "','" & Replace(Left(rs!INDIRI, 40), "'", "''") & "','" & Replace(Left(rs!LOCALI, 35), "'", "''") & _
            "','" & rs!prov & "','" & rs!CAP & "','" & rs!PIVA & "','" & codice & "'," & nFat & _
            ",'" & Format(Data, "yyyymmdd") & "','" & Data & "','E'," & g_Settings.IVA & ",'" & g_Settings.CodIVA & "'," & Str(adempi) & "," & Str(decreti) & "," & Str(Notifiche) & "," & Str(stratti) & ");"
            nFat = nFat + 1
    Else
-     SQL = "UPDATE StoricoFatture SET " & _
+     sql = "UPDATE " & tabFatture & " SET " & _
            "CompAdempEuro=CompAdempEuro+" & Str(adempi) & _
            ",CompDecrIngEuro=CompDecrIngEuro+" & Str(decreti) & _
            ",CompNotifEuro=CompNotifEuro+" & Str(Notifiche) & _
@@ -845,14 +852,14 @@ If GetADORecordset("StoricoFatture", "*", "codAVV='" & codice & "' and DATAFATTU
            " WHERE codAVV='" & codice & "' and DATAFATTURA='" & Data & "';"
    
 End If
-g_Settings.DBConnection.Execute SQL
+g_Settings.DBConnection.Execute sql
 
 End Sub
-Public Sub GeneraFattura(Numero As Integer, Data As Date)
+Public Sub GeneraFattura(Numero As Integer, Data As Date, isTemp As Boolean)
 Dim nFat As Long
 Dim ValEuro As Variant
 Dim Query As String
-Dim SQL As String
+Dim sql As String
 Dim rsEstratto As ADODB.Recordset
 Dim codice As String
 Dim adempi As Double
@@ -864,23 +871,26 @@ ValEuro = 1936.27
 nFat = Numero
 
 
-SQL = "SELECT codAvv,DESCR_ATTIVITA,Sum(Competenze) FROM PrtEstrattoConto " & _
+If isTemp Then
+   g_Settings.DBConnection.Execute "DELETE * FROM FattureTemp"
+   
+End If
+
+sql = "SELECT codAvv,DESCR_ATTIVITA,Sum(Competenze) FROM PrtEstrattoConto " & _
       "GROUP BY NumOrdinamento,codAvv,DESCR_ATTIVITA " & _
       "ORDER BY NumOrdinamento;"
 
 Set rsEstratto = newAdoRs()
-rsEstratto.Open SQL, g_Settings.DBConnection
+rsEstratto.Open sql, g_Settings.DBConnection
 If rsEstratto.EOF Then Exit Sub
 
 codice = rsEstratto(0)
 While Not rsEstratto.EOF
- If rsEstratto(0) = "525/158" Then
-   Debug.Print "Strano"
- End If
+
  If rsEstratto(0) <> codice Then
    
    If adempi + decreti + Notifiche + sfratti > 0 Then
-     aggiornaFattura nFat, codice, "" & Data, adempi, decreti, Notifiche, sfratti
+     aggiornaFattura nFat, codice, "" & Data, adempi, decreti, Notifiche, sfratti, isTemp
         codice = rsEstratto(0)
         adempi = 0
         decreti = 0
@@ -899,7 +909,7 @@ While Not rsEstratto.EOF
  rsEstratto.MoveNext
 Wend
 If adempi + decreti + Notifiche + sfratti > 0 Then
-     aggiornaFattura nFat, codice, "" & Data, adempi, decreti, Notifiche, sfratti
+     aggiornaFattura nFat, codice, "" & Data, adempi, decreti, Notifiche, sfratti, isTemp
 End If
 End Sub
 Private Sub SalvaSaldiTemporanei()

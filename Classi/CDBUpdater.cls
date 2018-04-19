@@ -11,18 +11,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-
-Public Sub UpdateDatabase(CN As ADODB.Connection)
-Dim rsAv As ADODB.Recordset
-Dim Ord As Long
-Dim SQL As String
-Dim Descr As String
-Dim Code As String
- Dim codAvv As String, Nota As String, mail As String, pos As Integer, leftPart As String, rightPart As String
- 
- Dim rs As ADODB.Recordset
-Dim nv As Integer
- 
+Public Sub UpdateVeryOld(CN As ADODB.Connection)
 If Not ExistMDBTable(CN, "LockTable") Then
      CN.Execute "CREATE TABLE LockTable (TabID TEXT(50) PRIMARY KEY, Locked TEXT(50) DEFAULT 'NONE')"
      CN.Execute "INSERT INTO LockTable (TabID, Locked) VALUES ('ADEMPI','NONE')"
@@ -56,11 +45,11 @@ End If
 'Rivedi ordinamento avvocati
 If Not ExistMDBField(CN, "Parametri", "XXX") Then
    'Cerca dupplicati
-   SQL = "SELECT Anticipi.Descrizione, Anticipi.CodiceAnticipi, Anticipi_1.CodiceAnticipi " & _
+   sql = "SELECT Anticipi.Descrizione, Anticipi.CodiceAnticipi, Anticipi_1.CodiceAnticipi " & _
        "FROM Anticipi, Anticipi AS Anticipi_1 " & _
        "WHERE (((Anticipi.Descrizione)=[Anticipi_1].[Descrizione]) AND ((Anticipi.CodiceAnticipi)>[Anticipi_1].[CodiceAnticipi]));"
    Set rsAv = newAdoRs
-   rsAv.Open SQL, CN
+   rsAv.Open sql, CN
    While Not rsAv.EOF
      Code = rsAv(1)
      Descr = rsAv(0) & " " & Code
@@ -636,33 +625,86 @@ If Not ExistMDBField(CN, "PrtSospesiUNEP", "Deduzione") Then
 
 End If
 
+
+End Sub
+Public Sub UpdateDatabase(CN As ADODB.Connection)
+Dim rsAv As ADODB.Recordset
+Dim Ord As Long
+Dim sql As String
+Dim Descr As String
+Dim Code As String
+ Dim codAvv As String, Nota As String, mail As String, pos As Integer, leftPart As String, rightPart As String
+ 
+ Dim rs As ADODB.Recordset
+Dim nv As Integer
+
 If Not ExistMDBTable(CN, "Versione") Then
    CN.Execute "CREATE TABLE Versione (NumeroVersione Integer) "
    CN.Execute "INSERT INTO Versione (NumeroVersione) VALUES(1)"
-
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  Nome TEXT(100)"
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  INDIRI TEXT(100)"
    CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN  LOCALI TEXT(100)"
    CN.Execute "ALTER TABLE  PrtSaldi ALTER COLUMN  Commento TEXT(100)"
    CN.Execute "ALTER TABLE  PrtSaldi ALTER COLUMN  Nome TEXT(100)"
-
 End If
-
 
 Set rs = New ADODB.Recordset
 Set rs = GetADORecordset("Versione", "NumeroVersione", "1=1", CN)
-
 If Not rs.EOF Then
   nv = rs(0)
-  
   If nv < 2 Then
     GoTo UPD_2
+   ElseIf nv < 3 Then
+    GoTo UPD_3
+   ElseIf nv < 4 Then
+    GoTo UPD_4
+   ElseIf nv < 5 Then
+    GoTo UPD_5
   End If
 End If
-
+Exit Sub
 UPD_2:
  Update2 CN
+UPD_3:
+ Update3 CN
+UPD_4:
+ Update4 CN
+UPD_5:
+ Update5 CN
+End Sub
+Private Sub Update5(CN As ADODB.Connection)
+   CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ALTER COLUMN  Nome TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ALTER COLUMN  INDIRI TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ALTER COLUMN  LOCALI TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSaldiUNEP ALTER COLUMN  Commento TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSaldiUNEP ALTER COLUMN  Nome TEXT(100)"
+ 
+ CN.Execute "UPDATE Versione SET NumeroVersione=5"
+End Sub
 
+Private Sub Update4(CN As ADODB.Connection)
+If Not ExistMDBTable(CN, "FattureTemp") Then
+   CN.Execute "SELECT * INTO  FattureTemp FROM StoricoFatture "
+
+End If
+
+If Not ExistMDBTable(CN, "FattureTempUNEP") Then
+   CN.Execute "SELECT * INTO  FattureTempUNEP FROM StoricoFattureUNEP   "
+
+End If
+ CN.Execute "UPDATE Versione SET NumeroVersione=4"
+End Sub
+Private Sub Update3(CN As ADODB.Connection)
+ 
+   CN.Execute "ALTER TABLE  PrtSospesi ALTER COLUMN  Nome TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSospesi ALTER COLUMN  INDIRI TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSospesi ALTER COLUMN  LOCALI TEXT(100)"
+   
+   CN.Execute "ALTER TABLE  PrtSospesiUNEP ALTER COLUMN  Nome TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSospesiUNEP ALTER COLUMN  INDIRI TEXT(100)"
+   CN.Execute "ALTER TABLE  PrtSospesiUNEP ALTER COLUMN  LOCALI TEXT(100)"
+ 
+ CN.Execute "UPDATE Versione SET NumeroVersione=3"
 End Sub
 
 Private Sub Update2(CN As ADODB.Connection)
@@ -675,7 +717,6 @@ Private Sub Update2(CN As ADODB.Connection)
    CN.Execute "ALTER TABLE  TempSaldiUNEP ALTER COLUMN  INDIRI TEXT(100)"
    CN.Execute "ALTER TABLE  TempSaldiUNEP ALTER COLUMN  LOCALI TEXT(100)"
 
- 
  CN.Execute "UPDATE Versione SET NumeroVersione=2"
 End Sub
 

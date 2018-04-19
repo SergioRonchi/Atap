@@ -1387,6 +1387,7 @@ If FindForm("frmRicerca") Then
 End If
 End Sub
 Private Sub cmdPrint_Click()
+On Error Resume Next
   PrintForm
 End Sub
 
@@ -1529,7 +1530,7 @@ Private Sub IForm_SetFocus()
  Me.SetFocus
 End Sub
 Private Sub IForm_RisRicerca()
- Dim SQL As String
+ Dim sql As String
 Dim rs As ADODB.Recordset
  PassaLoad = True
  
@@ -1540,7 +1541,7 @@ Dim rs As ADODB.Recordset
     
 Set rs = newAdoRs
 PassaLoad = True
-SQL = "SELECT " & getCurrentTable() & ".CODAVV, " & _
+sql = "SELECT " & getCurrentTable() & ".CODAVV, " & _
       "( Mid(DataRegistrazione,7,2) & '/' & Mid(DataRegistrazione,5,2)& '/' & Mid(DataRegistrazione,1,4)) As DataRegistrazione, " & _
       "( Mid(DataPresentazione,7,2) & '/' & Mid(DataPresentazione,5,2)& '/' & Mid(DataPresentazione,1,4)) As DataPresentazione, " & _
       "( Mid(DataRestituzione,7,2) & '/' & Mid(DataRestituzione,5,2)& '/' & Mid(DataRestituzione,1,4)) As DataRestituzione, " & _
@@ -1552,7 +1553,7 @@ SQL = "SELECT " & getCurrentTable() & ".CODAVV, " & _
       getCurrentTable() & ".NumOrdinamento,SIGLA,SIGLACH, IDCod, Crono " & _
       "FROM (" & getCurrentTable() & " INNER JOIN AnagraficaAvvocati ON " & getCurrentTable() & ".CODAVV = AnagraficaAvvocati.CODAVV) INNER JOIN TribunaliAppartenenza ON " & getCurrentTable() & ".CodTribunaleApp = TribunaliAppartenenza.CodiceTribunale " & _
       "WHERE " & sWhere
-rs.Open SQL, g_Settings.DBConnection
+rs.Open sql, g_Settings.DBConnection
 m_ID = -1
 If Not rs.EOF Then
    
@@ -1641,17 +1642,17 @@ Private Sub ChkAnnullo_Click()
 End Sub
 
 Public Sub InserisciPredefiniti()
- Dim SQL As String
+ Dim sql As String
  Dim rs As ADODB.Recordset
  Dim codPigno, codTribunale
  codTribunale = cmbTribunale.Columns(1).value
  codPigno = CmbPignoramenti.Columns(1).value
- SQL = "SELECT TribunaliAppartenenza.CodiceTribunale, Anticipi.PrezDepositoEuro, Anticipi.PrezCompetenzeEuro " & _
+ sql = "SELECT TribunaliAppartenenza.CodiceTribunale, Anticipi.PrezDepositoEuro, Anticipi.PrezCompetenzeEuro " & _
      "FROM Anticipi INNER JOIN TribunaliAppartenenza ON Anticipi.CodiceTribunale = TribunaliAppartenenza.CodiceTribunale " & _
      "WHERE Anticipi.CodiceAttivita='S' AND Anticipi.CodiceAlternativo='" & codPigno & "' And TribunaliAppartenenza.CodiceTribunale='" & codTribunale & "'"
   Set rs = newAdoRs
   
-  rs.Open SQL, g_Settings.DBConnection
+  rs.Open sql, g_Settings.DBConnection
   If Not rs.EOF Then
            txtDeposito = rs!PrezDepositoEuro
            txtCompetenze = rs!PrezCompetenzeEuro

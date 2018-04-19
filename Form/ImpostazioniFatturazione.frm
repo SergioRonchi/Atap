@@ -168,7 +168,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
-Public IsUnep As Boolean
+Public isUnep As Boolean
 Private Sub CmdSalva_Click()
     Unload Me
 End Sub
@@ -177,7 +177,7 @@ Private Sub Form_Load()
    
     txtData = Date
     txtNumero = getNewNumFattura
-    If IsUnep Then
+    If isUnep Then
       StampaEstrattoContoUNEP.Hide
     Else
       StampaEstrattoConto.Hide
@@ -191,26 +191,26 @@ Private Sub Form_Load()
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
- On Error GoTo FINE
-Dim DataFattura As ADODB.Recordset
+ On Error GoTo fine
+Dim dataFattura As ADODB.Recordset
   Screen.MousePointer = vbHourglass
-    If IsUnep Then
-        Set DataFattura = GetADORecordset("Date_EstrattiConto", "DATA_FATTURA_UNEP", "1=1", g_Settings.DBConnection)
-        If DataFattura Is Nothing Then
+    If isUnep Then
+        Set dataFattura = GetADORecordset("Date_EstrattiConto", "DATA_FATTURA_UNEP", "1=1", g_Settings.DBConnection)
+        If dataFattura Is Nothing Then
              g_Settings.DBConnection.Execute ("INSERT INTO Date_EstrattiConto (DATA_FATTURA_UNEP) VALUES ('" & txtData & "')")
             Else
              g_Settings.DBConnection.Execute ("UPDATE Date_EstrattiConto SET DATA_FATTURA_UNEP= '" & txtData & "'")
         End If
-        StampaEstrattoContoUNEP.GeneraFattura txtNumero, txtData.Text
+        StampaEstrattoContoUNEP.GeneraFattura txtNumero, txtData.Text, False
         StampaEstrattoContoUNEP.Show
     Else
-        Set DataFattura = GetADORecordset("Date_EstrattiConto", "DATA_FATTURA", "1=1", g_Settings.DBConnection)
-        If DataFattura Is Nothing Then
+        Set dataFattura = GetADORecordset("Date_EstrattiConto", "DATA_FATTURA", "1=1", g_Settings.DBConnection)
+        If dataFattura Is Nothing Then
              g_Settings.DBConnection.Execute ("INSERT INTO Date_EstrattiConto (DATA_FATTURA) VALUES ('" & txtData & "')")
             Else
              g_Settings.DBConnection.Execute ("UPDATE Date_EstrattiConto SET DATA_FATTURA= '" & txtData & "'")
         End If
-        StampaEstrattoConto.GeneraFattura txtNumero, txtData.Text
+        StampaEstrattoConto.GeneraFattura txtNumero, txtData.Text, False
         StampaEstrattoConto.Show
     End If
 
@@ -226,7 +226,7 @@ Dim DataFattura As ADODB.Recordset
     Atap.mnuUtilita.Enabled = True
     MsgBox "Procedura di fatturazione eseguita con successo", vbInformation, "Informazione"
  Exit Sub
-FINE:
+fine:
  MsgBox err.Description
  
 End Sub

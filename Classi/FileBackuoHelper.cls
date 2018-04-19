@@ -35,7 +35,7 @@ On Error GoTo errback
  
  
  If Dir(compactedFile) <> "" Then
-        zipFile Path, zippedFile, g_Settings.AtapUserTempFolder, dbFile
+        zipFile Path, zippedFile, g_Settings.AtapUserTempFolder, dbFile, ""
  End If
  Screen.MousePointer = vbDefault
  

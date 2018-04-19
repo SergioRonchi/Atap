@@ -33,7 +33,7 @@ Begin VB.MDIForm Atap
             Style           =   6
             Alignment       =   1
             AutoSize        =   2
-            TextSave        =   "07/04/2017"
+            TextSave        =   "19/04/2018"
          EndProperty
          BeginProperty Panel2 {8E3867AB-8586-11D1-B16A-00C0F0283628} 
             AutoSize        =   1
@@ -53,7 +53,7 @@ Begin VB.MDIForm Atap
             Style           =   5
             Alignment       =   2
             AutoSize        =   2
-            TextSave        =   "15.51"
+            TextSave        =   "15.22"
          EndProperty
       EndProperty
    End
@@ -489,6 +489,12 @@ Begin VB.MDIForm Atap
       Begin VB.Menu mnuSep 
          Caption         =   "-"
       End
+      Begin VB.Menu mnuFat 
+         Caption         =   "&Fatturato"
+      End
+      Begin VB.Menu mnuSepX 
+         Caption         =   "-"
+      End
       Begin VB.Menu mnuCalc 
          Caption         =   "&Calcolatrice"
       End
@@ -675,6 +681,10 @@ End Sub
 
 Private Sub mnuEstrattoContoAdempimenti_Click()
     StampaEstrattoContoAdempimenti.Show
+End Sub
+
+Private Sub mnuFat_Click()
+ frmCalcoloFatturato.Show
 End Sub
 
 Private Sub mnuFattura_Click()
