@@ -852,8 +852,12 @@ Else
             'LockTable "AnagraficaAvvocati"
             If SalvaRecord(Me, Azione, "AnagraficaAvvocati", False) Then
               salvaUsufruenti (TxtCodiceAvvocatoInt)
-              g_Settings.DBConnection.Execute "INSERT INTO SALDI (CODICE,Chiusura,NumOrdinamento) VALUES ('" & TxtCodiceAvvocatoInt & "','" & Format(Date, "YYYYMMDD") & "','" & txtOrdine & "')"
-              g_Settings.DBConnection.Execute "INSERT INTO SALDIUNEP (CODICE,Chiusura,NumOrdinamento) VALUES ('" & TxtCodiceAvvocatoInt & "','" & Format(Date, "YYYYMMDD") & "','" & txtOrdine & "')"
+               If GetADORecordset("SALDI", "CODICE", "CODICE='" & TxtCodiceAvvocatoInt & "'", g_Settings.DBConnection) Is Nothing Then
+                  g_Settings.DBConnection.Execute "INSERT INTO SALDI (CODICE,Chiusura,NumOrdinamento) VALUES ('" & TxtCodiceAvvocatoInt & "','" & Format(Date, "YYYYMMDD") & "','" & txtOrdine & "')"
+               End If
+                If GetADORecordset("SALDIUNEP", "CODICE", "CODICE='" & TxtCodiceAvvocatoInt & "'", g_Settings.DBConnection) Is Nothing Then
+                  g_Settings.DBConnection.Execute "INSERT INTO SALDIUNEP (CODICE,Chiusura,NumOrdinamento) VALUES ('" & TxtCodiceAvvocatoInt & "','" & Format(Date, "YYYYMMDD") & "','" & txtOrdine & "')"
+                End If
             End If
             'DelockTable "AnagraficaAvvocati"
           Else
@@ -969,7 +973,7 @@ Public Function AbilitaCampi(SiNO As Boolean)
 End Function
 
 Public Function NascondiCampi(SiNO As Boolean)
-        LblCAP.Visible = SiNO
+        lblCAP.Visible = SiNO
         LblCellulare.Visible = SiNO
         LblCodiceFiscale.Visible = SiNO
         LblCognomeNome.Visible = SiNO

@@ -162,12 +162,20 @@ Begin VB.Form Saldi
       TabIndex        =   0
       Top             =   0
       Width           =   11475
+      Begin VB.CommandButton cmdElimina2 
+         Caption         =   "&Elimina"
+         Height          =   570
+         Left            =   10200
+         TabIndex        =   28
+         Top             =   720
+         Width           =   1200
+      End
       Begin VB.CommandButton cmdStampa 
          Caption         =   "Stampa"
          Height          =   375
          Left            =   10200
          TabIndex        =   27
-         Top             =   1680
+         Top             =   1800
          Width           =   1215
       End
       Begin VB.CommandButton cmdNew 
@@ -175,16 +183,16 @@ Begin VB.Form Saldi
          Height          =   375
          Left            =   10200
          TabIndex        =   26
-         Top             =   1200
+         Top             =   1320
          Visible         =   0   'False
          Width           =   1200
       End
       Begin VB.CommandButton CmdSalva 
          Caption         =   "&Salva"
-         Height          =   930
+         Height          =   570
          Left            =   10200
          TabIndex        =   23
-         Top             =   240
+         Top             =   120
          Width           =   1200
       End
       Begin VB.TextBox TxtCodice 
@@ -687,6 +695,29 @@ Private Sub cmdPrint_Click()
   PrintForm
 End Sub
 
+Private Sub cmdElimina2_Click()
+Dim Response As Long
+Dim RecCor As Long
+Dim c As Control
+Dim SQL As String
+    RecCor = flex.row
+    'Sto Modificando la mia anagrafica
+    Response = MsgBox("Vuoi eliminare il saldo selezionato?", vbYesNo + vbInformation + vbDefaultButton2, "Attenzione")
+    If Response = vbYes Then    ' User chose Yes.
+     SQL = ""
+         
+         SQL = "DELETE * FROM " & TabellaSaldi
+         SQL = SQL & " WHERE codice='" & TxtCodice & "'"
+         g_Settings.DBConnection.Execute SQL
+         Aggiorna
+         On Error GoTo prox
+         flex.row = RecCor
+prox:
+         flex_DblClick
+    End If
+
+End Sub
+
 Private Sub cmdEsci_Click()
 Unload Me
 End Sub
@@ -753,7 +784,7 @@ Private Sub flex_DblClick()
 Dim SQL As String
 Dim txt As TDBNumber
 Dim rs As ADODB.Recordset
-Dim d As Double
+Dim D As Double
 Dim r As Long
 r = flex.row
 If r = 0 Then Exit Sub
@@ -762,10 +793,11 @@ LblDescrizioneAvvocato = flex.TextMatrix(r, 2)
 Set rs = GetADORecordset(TabellaSaldi, "*", "Codice='" & TxtCodice & "' ", g_Settings.DBConnection)
                                
 For Each txt In Me.txtSaldo
-   d = Round(rs(txt.DataField), 2)
+If (IsNumeric(rs(txt.DataField))) Then
+   D = Round(rs(txt.DataField), 2)
   
-  txt.value = d
-  
+  txt.value = D
+End If
 Next
 txtDataChiusura.Text = RitornaData(rs!Chiusura)
 SaldiNegativi.Caption = ControlloNULL(rs!Commento)
@@ -824,11 +856,11 @@ Next I
 
 End Sub
 
-Private Sub txtSaldo_Change(Index As Integer)
-  If Index <> 2 Then CalcolaSaldoTotale
+Private Sub txtSaldo_Change(index As Integer)
+  If index <> 2 Then CalcolaSaldoTotale
 End Sub
 
 
-Private Sub txtSaldo_KeyPress(Index As Integer, KeyAscii As Integer)
+Private Sub txtSaldo_KeyPress(index As Integer, KeyAscii As Integer)
 If KeyAscii = Asc(".") Then KeyAscii = Asc(",")
 End Sub
