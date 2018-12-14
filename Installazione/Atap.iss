@@ -119,7 +119,7 @@ Source: ..\..\..\DeployFiles\COMCT332.OCX; DestDir: {sys}; Flags: regserver shar
 ;MS Tabbed Dialog Control
 Source: ..\..\..\DeployFiles\tabctl32.ocx; DestDir: {sys}; Flags: regserver sharedfile
 
-
+Source: ..\..\..\DeployFiles\msxml6.dll; DestDir: {sys}; Flags: regserver sharedfile onlyifdoesntexist
 
 ;VB Accellerator ImmageList
 Source: ..\..\..\DeployFiles\vbAccellerator\vbalIml6.ocx; DestDir: {sys}; Flags: regserver sharedfile

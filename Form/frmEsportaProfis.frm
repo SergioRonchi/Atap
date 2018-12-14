@@ -607,9 +607,9 @@ Private Sub cmbDayNav_Click()
  
 End Sub
 
-Private Sub cmdButton_Click(Index As Integer)
+Private Sub cmdButton_Click(index As Integer)
 On Error GoTo fine
-Select Case Index
+Select Case index
   Case 18 'OK
    If txtPath.Text <> "" Then
      Dim D As String
@@ -629,6 +629,12 @@ Select Case Index
         zipUtils.zipFile txtPath.Text, "Atap_Export_" & D & "_" & g_Settings.Sede, txtPath.Text, "*" & D & "*.csv", "Esportato file " & exportFile & " in "
         
         SafeKill txtPath.Text & "\*" & D & "*.csv"
+        
+        exportFile = "Atap_Export_XML" & D & ".zip"
+        zipUtils.zipFile txtPath.Text, "Atap_Export_XML" & D & "_" & g_Settings.Sede, txtPath.Text, "*" & D & "*.xml", "Esportato file " & exportFile & " in "
+        
+        SafeKill txtPath.Text & "\*" & D & "*.xml"
+        
         
         Shell "explorer.exe /e, " & txtPath.Text, vbNormalFocus
         Unload Me
@@ -650,11 +656,19 @@ Dim nextMin As Long
 Dim nextMax As Long
 
 Dim oMinmax As MinMax
+Dim esportaDatev As Boolean
+Dim esportaXML As Boolean
+
 ProgressBar1.Visible = True
 ProgressBar2.Visible = True
 Set oMinmax = New MinMax
-If m_exporter.Esporta(oMinmax, txtPath.Text, optMode(1).value, _
-                      tdbAnno.value, tdbDa.value, IIf(chkEnable.value = 1, tdbA.value, 1000000), mskDal.value, mskAl.value, datePostFix, tdbNumFat.value) Then
+
+esportaDatev = m_exporter.Esporta(oMinmax, txtPath.Text, optMode(1).value, _
+                      tdbAnno.value, tdbDa.value, IIf(chkEnable.value = 1, tdbA.value, 1000000), mskDal.value, mskAl.value, datePostFix, tdbNumFat.value)
+esportaXML = m_exporter.esportaXML(txtPath.Text, optMode(1).value, _
+                      tdbAnno.value, tdbDa.value, IIf(chkEnable.value = 1, tdbA.value, 1000000), mskDal.value, mskAl.value, datePostFix)
+
+If esportaDatev And esportaXML Then
   Esporta = True
  Else
   Esporta = False
@@ -729,7 +743,7 @@ Private Sub m_exporter_OnDoubleProgress(v1 As Long, v2 As Long)
  ProgressBar2.value = v2
 End Sub
 
-Private Sub optMode_Click(Index As Integer)
+Private Sub optMode_Click(index As Integer)
 
    mskAl.Enabled = optMode(0).value
    mskDal.Enabled = optMode(0).value
