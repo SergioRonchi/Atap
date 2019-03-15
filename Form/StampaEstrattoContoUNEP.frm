@@ -432,7 +432,7 @@ End Sub
 Private Sub CmdAnnulla_Click()
 Unload Me
 If FindForm("frmRicerca") Then
-    Unload FrmRicerca
+    Unload frmRicerca
 End If
 
 End Sub
@@ -512,7 +512,11 @@ Private Sub CmdOK_Click()
    
     AggiungiDeduzioni TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti
     
+    
+    
     AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
+    
+    AggiungiBolloUnep
     
     If Not GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
         If OptTipoStampa(0).value = True Or ChkAbilitaAnteDef.value = True Then
@@ -592,7 +596,7 @@ Dim c As Control
 End Sub
 
 Private Sub moFilterManager_Validate(IsValid As Boolean)
-   cmdOk.Enabled = IsValid
+   CmdOK.Enabled = IsValid
 End Sub
 
 Private Sub optMese_Click(index As Integer)
@@ -752,7 +756,7 @@ Dim saldo As Double
 Dim saldoPrec As Double
 Dim dataEC As String
 Dim codice As String
-Dim sql As String
+Dim SQL As String
 Dim Commento As String
 Dim prog As String
 Dim rs As ADODB.Recordset
@@ -775,7 +779,7 @@ Dim dataChiusura As String
  Set rs = GetADORecordset("SaldiUNEP", "chiusura", "codice='" & codice & "'", g_Settings.DBConnection)
  If rs Is Nothing Then
    'Record inesistente
-   sql = "INSERT INTO SALDIUNEP(codice,Stato,PROG_Saldi,Commento,SaldoAdemp,SaldoSfpg, " & _
+   SQL = "INSERT INTO SALDIUNEP(codice,Stato,PROG_Saldi,Commento,SaldoAdemp,SaldoSfpg, " & _
          "SaldoNotif,SaldoDecrIng,SaldoAdempEuro,SaldoSfpgEuro,SaldoNotifEuro,SaldoDecrIngEuro," & _
          "SaldoTotale,SaldoTotaleEuro, Chiusura) " & _
          "VALUES ('" & codice & "','N'," & 1 & ",'" & Commento & "'," & _
@@ -789,17 +793,17 @@ Dim dataChiusura As String
             prog = 1
             
    End If
-   sql = "UPDATE SALDIUNEP SET " & _
+   SQL = "UPDATE SALDIUNEP SET " & _
          "Stato='N',PROG_Saldi=" & prog & ",Commento='" & Commento & "',SaldoAdemp=0,SaldoSfpg=0, " & _
          "SaldoNotif=0,SaldoDecrIng=0,SaldoAdempEuro=0,SaldoSfpgEuro=0,SaldoNotifEuro=0,SaldoDecrIngEuro=0," & _
          "SaldoTotale=" & Str(saldo * 1936.27) & ",SaldoTotaleEuro=" & Str(saldo) & _
          ",Chiusura='" & dataChiusura & "'" & _
          " WHERE codice='" & codice & "';"
  End If
- g_Settings.DBConnection.Execute sql
+ g_Settings.DBConnection.Execute SQL
  Exit Sub
 fine:
- MsgBox err.Description & vbCrLf & sql
+ MsgBox err.Description & vbCrLf & SQL
  
 End Sub
 
@@ -854,7 +858,7 @@ End If
 End Sub
 Public Sub aggiornaFattura(ByRef nFat As Long, codice As String, Data As String, adempi As Double, _
                             decreti As Double, Notifiche As Double, stratti As Double, quota As Double, isTemp As Boolean)
-Dim sql As String
+Dim SQL As String
 Dim rs As ADODB.Recordset
 If codice = "525/158" Then
  Debug.Print "Errore"
@@ -864,7 +868,7 @@ quotaBimestrale = GetADOValue("Parametri", "QuotaSoci", "1=1", g_Settings.DBConn
 
 Dim strBimestre As String
 Dim bimestre As Integer
-Dim Anno As Integer
+Dim anno As Integer
 
 Dim T As Integer
 Dim nomeTabella As String
@@ -877,50 +881,50 @@ End If
 
 T = GetADOValue("PrtData", "Tipo", "1=1", g_Settings.DBConnection, True)
 bimestre = GetADOValue("PrtData", "Bimestre", "1=1", g_Settings.DBConnection, True)
-Anno = GetADOValue("PrtData", "BimestreAnno", "1=1", g_Settings.DBConnection, True)
+anno = GetADOValue("PrtData", "BimestreAnno", "1=1", g_Settings.DBConnection, True)
 
 If T = 1 Then
       quotaBimestrale = quotaBimestrale / 2
       Select Case bimestre
       Case 1
-        strBimestre = "GENNAIO " & Anno
+        strBimestre = "GENNAIO " & anno
       Case 2
-        strBimestre = "FEBBRAIO " & Anno
+        strBimestre = "FEBBRAIO " & anno
       Case 3
-        strBimestre = "MARZO " & Anno
+        strBimestre = "MARZO " & anno
       Case 4
-        strBimestre = "APRILE " & Anno
+        strBimestre = "APRILE " & anno
       Case 5
-        strBimestre = "MAGGIO " & Anno
+        strBimestre = "MAGGIO " & anno
       Case 6
-        strBimestre = "GIUGNO " & Anno
+        strBimestre = "GIUGNO " & anno
               Case 7
-        strBimestre = "LUGLIO " & Anno
+        strBimestre = "LUGLIO " & anno
               Case 8
-        strBimestre = "AGOSTO " & Anno
+        strBimestre = "AGOSTO " & anno
               Case 9
-        strBimestre = "SETTEMBRE " & Anno
+        strBimestre = "SETTEMBRE " & anno
               Case 10
-        strBimestre = "OTTOBRE " & Anno
+        strBimestre = "OTTOBRE " & anno
               Case 11
-        strBimestre = "NOVEMBRE " & Anno
+        strBimestre = "NOVEMBRE " & anno
               Case 12
-        strBimestre = "DICEMBRE " & Anno
+        strBimestre = "DICEMBRE " & anno
     End Select
   Else
     Select Case bimestre
       Case 1
-        strBimestre = "GENNAIO-FEBBRAIO " & Anno
+        strBimestre = "GENNAIO-FEBBRAIO " & anno
       Case 2
-        strBimestre = "MARZO-APRILE " & Anno
+        strBimestre = "MARZO-APRILE " & anno
       Case 3
-        strBimestre = "MAGGIO-GIUGNO " & Anno
+        strBimestre = "MAGGIO-GIUGNO " & anno
       Case 4
-        strBimestre = "LUGLIO-AGOSTO " & Anno
+        strBimestre = "LUGLIO-AGOSTO " & anno
       Case 5
-        strBimestre = "SETTEMBRE-OTTOBRE " & Anno
+        strBimestre = "SETTEMBRE-OTTOBRE " & anno
       Case 6
-        strBimestre = "NOVEMBRE-DICEMBRE " & Anno
+        strBimestre = "NOVEMBRE-DICEMBRE " & anno
     End Select
   End If
 
@@ -929,7 +933,7 @@ If GetADORecordset(nomeTabella, "*", "Bimestre='" & strBimestre & "' AND codAVV=
      
      If rs!AFAT <> "S" Then Exit Sub
      
-     sql = "INSERT INTO " & nomeTabella & " (numOrdinamento,NOME,INDIRI,LOCALI,PROV,CAP,PIVA,codAvv," & _
+     SQL = "INSERT INTO " & nomeTabella & " (numOrdinamento,NOME,INDIRI,LOCALI,PROV,CAP,PIVA,codAvv," & _
            "NumeroFattura,DataFattura,DataFatturaNormale,Valuta,ImportoIva,CodIVA,CompAdempEuro,CompDecrIngEuro,CompNotifEuro,CompSfpgEuro, Bimestre, Quota) " & _
            "VALUES (" & rs!numOrdinamento & ",'" & Replace(Left(rs!nome, 40), "'", "''") & "','" & Replace(Left(rs!INDIRI, 40), "'", "''") & "','" & Replace(Left(rs!LOCALI, 35), "'", "''") & _
            "','" & rs!prov & "','" & rs!CAP & "','" & rs!PIVA & "','" & codice & "'," & nFat & _
@@ -937,7 +941,7 @@ If GetADORecordset(nomeTabella, "*", "Bimestre='" & strBimestre & "' AND codAVV=
            ",'" & strBimestre & "'," & Str(quota) & ");"
            nFat = nFat + 1
    Else
-     sql = "UPDATE " & nomeTabella & " SET " & _
+     SQL = "UPDATE " & nomeTabella & " SET " & _
            "CompAdempEuro=CompAdempEuro+" & Str(adempi) & _
            ",CompDecrIngEuro=CompDecrIngEuro+" & Str(decreti) & _
            ",CompNotifEuro=CompNotifEuro+" & Str(Notifiche) & _
@@ -946,14 +950,14 @@ If GetADORecordset(nomeTabella, "*", "Bimestre='" & strBimestre & "' AND codAVV=
            " WHERE codAVV='" & codice & "' and DATAFATTURA='" & Format(Data, "yyyymmdd") & "' AND Bimestre='" & strBimestre & "'"
    
 End If
-g_Settings.DBConnection.Execute sql
+g_Settings.DBConnection.Execute SQL
 
 End Sub
 Public Sub GeneraFattura(Numero As Long, Data As Date, isTemp As Boolean)
 Dim nFat As Long
 Dim ValEuro As Variant
 Dim Query As String
-Dim sql As String
+Dim SQL As String
 Dim rsEstratto As ADODB.Recordset
 Dim codice As String
 Dim adempi As Double
@@ -969,12 +973,12 @@ If isTemp Then
    
 End If
 
-sql = "SELECT codAvv,DESCR_ATTIVITA,Sum(Competenze), SUM(Quota) FROM PrtEstrattoContoUNEP " & _
+SQL = "SELECT codAvv,DESCR_ATTIVITA,Sum(Competenze), SUM(Quota) FROM PrtEstrattoContoUNEP " & _
       "GROUP BY NumOrdinamento,codAvv,DESCR_ATTIVITA " & _
       "ORDER BY NumOrdinamento;"
 
 Set rsEstratto = newAdoRs()
-rsEstratto.Open sql, g_Settings.DBConnection
+rsEstratto.Open SQL, g_Settings.DBConnection
 If rsEstratto.EOF Then Exit Sub
 
 codice = rsEstratto(0)
@@ -1056,20 +1060,20 @@ Private Function GetQuerySaldi(destinationTable As String, condition As String) 
 Dim qry As String
 
 qry = "INSERT INTO " & destinationTable & " ( CODAVV, NOME, DESCR_ATTIVITA, DEPOSITO, COMPETENZE, SALDO, " & _
-     "SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, SALDO_PRECEDENTE, VALUTA,NumOrdinamento,DATA_INIZIO,DATA_FINE,Quota, Deduzione ) " & _
+     "SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, SALDO_PRECEDENTE, VALUTA,NumOrdinamento,DATA_INIZIO,DATA_FINE,Quota, Deduzione, Bollo ) " & _
      "SELECT CODAVV, NOME, 'XXX', Sum(PrtEstrattoContoUNEP.DEPOSITO) AS DEP," & _
-     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q +DED AS Ass," & _
+     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q +DED - B AS Ass," & _
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1])) AS S1, Sum(PrtEstrattoContoUNEP.SPESE2) AS S2," & _
      "Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) AS S3, Sum(PrtEstrattoContoUNEP.SPESE4) AS S4, " & _
      "Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) AS S5, Sum(PrtEstrattoContoUNEP.SPESE6) AS S6," & _
-     "fIRST(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS S_PRECEDENTE, 'E' AS Valuta,NumOrdinamento,DATA_INIZIO,DATA_FINE,SUM(Quota) as Q, SUM(Deduzione) as DED " & _
+     "fIRST(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) AS S_PRECEDENTE, 'E' AS Valuta,NumOrdinamento,DATA_INIZIO,DATA_FINE,SUM(Quota) as Q, SUM(Deduzione) as DED, SUM(Bollo) as B " & _
      "From PrtEstrattoContoUNEP " & _
      "GROUP BY PrtEstrattoContoUNEP.CODAVV,PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, NumOrdinamento,DATA_INIZIO,DATA_FINE " & _
      " HAVING   Sum(PrtEstrattoContoUNEP.DEPOSITO) + fIRST(PrtEstrattoContoUNEP.SALDO_PRECEDENTE) -Sum(PrtEstrattoContoUNEP.COMPETENZE)-" & _
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1]))-" & _
      "Sum(PrtEstrattoContoUNEP.SPESE2) -Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) - " & _
      "Sum(PrtEstrattoContoUNEP.SPESE4) - Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) - " & _
-     "Sum(PrtEstrattoContoUNEP.SPESE6) -SUM(Quota) + SUM(Deduzione) " & condition & Str(g_Settings.LimiteSaldo)
+     "Sum(PrtEstrattoContoUNEP.SPESE6) -SUM(Quota) + SUM(Deduzione) - SUM(Bollo) " & condition & Str(g_Settings.LimiteSaldo)
   GetQuerySaldi = qry
 End Function
 

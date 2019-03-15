@@ -385,7 +385,7 @@ Dim MSG_Avviso, Response As Variant
     
     AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(1).value, g_Settings.QuotaSoci, g_Settings.QuotaSoci / 2)
      
-
+    AggiungiBolloUnep
     createQuery
     If Not GetADORecordset("PrtSaldiUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then
         Call Stampa.gestioneReport("PrtSaldiUNEP", "", 0, IIf(OptModSt(0).value, crptToWindow, crptToPrinter), "SaldiProvvisoriUNEP.rpt", 1)
@@ -479,7 +479,7 @@ On Error GoTo fine
 
 Dim qry As String
     
-    qrySQL = "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, AnagraficaAvvocati.NumOrdinamento,( Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA+ PrtEstrattoContoUNEP.Deduzione)  + PrtEstrattoContoUNEP.Saldo_Precedente ) AS totaleSaldo, " & _
+    qrySQL = "SELECT PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, AnagraficaAvvocati.NumOrdinamento,( Sum(PrtEstrattoContoUNEP.SALDO - PrtEstrattoContoUNEP.QUOTA+ PrtEstrattoContoUNEP.Deduzione- PrtEstrattoContoUNEP.Bollo)  + PrtEstrattoContoUNEP.Saldo_Precedente ) AS totaleSaldo, " & _
               "'" & TxtRicDataIn.Text & "','" & TxtRicDataFin.Text & "','E' "
     qrySQL = qrySQL & " FROM PrtEstrattoContoUNEP INNER JOIN AnagraficaAvvocati ON PrtEstrattoContoUNEP.CODAVV = AnagraficaAvvocati.CODAVV "
     qrySQL = qrySQL & " GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Saldo_Precedente, PrtEstrattoContoUNEP.NOME, AnagraficaAvvocati.NumOrdinamento"

@@ -567,12 +567,12 @@ Private Sub cmdCalcola_Click()
     MsgBox "Inserire l'intervallo di date", vbOKOnly + vbCritical
     Exit Sub
   End If
-  Dim sql As String
+  Dim SQL As String
   
   Set avvocatiEstratti = GetAvvocatoSingoloPerEstratto("")
   If optAtap Then
     CalcolaNormale avvocatiEstratti
-        sql = "SELECT Sum(CompAdempEuro) AS Ademp, " & _
+        SQL = "SELECT Sum(CompAdempEuro) AS Ademp, " & _
           "Sum(CompSfpgEuro) AS Sfratti, " & _
           "Sum(CompNotifEuro) AS Notifiche, " & _
           "Sum(CompNotifEuro) AS Decreti, " & _
@@ -583,7 +583,7 @@ Private Sub cmdCalcola_Click()
           "FROM FattureTemp;"
    Else
     CalcolaUnep avvocatiEstratti
-          sql = "SELECT Sum(CompAdempEuro) AS Ademp, " & _
+          SQL = "SELECT Sum(CompAdempEuro) AS Ademp, " & _
           "Sum(CompSfpgEuro) AS Sfratti, " & _
           "Sum(CompNotifEuro) AS Notifiche, " & _
           "Sum(CompNotifEuro) AS Decreti, " & _
@@ -599,7 +599,7 @@ Private Sub cmdCalcola_Click()
     Dim rs As ADODB.Recordset
    Set rs = newAdoRs
 
-        rs.Open sql, g_Settings.DBConnection
+        rs.Open SQL, g_Settings.DBConnection
     
         If Not rs.EOF Then
          PopolaLabel 0, rs
@@ -641,7 +641,7 @@ Private Sub CalcolaUnep(avvocatiEstratti As AvvocatiPerEstratto)
     AggiungiDeduzioni TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti
     
     AggiungiAvvocatiQuota TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, IIf(optMese(0).value, g_Settings.QuotaSoci / 2, g_Settings.QuotaSoci)
-
+    AggiungiBolloUnep
     Riempi_PRT_EstrattoContoX TxtRicDataIn.Text, TxtRicDataFin.Text, avvocatiEstratti, 1, 1, 1, 1, "N", False, 0, ""
     
     If Not GetADORecordset("PrtEstrattoContoUNEP", "*", "1=1", g_Settings.DBConnection) Is Nothing Then

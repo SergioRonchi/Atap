@@ -37,6 +37,10 @@ Private m_AtapUserFolderTemp As String
 Private m_AtapUserFolderBackup As String
 Private m_Sede As String
 
+Private m_LimiteBollo As Double
+Private m_ImportoBollo As Double
+
+
 Private m_CodTestata As String
 Private m_CodTestataIncasso As String
 Private m_CodQVar As String
@@ -105,6 +109,9 @@ Private Sub Class_Initialize()
       m_CodCompetenze = rs("CECodCompetenze")
       m_CodIVA = rs("CodIVA")
       m_Sede = rs("Sede")
+      m_LimiteBollo = rs("LimiteBollo")
+      m_ImportoBollo = rs("ImportoBollo")
+
     End If
     
     
@@ -145,10 +152,10 @@ End Property
 Public Property Get UserLock() As String
  UserLock = m_USER_LOCK
 End Property
-Public Property Get IVA() As Double
- IVA = m_IVA
+Public Property Get iva() As Double
+ iva = m_IVA
 End Property
-Public Property Let IVA(x As Double)
+Public Property Let iva(x As Double)
   m_IVA = x
   Me.DBConnection.Execute "UPDATE Parametri SET IVA=" & Str(m_IVA)
 End Property
@@ -163,9 +170,35 @@ Public Property Let LimiteSaldo(x As Double)
   m_LimiteSaldo = x
   Me.DBConnection.Execute "UPDATE Parametri SET LimiteSaldo=" & Str(m_LimiteSaldo)
 End Property
+
+Public Property Let ImportoBollo(x As Double)
+  m_ImportoBollo = x
+  Me.DBConnection.Execute "UPDATE Parametri SET ImportoBollo=" & Str(m_ImportoBollo)
+End Property
+
+Public Property Let LimiteBollo(x As Double)
+  m_LimiteBollo = x
+  Me.DBConnection.Execute "UPDATE Parametri SET LimiteBollo=" & Str(m_LimiteBollo)
+End Property
+
+
+
+
 Public Property Get LimiteSaldo() As Double
  LimiteSaldo = m_LimiteSaldo
 End Property
+
+
+Public Property Get ImportoBollo() As Double
+ ImportoBollo = m_ImportoBollo
+End Property
+
+Public Property Get LimiteBollo() As Double
+ LimiteBollo = m_LimiteBollo
+End Property
+
+
+
 Public Property Let Banca(x As String)
   m_Banca = x
   Me.DBConnection.Execute "UPDATE Parametri SET Banca='" & Replace(m_Banca, "'", "''") & "'"

@@ -42,9 +42,9 @@ Public Function GetFreeFile(NomeFile As String) As String
 End Function
 Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String, isUnep As Boolean, Optional avvocatiEstratti As AvvocatiPerEstratto, Optional schema As String) As Boolean
   Dim rsTable As ADODB.Recordset
-  Dim SQL As String, Tabella As String
+  Dim sql As String, Tabella As String
   Dim sqlDEL As String
-  Dim Anno As String
+  Dim anno As String
   Dim Data As Boolean
   Dim isUnepTable As Boolean
   Dim sWhere As String
@@ -102,7 +102,7 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                             Loop While rsTable!TABLE_NAME = Tabella
                             
                             If Data Then
-                                SQL = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]" & _
+                                sql = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]" & _
                                           " WHERE DataEvasionePratica>='" & Da & "' AND DataEvasionePratica<='" & A & "' "
                                 If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
 
@@ -114,17 +114,17 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                
                                
                               Else
-                                SQL = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]"
+                                sql = "SELECT *  INTO [" & Tabella & "] IN '" & NomeFile & "' FROM [" & Tabella & "]"
                                 sqlDEL = ""
                             End If
                             If isCodAvv And avvocatiEstratti.Tutti = False Then
                               If avvocatiEstratti.ListaEsclusi = False Then
                                             If Data Then
-                                                     SQL = SQL & " AND ("
+                                                     sql = sql & " AND ("
                                                      For Each currentAvv In avvocatiEstratti.Lista
-                                                        SQL = SQL & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
+                                                        sql = sql & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
                                                      Next
-                                                     SQL = Mid(SQL, 1, Len(SQL) - 3) & " ) "
+                                                     sql = Mid(sql, 1, Len(sql) - 3) & " ) "
                                                      If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
                                                           sqlDEL = sqlDEL & " AND ("
                                                           For Each currentAvv In avvocatiEstratti.Lista
@@ -137,21 +137,21 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                                                  
                                                 Else
                                                 
-                                                     SQL = SQL & " WHERE ("
+                                                     sql = sql & " WHERE ("
                                                      For Each currentAvv In avvocatiEstratti.Lista
-                                                       SQL = SQL & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
+                                                       sql = sql & " [" & Tabella & "].CodAvv='" & currentAvv & "' OR "
                                                      Next
-                                                     SQL = Mid(SQL, 1, Len(SQL) - 3) & " ) "
+                                                     sql = Mid(sql, 1, Len(sql) - 3) & " ) "
                                                      
                                                      sqlDEL = ""
                                             End If 'If Data Then
                                    Else
                                              If Data Then
-                                                     SQL = SQL & " AND "
+                                                     sql = sql & " AND "
                                                      For Each currentAvv In avvocatiEstratti.Lista
-                                                        SQL = SQL & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
+                                                        sql = sql & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
                                                      Next
-                                                     SQL = Mid(SQL, 1, Len(SQL) - 4) & "  "
+                                                     sql = Mid(sql, 1, Len(sql) - 4) & "  "
                                                      If (isUnep And isUnepTable) Or (Not isUnep And Not isUnepTable) Then
                                                           sqlDEL = sqlDEL & " AND "
                                                           For Each currentAvv In avvocatiEstratti.Lista
@@ -164,11 +164,11 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                                                  
                                                 Else
                                                 
-                                                     SQL = SQL & " WHERE "
+                                                     sql = sql & " WHERE "
                                                      For Each currentAvv In avvocatiEstratti.Lista
-                                                       SQL = SQL & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
+                                                       sql = sql & " [" & Tabella & "].CodAvv<>'" & currentAvv & "' AND "
                                                      Next
-                                                     SQL = Mid(SQL, 1, Len(SQL) - 4) & "  "
+                                                     sql = Mid(sql, 1, Len(sql) - 4) & "  "
                                                      
                                                      sqlDEL = ""
                                             End If 'If Data Then
@@ -177,10 +177,10 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
                             End If 'If isCodAvv And avvocatiEstratti.Tutti = False Then
                             
                             If Not isToTransfer(Tabella, schema) Then
-                              SQL = SQL & " AND [" & Tabella & "].CodAvv='XXXXX'"
+                              sql = sql & " AND [" & Tabella & "].CodAvv='XXXXX'"
                               If sqlDEL <> "" Then sqlDEL = sqlDEL & " AND [" & Tabella & "].CodAvv='XXXXX'"
                             End If
-                            g_Settings.DBConnection.Execute SQL
+                            g_Settings.DBConnection.Execute sql
                             
                             If sqlDEL <> "" Then
                                g_Settings.DBConnection.Execute sqlDEL
@@ -203,7 +203,7 @@ Public Function Trasferisci(ByRef NomeFile As String, Da As String, A As String,
   Screen.MousePointer = vbDefault
   Exit Function
 errtrasf:
-  MsgBox err.Description & vbCrLf & SQL, vbOKOnly + vbCritical
+  MsgBox err.Description & vbCrLf & sql, vbOKOnly + vbCritical
   g_Settings.DBConnection.RollbackTrans
 End Function
 
@@ -226,7 +226,7 @@ Public Function getQryAdempimenti(isUnep As Boolean, tipo As String, Da As Strin
     qrySQL = qrySQL & " ImpSpese5E, DesrSpese5, ImpSpese6E, DesrSpese6, "
     qrySQL = qrySQL & " ImpCompetenzeE, "
     If tipo = "Futuro" Then
-       qrySQL = qrySQL & " ImpDepositoE-ImpSpese1E-ImpSpese2E-ImpSpese3E-ImpSpese4E-ImpSpese5E-ImpSpese6E-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & " AS SaldoFinale, "
+       qrySQL = qrySQL & " ImpDepositoE-ImpSpese1E-ImpSpese2E-ImpSpese3E-ImpSpese4E-ImpSpese5E-ImpSpese6E-ImpCompetenzeE*" & Str(1 + g_Settings.iva / 100) & " AS SaldoFinale, "
       Else
        qrySQL = qrySQL & " ImpSaldoE  AS SaldoFinale, "
     End If
@@ -280,7 +280,7 @@ Public Function getQryDecreti(isUnep As Boolean, tipo As String, Da As String, A
     qrySQL = qrySQL & "ImpFormulaE, 'Costo Formula', ImpMarcheE,'Marche', "
     qrySQL = qrySQL & "ImpSpeseE,  DesrSpese, ImpCopieE,'Diritti Cancelleria',0,' ',ImpCompetenzeE,  "
     If tipo = "Futuro" Then
-        qrySQL = qrySQL & "  ImpDepositoE - (ImpFotocopieE * QtaFotocopie) - (ImpMarcheE * QtaMarche) - (ImpCopieE * QtaDirittiCancelleria) - ImpFormulaE - ImpSpeseE  - ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & "   AS SaldoFinale, "
+        qrySQL = qrySQL & "  ImpDepositoE - (ImpFotocopieE * QtaFotocopie) - (ImpMarcheE * QtaMarche) - (ImpCopieE * QtaDirittiCancelleria) - ImpFormulaE - ImpSpeseE  - ImpCompetenzeE*" & Str(1 + g_Settings.iva / 100) & "   AS SaldoFinale, "
       Else
        qrySQL = qrySQL & " ImpSaldoE  AS SaldoFinale, "
     End If
@@ -336,7 +336,7 @@ Public Function getQryNotifiche(tipoBimestre As Integer, isUnep As Boolean, tipo
        If isUnep Then
          qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE,"
         Else
-         qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
+         qrySQL = qrySQL & "  ImpDepositoE-ImpNotificheE-ImpSpeseE-ImpCompetenzeE*" & Str(1 + g_Settings.iva / 100) & ","
         End If
        Else
        qrySQL = qrySQL & " ImpSaldoE  AS SaldoFinale, "
@@ -395,7 +395,7 @@ Public Function getQrySfratti(tipoBimestre As Integer, isUnep As Boolean, tipo A
         If isUnep Then
          qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE,"
         Else
-         qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE*" & Str(1 + g_Settings.IVA / 100) & ","
+         qrySQL = qrySQL & "  ImpDepositoE-ImpSpeseE-ImpVarieE-ImpCompetenzeE*" & Str(1 + g_Settings.iva / 100) & ","
         End If
        Else
         qrySQL = qrySQL & " ImpSaldoE  AS SaldoFinale, "
@@ -601,6 +601,28 @@ Dim qrySQL As String
     
     RigaPerAvvocatoSenzaOperazioni = qrySQL
 End Function
+Public Sub AggiungiBolloUnep()
+Dim sql As String
+Dim rs As ADODB.Recordset
+Dim d As Double
+Dim list As New Collection
+
+
+Set rs = newAdoRs
+sql = "SELECT CODAVV, Nome, Sum(COMPETENZE) AS COMPETENZE, Sum(Quota) AS Quota " & _
+      "From PrtEstrattoContoUNEP " & _
+      "GROUP BY PrtEstrattoContoUNEP.CODAVV, PrtEstrattoContoUNEP.Nome"
+rs.Open sql, g_Settings.DBConnection
+
+While Not rs.EOF
+ d = rs(2) + rs(3)
+ If d >= g_Settings.LimiteBollo Then
+     g_Settings.DBConnection.Execute "UPDATE PrtEstrattoContoUNEP SET Bollo=" & FixDouble(g_Settings.ImportoBollo) & " WHERE CODAVV='" & rs(0) & "' AND Quota<>0"
+ End If
+ rs.MoveNext
+Wend
+
+End Sub
 Public Sub AggiungiDeduzioni(data1 As String, data2 As String, oCodAvv As AvvocatiPerEstratto)
 Dim qrySQL As String
 Dim qryApp As String

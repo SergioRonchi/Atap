@@ -45,11 +45,11 @@ End If
 'Rivedi ordinamento avvocati
 If Not ExistMDBField(CN, "Parametri", "XXX") Then
    'Cerca dupplicati
-   sql = "SELECT Anticipi.Descrizione, Anticipi.CodiceAnticipi, Anticipi_1.CodiceAnticipi " & _
+   SQL = "SELECT Anticipi.Descrizione, Anticipi.CodiceAnticipi, Anticipi_1.CodiceAnticipi " & _
        "FROM Anticipi, Anticipi AS Anticipi_1 " & _
        "WHERE (((Anticipi.Descrizione)=[Anticipi_1].[Descrizione]) AND ((Anticipi.CodiceAnticipi)>[Anticipi_1].[CodiceAnticipi]));"
    Set rsAv = newAdoRs
-   rsAv.Open sql, CN
+   rsAv.Open SQL, CN
    While Not rsAv.EOF
      Code = rsAv(1)
      Descr = rsAv(0) & " " & Code
@@ -630,7 +630,7 @@ End Sub
 Public Sub UpdateDatabase(CN As ADODB.Connection)
 Dim rsAv As ADODB.Recordset
 Dim Ord As Long
-Dim sql As String
+Dim SQL As String
 Dim Descr As String
 Dim Code As String
  Dim codAvv As String, Nota As String, mail As String, pos As Integer, leftPart As String, rightPart As String
@@ -660,6 +660,8 @@ If Not rs.EOF Then
     GoTo UPD_4
    ElseIf nv < 5 Then
     GoTo UPD_5
+   ElseIf nv < 6 Then
+    GoTo UPD_6
   End If
 End If
 Exit Sub
@@ -671,6 +673,26 @@ UPD_4:
  Update4 CN
 UPD_5:
  Update5 CN
+UPD_6:
+ Update6 CN
+End Sub
+
+Private Sub Update6(CN As ADODB.Connection)
+  
+   CN.Execute "ALTER TABLE  Parametri ADD ImportoBollo Double"
+   CN.Execute "ALTER TABLE  Parametri ADD LimiteBollo Double"
+
+   CN.Execute "UPDATE Parametri SET ImportoBollo=2.00"
+   CN.Execute "UPDATE Parametri SET LimiteBollo=77.47"
+   
+   
+   CN.Execute "ALTER TABLE  PrtEstrattoConto ADD Bollo Double DEFAULT 0"
+   CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ADD Bollo Double DEFAULT 0"
+   
+   CN.Execute "ALTER TABLE  TempSaldiUNEP ADD Bollo Double DEFAULT 0"
+   CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD Bollo Double DEFAULT 0"
+ 
+ CN.Execute "UPDATE Versione SET NumeroVersione=6"
 End Sub
 Private Sub Update5(CN As ADODB.Connection)
    CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ALTER COLUMN  Nome TEXT(100)"
