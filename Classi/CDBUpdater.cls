@@ -679,18 +679,53 @@ End Sub
 
 Private Sub Update6(CN As ADODB.Connection)
   
+  If Not ExistMDBField(CN, "Parametri", "ImportoBollo") Then
+  
    CN.Execute "ALTER TABLE  Parametri ADD ImportoBollo Double"
    CN.Execute "ALTER TABLE  Parametri ADD LimiteBollo Double"
 
    CN.Execute "UPDATE Parametri SET ImportoBollo=2.00"
    CN.Execute "UPDATE Parametri SET LimiteBollo=77.47"
-   
-   
+  End If
+  
+  If Not ExistMDBField(CN, "PrtEstrattoConto", "Bollo") Then
    CN.Execute "ALTER TABLE  PrtEstrattoConto ADD Bollo Double DEFAULT 0"
    CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ADD Bollo Double DEFAULT 0"
-   
+  End If
+  
+  If Not ExistMDBField(CN, "TempSaldiUNEP", "Bollo") Then
    CN.Execute "ALTER TABLE  TempSaldiUNEP ADD Bollo Double DEFAULT 0"
+  End If
+ If Not ExistMDBField(CN, "PrtAssegniCircolariUNEP", "Bollo") Then
    CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD Bollo Double DEFAULT 0"
+  End If
+  
+  If Not ExistMDBField(CN, "TempSaldiUNEP", "Quota") Then
+
+   CN.Execute "ALTER TABLE  TempSaldiUNEP ADD COLUMN Quota Double"
+  
+
+End If
+
+If Not ExistMDBField(CN, "TempSaldiUNEP", "Deduzione") Then
+
+     CN.Execute "ALTER TABLE  TempSaldiUNEP ADD COLUMN Deduzione Double"
+     CN.Execute "UPDATE TempSaldiUNEP SET Deduzione=0"
+    
+End If
+
+If Not ExistMDBField(CN, "PrtAssegniCircolariUNEP", "Deduzione") Then
+
+   CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ADD COLUMN Deduzione Double"
+
+   
+     CN.Execute "UPDATE PrtAssegniCircolariUNEP SET Deduzione=0"
+End If
+  
+  CN.Execute "ALTER TABLE  PrtEstrattoConto ALTER COLUMN Bollo Double DEFAULT 0"
+  CN.Execute "ALTER TABLE  PrtEstrattoContoUNEP ALTER COLUMN Bollo Double DEFAULT 0"
+  CN.Execute "ALTER TABLE  TempSaldiUNEP ALTER COLUMN Bollo Double DEFAULT 0"
+  CN.Execute "ALTER TABLE  PrtAssegniCircolariUNEP ALTER COLUMN Bollo Double DEFAULT 0"
  
  CN.Execute "UPDATE Versione SET NumeroVersione=6"
 End Sub
@@ -730,6 +765,16 @@ Private Sub Update3(CN As ADODB.Connection)
 End Sub
 
 Private Sub Update2(CN As ADODB.Connection)
+ 
+ If Not ExistMDBTable(CN, "TempSaldi") Then
+     CN.Execute "SELECT * INTO TempSaldi FROM PrtAssegniCircolari "
+     CN.Execute "DELETE * FROM TempSaldi"
+End If
+
+If Not ExistMDBTable(CN, "TempSaldiUNEP") Then
+  CN.Execute "SELECT * INTO TempSaldiUNEP FROM TempSaldi"
+
+End If
  
    CN.Execute "ALTER TABLE  TempSaldi ALTER COLUMN  Nome TEXT(100)"
    CN.Execute "ALTER TABLE  TempSaldi ALTER COLUMN  INDIRI TEXT(100)"

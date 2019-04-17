@@ -432,7 +432,7 @@ End Sub
 Private Sub CmdAnnulla_Click()
 Unload Me
 If FindForm("frmRicerca") Then
-    Unload frmRicerca
+    Unload FrmRicerca
 End If
 
 End Sub
@@ -937,7 +937,7 @@ If GetADORecordset(nomeTabella, "*", "Bimestre='" & strBimestre & "' AND codAVV=
            "NumeroFattura,DataFattura,DataFatturaNormale,Valuta,ImportoIva,CodIVA,CompAdempEuro,CompDecrIngEuro,CompNotifEuro,CompSfpgEuro, Bimestre, Quota) " & _
            "VALUES (" & rs!numOrdinamento & ",'" & Replace(Left(rs!nome, 40), "'", "''") & "','" & Replace(Left(rs!INDIRI, 40), "'", "''") & "','" & Replace(Left(rs!LOCALI, 35), "'", "''") & _
            "','" & rs!prov & "','" & rs!CAP & "','" & rs!PIVA & "','" & codice & "'," & nFat & _
-           ",'" & Format(Data, "yyyymmdd") & "','" & Data & "','E',0,''," & Str(adempi) & "," & Str(decreti) & "," & Str(Notifiche) & "," & Str(stratti) & _
+           ",'" & Format(Data, "yyyymmdd") & "','" & Data & "','E'," & g_Settings.iva & ",'" & g_Settings.CodIVA & "'," & Str(adempi) & "," & Str(decreti) & "," & Str(Notifiche) & "," & Str(stratti) & _
            ",'" & strBimestre & "'," & Str(quota) & ");"
            nFat = nFat + 1
    Else
@@ -1062,7 +1062,7 @@ Dim qry As String
 qry = "INSERT INTO " & destinationTable & " ( CODAVV, NOME, DESCR_ATTIVITA, DEPOSITO, COMPETENZE, SALDO, " & _
      "SPESE1, SPESE2, SPESE3, SPESE4, SPESE5, SPESE6, SALDO_PRECEDENTE, VALUTA,NumOrdinamento,DATA_INIZIO,DATA_FINE,Quota, Deduzione, Bollo ) " & _
      "SELECT CODAVV, NOME, 'XXX', Sum(PrtEstrattoContoUNEP.DEPOSITO) AS DEP," & _
-     "Sum(PrtEstrattoContoUNEP.COMPETENZE) AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q +DED - B AS Ass," & _
+     "Sum(PrtEstrattoContoUNEP.COMPETENZE)*" & Str(1 + g_Settings.iva / 100) & " AS [COMP], [DEP]-[COMP]-[S1]-[S2]-[S3]-[S4]-[S5]-[S6]-Q +DED - B AS Ass," & _
      "Sum(IIF(DESCR_SPESE1='Fotocopie',[SPESE1]*[PrtEstrattoContoUNEP]![QtaFotocopie],[SPESE1])) AS S1, Sum(PrtEstrattoContoUNEP.SPESE2) AS S2," & _
      "Sum(IIF(DESCR_SPESE3='Marche',[SPESE3]*[QtaMarche],[SPESE3])) AS S3, Sum(PrtEstrattoContoUNEP.SPESE4) AS S4, " & _
      "Sum(IIF(DESCR_SPESE5='Diritti Cancelleria',[SPESE5]*[qtaDirittiCancelleria],[SPESE5])) AS S5, Sum(PrtEstrattoContoUNEP.SPESE6) AS S6," & _

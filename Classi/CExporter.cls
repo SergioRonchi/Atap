@@ -17,7 +17,7 @@ Private m_prog2 As Long
 Private m_da As Date
 Private m_a As Date
 Public Function esportaXML(Path As String, isNumeroFatture As Boolean, _
-                        Anno As Integer, daNum As Long, aNum As Long, _
+                        anno As Integer, daNum As Long, aNum As Long, _
                         Da As Date, A As Date, datePostFix As String) As Boolean
 On Error GoTo fine
 Dim xml_doc As DOMDocument
@@ -28,8 +28,8 @@ Dim fatture_Node As IXMLDOMElement
 Set fatture_Node = xml_doc.createElement("Fatture")
 xml_doc.appendChild fatture_Node
 
-InnerEsportaXml xml_doc, False, isNumeroFatture, Anno, daNum, aNum, Da, A
-InnerEsportaXml xml_doc, True, isNumeroFatture, Anno, daNum, aNum, Da, A
+InnerEsportaXml xml_doc, False, isNumeroFatture, anno, daNum, aNum, Da, A
+InnerEsportaXml xml_doc, True, isNumeroFatture, anno, daNum, aNum, Da, A
 xml_doc.Save Path & "/Fatture_" & datePostFix & ".xml"
 
 esportaXML = True
@@ -39,32 +39,32 @@ fine:
 esportaXML = False
 End Function
 Private Sub InnerEsportaXml(doc As DOMDocument, isUnep As Boolean, isNumeroFatture As Boolean, _
-                        Anno As Integer, daNum As Long, aNum As Long, _
+                        anno As Integer, daNum As Long, aNum As Long, _
                         Da As Date, A As Date)
-Dim sql As String
+Dim SQL As String
 Dim rs As ADODB.Recordset
-Dim tabella As String
-tabella = IIf(isUnep, "StoricoFattureUnep", "STORICOFATTURE")
+Dim Tabella As String
+Tabella = IIf(isUnep, "StoricoFattureUnep", "STORICOFATTURE")
  m_prog1 = 0: m_prog2 = 0: RaiseProgress
-sql = "SELECT NumeroFattura, DataFatturaNormale, CodIva, " & _
+SQL = "SELECT NumeroFattura, DataFatturaNormale, CodIva, " & _
       "ImportoIVA, CompAdempEuro, CompSfpgEuro, CompNotifEuro, " & _
-      "CompDecrIngEuro, " & tabella & ".NOME, " & tabella & ".INDIRI, " & tabella & ".LOCALI, " & tabella & ".PROV, " & tabella & ".CAP, " & tabella & ".PIVA, " & _
+      "CompDecrIngEuro, " & Tabella & ".NOME, " & Tabella & ".INDIRI, " & Tabella & ".LOCALI, " & Tabella & ".PROV, " & Tabella & ".CAP, " & Tabella & ".PIVA, " & _
       "AnagraficaAvvocati.EMAIL, AnagraficaAvvocati.PEC, AnagraficaAvvocati.STAT, AnagraficaAvvocati.CFISC "
 If isUnep Then
-  sql = sql & ",QUOTA, BIMESTRE"
+  SQL = SQL & ",QUOTA, BIMESTRE"
 End If
 
-sql = sql & " FROM  AnagraficaAvvocati RIGHT JOIN " & tabella & " ON AnagraficaAvvocati.CODAVV = " & tabella & ".CODAVV    "
+SQL = SQL & " FROM  AnagraficaAvvocati RIGHT JOIN " & Tabella & " ON AnagraficaAvvocati.CODAVV = " & Tabella & ".CODAVV    "
 
 If isNumeroFatture Then
-   sql = sql & "WHERE  LEFT(DataFattura,4)='" & Anno & "' AND CInt(NumeroFattura)>=" & daNum & " AND CInt(NumeroFattura)<=" & aNum & " " & _
+   SQL = SQL & "WHERE  LEFT(DataFattura,4)='" & anno & "' AND CInt(NumeroFattura)>=" & daNum & " AND CInt(NumeroFattura)<=" & aNum & " " & _
                 "ORDER BY Format(NumeroFattura, '00000000')"
 Else
-   sql = sql & "WHERE DataFattura>='" & Format(Da, "YYYYMMDD") & "' AND DataFattura<='" & Format(A, "YYYYMMDD") & "' " & _
+   SQL = SQL & "WHERE DataFattura>='" & Format(Da, "YYYYMMDD") & "' AND DataFattura<='" & Format(A, "YYYYMMDD") & "' " & _
                 "ORDER BY DataFattura, Format(NumeroFattura, '00000000')"
 End If
 Set rs = New ADODB.Recordset
-rs.Open sql, g_Settings.DBConnection
+rs.Open SQL, g_Settings.DBConnection
 
 
 While Not rs.EOF
@@ -84,6 +84,9 @@ Dim righe_node As IXMLDOMElement
 Dim tot_node As IXMLDOMElement
 
 Dim x As Double
+Dim imponibile As Double
+Dim imposta As Double
+Dim totale As Double
 
 
  ' Make the Employee element.
@@ -144,20 +147,21 @@ Dim x As Double
     
     Set tot_node = doc.createElement("Totale")
     fattura_node.appendChild tot_node
-     x = rs("CompNotifEuro") + rs("CompDecrIngEuro") + rs("CompSfpgEuro") + rs("CompAdempEuro")
+    imponibile = rs("CompNotifEuro") + rs("CompDecrIngEuro") + rs("CompSfpgEuro") + rs("CompAdempEuro")
+    imposta = imponibile * rs("ImportoIVA") / 100
+    totale = imponibile + imposta
     If isUnep Then
      
-    
-     CreaRiga doc, "CONTRIBUTO ASSOCIATIVO PROPORZIONALE", righe_node, x, 0
+      
+     CreaRiga doc, "CONTRIBUTO ASSOCIATIVO PROPORZIONALE", righe_node, imponibile, rs("ImportoIVA")
      If InStr(1, rs("BIMESTRE"), "-") > 0 Then
-          CreaRiga doc, "CONTRIBUTO ASSOCIATIVO BIMESTRALE " & rs("BIMESTRE"), righe_node, rs("Quota"), 0
+         CreaRiga doc, "CONTRIBUTO ASSOCIATIVO BIMESTRALE " & rs("BIMESTRE"), righe_node, rs("Quota"), 0
       Else
          CreaRiga doc, "CONTRIBUTO ASSOCIATIVO MENSILE " & rs("BIMESTRE"), righe_node, rs("Quota"), 0
      End If
      
-        x = x + rs("Quota")
-
-    Else
+       totale = totale + rs("Quota")
+     Else
     
     CreaRiga doc, "PER COMPETENZE NOTIFICHE", righe_node, rs("CompNotifEuro"), rs("ImportoIVA")
     CreaRiga doc, "PER COMPETENZE DECRETI INGIUNTIVI", righe_node, rs("CompDecrIngEuro"), rs("ImportoIVA")
@@ -170,12 +174,18 @@ Dim x As Double
    
 
         Set nd = doc.createElement("Imponibile")
-        nd.appendChild doc.createTextNode(Format(x, "#,##0.00"))
+        nd.appendChild doc.createTextNode(Format(imponibile, "#,##0.00"))
         tot_node.appendChild nd
         
-        x = x * rs("ImportoIVA") / 100
+        
         Set nd = doc.createElement("Imposta")
-        nd.appendChild doc.createTextNode(Format(x, "#,##0.00"))
+        nd.appendChild doc.createTextNode(Format(imposta, "#,##0.00"))
+        tot_node.appendChild nd
+        
+        Set nd = doc.createElement("Totale")
+        nd.appendChild doc.createTextNode(Format(totale, "#,##0.00"))
+        
+        
         tot_node.appendChild nd
    
    
@@ -214,7 +224,7 @@ Dim x As Double
 End Sub
 
 Public Function Esporta(ByRef oMinmax As MinMax, Path As String, isNumeroFatture As Boolean, _
-                        Anno As Integer, daNum As Long, aNum As Long, _
+                        anno As Integer, daNum As Long, aNum As Long, _
                         Da As Date, A As Date, datePostFix As String, fatturePerFile As Long) As Boolean
   On Error GoTo fine
   Dim fattureMsg As String
@@ -239,9 +249,9 @@ Public Function Esporta(ByRef oMinmax As MinMax, Path As String, isNumeroFatture
          EsportaAnagrafica oMinmax, Path, datePostFix
          
          m_prog1 = 25: m_prog2 = 0: RaiseProgress
-         Set listaFatture = EsportaFatture(oMinmax, Path, isNumeroFatture, Anno, daNum, aNum, Da, A, True, False, fatturePerFile)
+         Set listaFatture = EsportaFatture(oMinmax, Path, isNumeroFatture, anno, daNum, aNum, Da, A, True, False, fatturePerFile)
          m_prog1 = 60: m_prog2 = 0: RaiseProgress
-         Set listaFattureUnep = EsportaFatture(oMinmax, Path, isNumeroFatture, Anno, daNum, aNum, Da, A, True, True, fatturePerFile)
+         Set listaFattureUnep = EsportaFatture(oMinmax, Path, isNumeroFatture, anno, daNum, aNum, Da, A, True, True, fatturePerFile)
          m_prog1 = 100: m_prog2 = 0: RaiseProgress
 
         iFileNo = FreeFile
@@ -297,9 +307,9 @@ Dim row As CExportAnagraficaRow
 
 Set rs = newAdoRs
 
-sql = "SELECT * FROM ANAGRAFICAAVVOCATI WHERE PIVA IS NOT NULL AND CFISC IS NOT NULL AND CFISC<>'' AND Piva<>''"
+SQL = "SELECT * FROM ANAGRAFICAAVVOCATI WHERE PIVA IS NOT NULL AND CFISC IS NOT NULL AND CFISC<>'' AND Piva<>''"
       
-rs.Open sql, g_Settings.DBConnection
+rs.Open SQL, g_Settings.DBConnection
 
 msg = msg & CreateIntestazioneAnagrafica & vbCrLf
 While Not rs.EOF
@@ -329,7 +339,7 @@ Close iFileNo
 
 End Sub
 Private Function EsportaFatture(ByRef oMinmax As MinMax, Path As String, isNumeroFatture As Boolean, _
-                        Anno As Integer, daNum As Long, aNum As Long, _
+                        anno As Integer, daNum As Long, aNum As Long, _
                         Da As Date, A As Date, addHeader As Boolean, isUnep As Boolean, fatturePerFile As Long) As Collection
 Dim rs As ADODB.Recordset
 Dim msg As String
@@ -337,35 +347,35 @@ Dim row As CExportFatturaRow
 Dim Tot As Double
 Dim nRiga As Long
 Set rs = newAdoRs
-Dim tabella As String
+Dim Tabella As String
 Dim fileName As String
 Dim codCE As String
 Dim codAliquotaIVA As String
 Dim codArticoloIVA As String
 Dim oListaStringhe As New Collection
-tabella = IIf(isUnep, "StoricoFattureUnep", "STORICOFATTURE")
+Tabella = IIf(isUnep, "StoricoFattureUnep", "STORICOFATTURE")
 
 codCE = g_Settings.CodCompetenze
 
-sql = "SELECT NumeroFattura, DataFatturaNormale, CodIva, " & _
+SQL = "SELECT NumeroFattura, DataFatturaNormale, CodIva, " & _
       "ImportoIVA, CompAdempEuro, CompSfpgEuro, CompNotifEuro, " & _
       "CompDecrIngEuro, AnagraficaAvvocati.PIVA as PIVA_REAL, AnagraficaAvvocati.CFISC as PIVA,AnagraficaAvvocati.CODAVV "
 If isUnep Then
-  sql = sql & ",QUOTA"
+  SQL = SQL & ",QUOTA"
   codCE = g_Settings.CodQuotaVariabile
 End If
 
-sql = sql & " FROM AnagraficaAvvocati INNER JOIN " & tabella & " ON AnagraficaAvvocati.CODAVV = " & tabella & ".CODAVV  "
+SQL = SQL & " FROM AnagraficaAvvocati INNER JOIN " & Tabella & " ON AnagraficaAvvocati.CODAVV = " & Tabella & ".CODAVV  "
 
 If isNumeroFatture Then
-   sql = sql & "WHERE AnagraficaAvvocati.STAT='V' AND LEFT(DataFattura,4)='" & Anno & "' AND CInt(NumeroFattura)>=" & daNum & " AND CInt(NumeroFattura)<=" & aNum & " " & _
+   SQL = SQL & "WHERE AnagraficaAvvocati.STAT='V' AND LEFT(DataFattura,4)='" & anno & "' AND CInt(NumeroFattura)>=" & daNum & " AND CInt(NumeroFattura)<=" & aNum & " " & _
                 "ORDER BY Format(NumeroFattura, '00000000')"
 Else
-   sql = sql & "WHERE AnagraficaAvvocati.STAT='V' AND DataFattura>='" & Format(Da, "YYYYMMDD") & "' AND DataFattura<='" & Format(A, "YYYYMMDD") & "' " & _
+   SQL = SQL & "WHERE AnagraficaAvvocati.STAT='V' AND DataFattura>='" & Format(Da, "YYYYMMDD") & "' AND DataFattura<='" & Format(A, "YYYYMMDD") & "' " & _
                 "ORDER BY DataFattura, Format(NumeroFattura, '00000000')"
 End If
 
-rs.Open sql, g_Settings.DBConnection
+rs.Open SQL, g_Settings.DBConnection
 
 If addHeader Then msg = CreateIntestazioneFatture & vbCrLf
 Dim codPartita As String
@@ -386,8 +396,8 @@ While Not rs.EOF
      minNumeroFattura = CInt(rs("NumeroFattura"))
   End If
   If isUnep Then
-    codAliquotaIVA = "EC"
-    codArticoloIVA = "160"
+    codAliquotaIVA = rs("CodIVA") ' "EC"
+    codArticoloIVA = "005" '"160"
   Else
     codAliquotaIVA = rs("CodIVA")
     codArticoloIVA = "005"
@@ -398,11 +408,12 @@ While Not rs.EOF
   Set row = New CExportFatturaRow
   Tot = rs("CompAdempEuro") + rs("CompSfpgEuro") + rs("CompNotifEuro") + rs("CompDecrIngEuro")
   totSenzaIVA = Tot
+  Tot = Tot * (1 + rs("ImportoIVA") / 100)
   If isUnep Then
     Tot = Tot + rs("QUOTA")
   End If
   
-  Tot = Tot * (1 + rs("ImportoIVA") / 100)
+  
   nRiga = 1
   numeroRegistrazione = rs("NumeroFattura") * 2
   'TESTATA
@@ -412,12 +423,25 @@ While Not rs.EOF
   codPartita = row.codPartita
   nRiga = nRiga + 1
   
-  'UNICA RIGA PER FATTURA TOTALE
+  If isUnep Then
+  
     Set row = New CExportFatturaRow
-    'row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Importo Competenze " & g_Settings.Sede, codCE
     row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "", codCE
     msg = msg & row.CreateRow & vbCrLf
     nRiga = nRiga + 1
+    
+    Set row = New CExportFatturaRow
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("QUOTA"), 0, "EC", "160", "", codCE
+    msg = msg & row.CreateRow & vbCrLf
+    nRiga = nRiga + 1
+  Else
+    'UNICA RIGA PER FATTURA TOTALE
+    Set row = New CExportFatturaRow
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "", codCE
+    msg = msg & row.CreateRow & vbCrLf
+    nRiga = nRiga + 1
+  End If
+
     
 'RIGHE SEPARATE
 '  If rs("CompAdempEuro") > 0 Then
