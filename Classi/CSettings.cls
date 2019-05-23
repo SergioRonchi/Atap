@@ -32,6 +32,11 @@ Private m_LimiteSaldo As Double
 Private m_Banca As String
 Private m_IBAN As String
 Private m_CodIVA As String
+
+Private m_CodIVAEsente As String
+Private m_CodArtIVAEsente As String
+Private m_CodArtIVA As String
+
 Private m_AtapUserFolder As String
 Private m_AtapUserFolderTemp As String
 Private m_AtapUserFolderBackup As String
@@ -108,6 +113,13 @@ Private Sub Class_Initialize()
       m_CodQFissa = rs("CECodQFixed")
       m_CodCompetenze = rs("CECodCompetenze")
       m_CodIVA = rs("CodIVA")
+      
+      m_CodIVAEsente = rs("CodIVAEsente")
+      m_CodArtIVAEsente = rs("CodArtIVAEsente")
+      m_CodArtIVA = rs("CodArtIVA")
+      
+
+      
       m_Sede = rs("Sede")
       m_LimiteBollo = rs("LimiteBollo")
       m_ImportoBollo = rs("ImportoBollo")
@@ -217,9 +229,40 @@ Public Property Let CodIVA(x As String)
   m_CodIVA = x
   Me.DBConnection.Execute "UPDATE Parametri SET CodIVA='" & Replace(m_CodIVA, "'", "''") & "'"
 End Property
+
+
+Public Property Let CodIVAEsente(x As String)
+  m_CodIVAEsente = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CodIVAEsente='" & Replace(m_CodIVAEsente, "'", "''") & "'"
+End Property
+
+Public Property Let CodArtIVA(x As String)
+  m_CodArtIVA = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CodArtIVA='" & Replace(m_CodArtIVA, "'", "''") & "'"
+End Property
+
+Public Property Let CodArtIVAEsente(x As String)
+  m_CodArtIVAEsente = x
+  Me.DBConnection.Execute "UPDATE Parametri SET CodArtIVAEsente='" & Replace(m_CodArtIVAEsente, "'", "''") & "'"
+End Property
+
 Public Property Get CodIVA() As String
  CodIVA = m_CodIVA
 End Property
+
+Public Property Get CodIVAEsente() As String
+ CodIVAEsente = m_CodIVAEsente
+End Property
+
+Public Property Get CodArtIVAEsente() As String
+ CodArtIVAEsente = m_CodArtIVAEsente
+End Property
+
+
+Public Property Get CodArtIVA() As String
+ CodArtIVA = m_CodArtIVA
+End Property
+
 
 Public Property Let Sede(x As String)
   m_Sede = x

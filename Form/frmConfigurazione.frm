@@ -14,12 +14,33 @@ Begin VB.Form frmConfigurazione
    ScaleWidth      =   8415
    ShowInTaskbar   =   0   'False
    StartUpPosition =   1  'CenterOwner
+   Begin VB.TextBox txtCodArtIVAEsente 
+      Height          =   285
+      Left            =   2640
+      TabIndex        =   36
+      Top             =   1200
+      Width           =   975
+   End
+   Begin VB.TextBox txtCodIVAEsente 
+      Height          =   285
+      Left            =   1440
+      TabIndex        =   34
+      Top             =   1200
+      Width           =   975
+   End
+   Begin VB.TextBox txtArtIVA 
+      Height          =   285
+      Left            =   2640
+      TabIndex        =   33
+      Top             =   600
+      Width           =   975
+   End
    Begin VB.TextBox txtSede 
       Height          =   285
       Left            =   1200
       TabIndex        =   28
       Top             =   120
-      Width           =   2055
+      Width           =   2415
    End
    Begin VB.Frame Frame1 
       Caption         =   "Codici del Piano dei Conti"
@@ -114,10 +135,10 @@ Begin VB.Form frmConfigurazione
    End
    Begin VB.TextBox txtCodIva 
       Height          =   285
-      Left            =   1200
+      Left            =   1440
       TabIndex        =   12
       Top             =   600
-      Width           =   1455
+      Width           =   975
    End
    Begin VB.TextBox txtIBAN 
       Height          =   285
@@ -439,6 +460,14 @@ Begin VB.Form frmConfigurazione
       MaxValueVT      =   5
       MinValueVT      =   5
    End
+   Begin VB.Label Label16 
+      Caption         =   "Codice IVA Esente"
+      Height          =   495
+      Left            =   120
+      TabIndex        =   35
+      Top             =   1080
+      Width           =   1215
+   End
    Begin VB.Label Label15 
       Alignment       =   1  'Right Justify
       Caption         =   "Importo Bollo"
@@ -479,7 +508,7 @@ Begin VB.Form frmConfigurazione
       Left            =   120
       TabIndex        =   13
       Top             =   600
-      Width           =   975
+      Width           =   1215
    End
    Begin VB.Label Label5 
       Caption         =   "IBAN"
@@ -551,6 +580,10 @@ Private Sub CmdOK_Click()
   g_Settings.ImportoBollo = numBollo.value
   g_Settings.LimiteBollo = numSogliaBollo.value
   
+  g_Settings.CodIVAEsente = txtCodIVAEsente.Text
+  g_Settings.CodArtIVAEsente = txtCodArtIVAEsente.Text
+  g_Settings.CodArtIVA = txtArtIVA.Text
+  
  Unload Me
 End Sub
 
@@ -568,6 +601,11 @@ Private Sub Form_Load()
     txtCodVar = g_Settings.CodQuotaVariabile
     txtCodComp = g_Settings.CodCompetenze
     txtSede = g_Settings.Sede
+    
+    txtCodIVAEsente = g_Settings.CodIVAEsente
+    txtCodArtIVAEsente = g_Settings.CodArtIVAEsente
+    txtArtIVA = g_Settings.CodArtIVA
+    
     
     numBollo.value = g_Settings.ImportoBollo
     numSogliaBollo.value = g_Settings.LimiteBollo

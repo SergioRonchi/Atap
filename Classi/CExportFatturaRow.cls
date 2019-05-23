@@ -133,8 +133,12 @@ Public Sub Init(IsTestata As Boolean, numMovimento As String, numRiga As Long, d
   N_mov = numMovimento
   N_riga = numRiga
   DataRegistrazione = dataFattura
-  ImportoRiga = Format(dImp, "##.00")
-  ImportoIVA = Format(dImpIVA, "##.00")
+  ImportoRiga = Format(dImp, "##0.00")
+  If dImpIVA = 0 Then
+    ImportoIVA = ""
+  Else
+    ImportoIVA = Format(dImpIVA, "##0.00")
+  End If
  If IsTestata Then
    DataDocumento = dataFattura
    NumDocumento = numFattura

@@ -426,66 +426,28 @@ While Not rs.EOF
   If isUnep Then
   
     Set row = New CExportFatturaRow
-    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "", codCE
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, g_Settings.CodArtIVA, "Quota Proporzionale", Trim(codCE)
     msg = msg & row.CreateRow & vbCrLf
     nRiga = nRiga + 1
-    
+   
     Set row = New CExportFatturaRow
-    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("QUOTA"), 0, "EC", "160", "", codCE
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("QUOTA"), 0, g_Settings.CodIVAEsente, g_Settings.CodArtIVAEsente, "Quota associativa", Trim(g_Settings.CodQuataFissa)
     msg = msg & row.CreateRow & vbCrLf
     nRiga = nRiga + 1
   Else
     'UNICA RIGA PER FATTURA TOTALE
     Set row = New CExportFatturaRow
-    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "", codCE
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), totSenzaIVA, totSenzaIVA * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "", Trim(codCE)
     msg = msg & row.CreateRow & vbCrLf
     nRiga = nRiga + 1
   End If
 
-    
-'RIGHE SEPARATE
-'  If rs("CompAdempEuro") > 0 Then
-'    Set row = New CExportFatturaRow
-'    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("CompAdempEuro"), rs("CompAdempEuro") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Adempimenti", codCE
-'    msg = msg & row.CreateRow & vbCrLf
-'    nRiga = nRiga + 1
-'  End If
-'
-'  If rs("CompSfpgEuro") > 0 Then
-'    Set row = New CExportFatturaRow
-'    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("CompSfpgEuro"), rs("CompSfpgEuro") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Sfratti", codCE
-'    msg = msg & row.CreateRow & vbCrLf
-'    nRiga = nRiga + 1
-'  End If
-'
-'  If rs("CompNotifEuro") > 0 Then
-'    Set row = New CExportFatturaRow
-'    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("CompNotifEuro"), rs("CompNotifEuro") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Notifiche", codCE
-'    msg = msg & row.CreateRow & vbCrLf
-'    nRiga = nRiga + 1
-'  End If
-'
-'  If rs("CompDecrIngEuro") > 0 Then
-'    Set row = New CExportFatturaRow
-'    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("CompDecrIngEuro"), rs("CompDecrIngEuro") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Decreti", codCE
-'    msg = msg & row.CreateRow & vbCrLf
-'    nRiga = nRiga + 1
-'  End If
-  
-   If isUnep Then
-    If rs("QUOTA") > 0 Then
-        Set row = New CExportFatturaRow
-        row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), rs("QUOTA"), rs("QUOTA") * rs("ImportoIVA") / 100, codAliquotaIVA, codArticoloIVA, "Quota associativa", g_Settings.CodQuataFissa
-        msg = msg & row.CreateRow & vbCrLf
-        nRiga = nRiga + 1
-    End If
-  End If
   
   'STAMPA INCASSI
     nRiga = 1
     numeroRegistrazione = numeroRegistrazione + 1
     Set row = New CExportFatturaRow
-    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", "", Tot, 0, "", "", "Incasso da clienti", g_Settings.CodTestataIncasso
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", "", Tot, 0, "", "", "Incasso da clienti", Trim(g_Settings.CodTestataIncasso)
     row.Causale = "B25"
     row.Valenza = "0"
     row.Fiscale = "0"
@@ -495,7 +457,7 @@ While Not rs.EOF
     nRiga = nRiga + 1
     Set row = New CExportFatturaRow
     
-    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), -Tot, 0, "", "", "", g_Settings.CodTestata
+    row.Init False, CStr(numeroRegistrazione), nRiga, rs("DataFatturaNormale"), rs("NumeroFattura"), "", Trim(rs("PIVA")), -Tot, 0, "", "", "", Trim(g_Settings.CodTestata)
     row.Causale = "B25"
     row.codPartita = codPartita
     row.CFnominativo = Trim(rs("PIVA"))

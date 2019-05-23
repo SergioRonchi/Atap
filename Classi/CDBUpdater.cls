@@ -662,6 +662,8 @@ If Not rs.EOF Then
     GoTo UPD_5
    ElseIf nv < 6 Then
     GoTo UPD_6
+   ElseIf nv < 7 Then
+    GoTo UPD_7
   End If
 End If
 Exit Sub
@@ -675,6 +677,24 @@ UPD_5:
  Update5 CN
 UPD_6:
  Update6 CN
+UPD_7:
+ Update7 CN
+End Sub
+Private Sub Update7(CN As ADODB.Connection)
+
+
+  If Not ExistMDBField(CN, "Parametri", "CodIVAEsente") Then
+  
+   CN.Execute "ALTER TABLE  Parametri ADD CodIVAEsente TEXT(50)"
+   CN.Execute "ALTER TABLE  Parametri ADD CodArtIVAEsente TEXT(50)"
+   CN.Execute "ALTER TABLE  Parametri ADD CodArtIVA TEXT(50)"
+
+   CN.Execute "UPDATE Parametri SET CodArtIVA='005'"
+   CN.Execute "UPDATE Parametri SET CodIVAEsente='EC'"
+   CN.Execute "UPDATE Parametri SET CodArtIVAEsente='160'"
+  End If
+ 
+ CN.Execute "UPDATE Versione SET NumeroVersione=7"
 End Sub
 
 Private Sub Update6(CN As ADODB.Connection)
